@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout1.html}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Search Results</title>
+    <style>
+        body {
+            margin: 0 auto;
+            max-width: 1200px; /* 최대 너비 설정 */
+        }
+
+        .responsive {
+            max-width: 100%;
+            height: auto;
+        }
+        .pagenation>ul{
+            list-style:none;
+        }
+        .pagenation>ul>li{
+            float: left;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <!-- 검색 폼 -->
+    <form th:action="@{/search}" method="get">
+        <label for="keyword">Enter keyword:</label>
+        <input type="text" id="keyword" name="keyword" value="" />
+        <button type="submit">Search</button>
+    </form>
+
+    <!-- 검색 결과 -->
+    <div>
+        <h1>Search Results for: <span th:text="${keyword}">Keyword</span></h1>
+        <div th:if="${items}">
+            <div th:each="item : ${items}">
+                <div>
+                    <p th:text="${item.addr1}">Address</p>
+                    <p th:text="${item.title}">Title</p>
+                    <p th:text="${item.mapx}">Mapx</p>
+                    <p th:text="${item.mapy}">Mapy</p>
+                    <img th:src="${item.firstimage}" alt="Image" class="responsive">
+                </div>
+            </div>
+        </div>
+        <div th:if="${error}">
+            <p th:text="${error}"></p>
+        </div>
+    </div>
+
+    <!-- 페이지 네비게이션 -->
+    <div class="pagenation" th:if="${totalCount > numOfRows}">
+        <ul>
+            <li th:if="${currentPage > 1}">
+                <a th:href="@{/search(keyword=${keyword}, page=${currentPage - 1}, numOfRows=${numOfRows})}">Previous</a>
+            </li>
+            <li th:each="i : ${#numbers.sequence(1, (totalCount / numOfRows) + 1)}">
+                <a th:href="@{/search(keyword=${keyword}, page=${i}, numOfRows=${numOfRows})}"
+                   th:text="${i}" th:classappend="${i == currentPage} ? 'current' : ''"></a>
+            </li>
+            <li th:if="${currentPage < (totalCount / numOfRows) + 1}">
+                <a th:href="@{/search(keyword=${keyword}, page=${currentPage + 1}, numOfRows=${numOfRows})}">Next</a>
+            </li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>
