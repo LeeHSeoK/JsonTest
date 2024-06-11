@@ -52,14 +52,22 @@ public class TravelController {
         } catch (Exception e) {
             model.addAttribute("error", "An unexpected error occurred: " + e.getMessage());
         }
-        return "searchResult";
+        return "searchresult";
     }
 
 
-    @GetMapping("/read")
-    public String read(){
-        System.out.println(response);
-        return "searchResult";
+    @GetMapping("/searchresultinfo")
+    public String searchResultInfo(@RequestParam("title") String title, Model model) {
+        if (response != null && response.getResponse().getBody().getItems().getItem() != null) {
+            for (MyResponse.Response.Body.Items.Item item : response.getResponse().getBody().getItems().getItem()) {
+                if (item.getTitle().equals(title)) {
+                    model.addAttribute("item", item);
+                    break;
+                }
+            }
+        }
+        return "searchresultinfo";
     }
+
 
 }

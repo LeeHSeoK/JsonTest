@@ -41,7 +41,7 @@
             <div th:each="item : ${items}">
                 <div>
                     <p th:text="${item.addr1}">Address</p>
-                    <p th:text="${item.title}">Title</p>
+                    <a th:href="@{/searchresultinfo(title=${item.title})}" th:text="${item.title}">Title</a>
                     <p th:text="${item.mapx}">Mapx</p>
                     <p th:text="${item.mapy}">Mapy</p>
                     <img th:src="${item.firstimage}" alt="Image" class="responsive">
