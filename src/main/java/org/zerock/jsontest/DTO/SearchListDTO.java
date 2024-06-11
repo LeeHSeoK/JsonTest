@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class MyResponse {
+public class SearchListDTO {
     private Response response;
 
     @Getter

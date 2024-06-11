@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.client.HttpClientErrorException;
 import com.fasterxml.jackson.databind.ObjectMapper; // Jackson 라이브러리 추가 필요
-import org.zerock.jsontest.DTO.MyResponse;
+import org.zerock.jsontest.DTO.ReadOneDTO;
+import org.zerock.jsontest.DTO.SearchListDTO;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -18,7 +19,8 @@ import java.net.URLEncoder;
 public class TravelController {
 
     private static final String SERVICE_KEY = "YbiiQej4SOjUqjefneA5s+dlhQpFqqST5WIJLkX+dTkp5v4jHrc4A4rEpvDh1h1mEFaT1UQBav8Yx8IT6OAjHQ=="; // Replace with your actual service key
-    MyResponse response;
+    SearchListDTO response1;
+    ReadOneDTO response2;
 
     @GetMapping("/search")
     public String searchKeyword(@RequestParam(value = "keyword", required = false, defaultValue = "대구") String keyword,
@@ -35,13 +37,13 @@ public class TravelController {
             URI url = new URI(uri);
             String jsonResult = restTemplate.getForObject(url, String.class);
 
-            response = new ObjectMapper().readValue(jsonResult, MyResponse.class);
+            response1 = new ObjectMapper().readValue(jsonResult, SearchListDTO.class);
 
-            model.addAttribute("items", response.getResponse().getBody().getItems().getItem());
+            model.addAttribute("items", response1.getResponse().getBody().getItems().getItem());
             model.addAttribute("keyword", keyword);
             model.addAttribute("currentPage", page);
             model.addAttribute("numOfRows", numOfRows);
-            model.addAttribute("totalCount", response.getResponse().getBody().getTotalCount());
+            model.addAttribute("totalCount", response1.getResponse().getBody().getTotalCount());
 
         } catch (HttpClientErrorException e) {
             model.addAttribute("error", "API key is invalid or not registered.");
@@ -55,19 +57,30 @@ public class TravelController {
         return "searchresult";
     }
 
-
     @GetMapping("/searchresultinfo")
-    public String searchResultInfo(@RequestParam("title") String title, Model model) {
-        if (response != null && response.getResponse().getBody().getItems().getItem() != null) {
-            for (MyResponse.Response.Body.Items.Item item : response.getResponse().getBody().getItems().getItem()) {
-                if (item.getTitle().equals(title)) {
-                    model.addAttribute("item", item);
-                    break;
-                }
-            }
+    public String searchContentId(@RequestParam(value = "contentId") String contentId, Model model) {
+        try {
+            String encodedServiceKey = URLEncoder.encode(SERVICE_KEY, "UTF-8");
+            String encodedcontentid = URLEncoder.encode(contentId, "UTF-8");
+
+            String uri = "https://apis.data.go.kr/B551011/KorService1/detailCommon1?serviceKey=" + encodedServiceKey +
+                    "&MobileOS=ETC&MobileApp=AppTest&_type=json&contentId=" + encodedcontentid + "&contentTypeId=12" +
+                    "&defaultYN=Y&firstImageYN=Y&areacodeYN=Y&catcodeYN=Y&addrinfoYN=Y&mapinfoYN=Y&overviewYN=Y&numOfRows=10&pageNo=1";
+
+            RestTemplate restTemplate = new RestTemplate();
+            URI url = new URI(uri);
+            String jsonResult1 = restTemplate.getForObject(url, String.class);
+            System.out.println(jsonResult1+"-------------------------------");
+
+            response2 = new ObjectMapper().readValue(jsonResult1, ReadOneDTO.class);
+            System.out.println(response2+"===================================");
+
+            model.addAttribute("item", response2.getResponse().getBody().getItems().getItem()[0]);
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
         }
         return "searchresultinfo";
     }
-
-
 }
