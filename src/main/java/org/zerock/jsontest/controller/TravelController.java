@@ -18,7 +18,7 @@ import java.net.URLEncoder;
 @Controller
 public class TravelController {
 
-    private static final String SERVICE_KEY = "YbiiQej4SOjUqjefneA5s+dlhQpFqqST5WIJLkX+dTkp5v4jHrc4A4rEpvDh1h1mEFaT1UQBav8Yx8IT6OAjHQ=="; // Replace with your actual service key
+    private static final String SERVICE_KEY = ""; // Replace with your actual service key
     SearchListDTO response1;
     ReadOneDTO response2;
 
