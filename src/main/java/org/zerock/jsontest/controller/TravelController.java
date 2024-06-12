@@ -1,7 +1,6 @@
 package org.zerock.jsontest.controller;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,18 +8,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.client.HttpClientErrorException;
 import com.fasterxml.jackson.databind.ObjectMapper; // Jackson 라이브러리 추가 필요
-import org.zerock.jsontest.DTO.ReadOneDTO;
-import org.zerock.jsontest.DTO.SearchListDTO;
+import org.zerock.jsontest.dto.ReadOneDTO;
+import org.zerock.jsontest.dto.SearchListDTO;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+
 @Controller
 public class TravelController {
 
-    private static final String SERVICE_KEY = ""; // Replace with your actual service key
+    @Value("${service_key}")
+    private String SERVICE_KEY; // Replace with your actual service key
     SearchListDTO response1;
     ReadOneDTO response2;
 
