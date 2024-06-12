@@ -1,4 +1,4 @@
-package org.zerock.jsontest.DTO;
+package org.zerock.jsontest.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
