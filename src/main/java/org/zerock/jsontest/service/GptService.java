@@ -7,5 +7,4 @@ import org.springframework.stereotype.Service;
 @Service
 public interface GptService {
     ResponseEntity<?> getAssistantMsg(String userMsg) throws JsonProcessingException;
-
 }
