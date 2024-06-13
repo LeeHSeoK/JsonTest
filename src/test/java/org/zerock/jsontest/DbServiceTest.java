@@ -16,6 +16,6 @@ public class DbServiceTest {
     public void seachOneTest(){
         TravelDTO travelDTO = dbService.seachOne("광화문광장");
         String contentid = travelDTO.getContentid();
-        System.out.println(contentid+"===========================");
+        System.out.println(contentid+"============================");
     }
 }
