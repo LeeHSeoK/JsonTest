@@ -47,7 +47,9 @@
             if(userInput.trim() !== ""){
                 $("#chat-box").append("<div><strong>You:</strong> " + userInput + "</div>");
                 $.post("/api/v1/gpt", { msg: userInput }, function(data) {
-                    $("#chat-box").append("<div><strong>GPT:</strong> " + data + "</div>");
+                    var link = '<a href="/searchresultinfo?contentid=' + data + '" th:text="' + data + '">' + data + '</a>';
+                    $("#chat-box").append("<div><strong>GPT:</strong> " + link + "</div>");
+                    console.log(data);
                 }).fail(function() {
                     alert("Error communicating with GPT");
                 });
@@ -56,5 +58,23 @@
         });
     });
 </script>
+<!--<script>-->
+<!--    $(document).ready(function(){-->
+<!--        $("#send-button").click(function(){-->
+<!--            var userInput = $("#user-input").val();-->
+<!--            if(userInput.trim() !== ""){-->
+<!--                $("#chat-box").append("<div><strong>You:</strong> " + userInput + "</div>");-->
+<!--                $.post("/api/v1/gpt", { msg: userInput }, function(data) {-->
+<!--                    $("#chat-box").append("<div><strong>GPT:</strong> " + data + "</div>");-->
+<!--                    console.log(data)-->
+<!--                }).fail(function() {-->
+<!--                    alert("Error communicating with GPT");-->
+<!--                });-->
+<!--                $("#user-input").val("");-->
+<!--            }-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
 </body>
 </html>
+<!--<a th:href="@{/searchresultinfo(contentid=${item.contentid})}" th:text="${item.contentid}">contentid</a>-->
