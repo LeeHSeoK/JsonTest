@@ -17,8 +17,9 @@ public class DbServiceImpl implements DbService{
     private final DbRepository dbRepository;
 
     public TravelDTO seachOne(String title) {
-        Optional<Travel> result = dbRepository.findByTitle(title);
-        Travel travel = result.orElseThrow();
+        String sanitizedTitle = title.replaceAll("\\s", "");
+        Optional<Travel> result = dbRepository.findFirstByTitleContainingIgnoreCase(sanitizedTitle);
+        Travel travel = result.orElseThrow(() -> new RuntimeException("Travel not found"));
         TravelDTO travelDTO = modelMapper.map(travel, TravelDTO.class);
         return travelDTO;
     }

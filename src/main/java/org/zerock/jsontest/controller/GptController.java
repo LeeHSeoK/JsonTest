@@ -29,8 +29,6 @@ public class GptController {
     @PostMapping
     @ResponseBody
     public ResponseEntity<?> getAssistantMsg(@RequestParam String msg) throws JsonProcessingException {
-
-        ResponseEntity<?> assistantMsg = gptService.getAssistantMsg(msg);
-        return assistantMsg;
+        return gptService.getAssistantMsg(msg);
     }
 }
