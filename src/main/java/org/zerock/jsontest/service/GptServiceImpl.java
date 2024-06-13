@@ -43,7 +43,7 @@ public class GptServiceImpl implements GptService {
         assistantMessage.put("role", "system");
         assistantMessage.put("content", "당신은 여행지를 추천해주는 도우미 입니다. 여행지는 하나만 추천해주세요. 예시: (질문:오늘 기분이 꿀꿀해요 여자친구랑 같이 바다를 보고싶습니다. 어디로 여행가면 좋을까요? " +
                 "gpt:영일대해수욕장), (질문:오늘은 실내에서 놀고 싶습니다 저는 서울 강남에 살고있어요 어디서 놀아야될까요 차로 30분거리이내로 추천해주세요" +
-                "gpt:대구수목원) 단답으로 여행지만 대답하세요.");
+                "gpt:대구수목원) 단답으로 여행지만 대답하세요..");
         messages.add(assistantMessage);
 
         bodyMap.put("messages", messages);
