@@ -15,7 +15,7 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class GptServiceImpl implements GptService {
-    @Value("${openai.api.key}")
+//    @Value("${openai.api.key}")
     private String apiKey;
 
     private final DbService dbService;
