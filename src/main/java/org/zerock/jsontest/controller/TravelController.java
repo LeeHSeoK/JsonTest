@@ -61,7 +61,7 @@ public class TravelController {
     }
 
     @GetMapping("/searchresultinfo")
-    public String searchContentId(@RequestParam(value = "contentId") String contentId, Model model) {
+    public String searchcontentId(@RequestParam(value = "contentId") String contentId, Model model) {
         try {
             String encodedServiceKey = URLEncoder.encode(SERVICE_KEY, "UTF-8");
             String encodedcontentid = URLEncoder.encode(contentId, "UTF-8");
