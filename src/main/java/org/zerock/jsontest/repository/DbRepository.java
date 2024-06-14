@@ -6,5 +6,6 @@ import org.zerock.jsontest.domain.Travel;
 import java.util.Optional;
 
 public interface DbRepository extends JpaRepository<Travel, String> {
+    Optional<Travel> findFirstByTitle(String travelId);
     Optional<Travel> findFirstByTitleContainingIgnoreCase(String title);
 }
