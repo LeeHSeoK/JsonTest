@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <link th:href="@{./css/main.css}" rel="stylesheet">
+</head>
+<body>
+<div class="content-division gray-background">
+  <div class="title">
+    <h2>Recommended Travel Destinations by Region</h2>
+  </div>
+
+  <div class="button-row">
+    <button onclick="redirectToNaver('대구')">Reg 1</button>
+    <button>Reg 2</button>
+    <button>Reg 3</button>
+    <button>Reg 4</button>
+    <button>Reg 5</button>
+    <button>Reg 6</button>
+    <button>Reg 7</button>
+    <button>Reg 8</button>
+    <button>Reg 9</button>
+    <button>Reg 10</button>
+    <button>Reg 11</button>
+    <button>Reg 12</button>
+    <button>Reg 13</button>
+    <button>Reg 14</button>
+    <button>Reg 15</button>
+    <button>Reg 16</button>
+    <button>Reg 17</button>
+    <button>Reg 18</button>
+  </div>
+  <div th:each="img, iterStat : ${img}" th:if="${iterStat.index < 4}" class="image-row">
+    <div>
+      <img th:src="${img}" alt="Image" class="image">
+    </div>
+  </div>
+</div>
+<div class="content-division gray-background content-split">
+  <div class="left-side">
+    <img src="images/sample04.jpg" class="square-image">
+  </div>
+  <div class="right-side">
+    <h2>Notices</h2>
+    <ul class="notice-list">
+      <li><a href="#notice1">Notice 1</a></li>
+      <li><a href="#notice2">Notice 2</a></li>
+      <li><a href="#notice3">Notice 3</a></li>
+      <li><a href="#notice4">Notice 4</a></li>
+      <li><a href="#notice5">Notice 5</a></li>
+    </ul>
+  </div>
+</div>
+</div>
+<script>
+  function redirectToNaver(value) {
+    const url = `http://localhost:8080/search?${value}`;
+    window.location.href = url;
+  }
+  setInterval(function (){
+    window.location.reload();
+  },5000);
+</script>
+</body>
+</html>

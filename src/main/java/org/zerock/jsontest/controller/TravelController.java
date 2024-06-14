@@ -1,6 +1,11 @@
 package org.zerock.jsontest.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.Getter;
+import org.springframework.beans.NullValueInNestedPathException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.support.NullValue;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,11 +15,15 @@ import org.springframework.web.client.HttpClientErrorException;
 import com.fasterxml.jackson.databind.ObjectMapper; // Jackson 라이브러리 추가 필요
 import org.zerock.jsontest.dto.ReadOneDTO;
 import org.zerock.jsontest.dto.SearchListDTO;
+import org.zerock.jsontest.dto.TravelDTO;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 
 @Controller
@@ -25,11 +34,34 @@ public class TravelController {
     SearchListDTO response1;
     ReadOneDTO response2;
 
-    @GetMapping("/search")
+
+//    @GetMapping("/home")
+//    public String home(){
+//        return
+//    }
+    public class Check {
+
+    public static String typeof(String str) {
+        if (str == null) {
+            return "null";
+        } else if (str.isEmpty()) {
+            return "empty";
+        } else if (str.contains(" ")) {
+            return "contains spaces";
+        } else {
+            return "valid";
+        }
+    }
+}
+
+    @GetMapping("/home")
     public String searchKeyword(@RequestParam(value = "keyword", required = false, defaultValue = "대구") String keyword,
-                                @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                @RequestParam(value = "numOfRows", required = false, defaultValue = "10") int numOfRows,
-                                Model model) {
+//                                @RequestParam(value = "page", required = false, defaultValue = "") int page,
+                                @RequestParam(value = "numOfRows", required = false, defaultValue = "20") int numOfRows,
+                                Model model, HttpServletRequest req) {
+        Random random = new Random();
+        int page = random.nextInt(10)+1;
+
         try {
             String encodedServiceKey = URLEncoder.encode(SERVICE_KEY, "UTF-8");
             String encodedKeyword = URLEncoder.encode(keyword, "UTF-8");
@@ -42,7 +74,24 @@ public class TravelController {
 
             response1 = new ObjectMapper().readValue(jsonResult, SearchListDTO.class);
 
-            model.addAttribute("items", response1.getResponse().getBody().getItems().getItem());
+            //검증 데이터 추가 06-14
+            // 리스트 받아서 뿌려주고 ?
+            SearchListDTO.Response.Body.Items.Item[] items = response1.getResponse().getBody().getItems().getItem();
+            List<String> imglist = new ArrayList<>();
+            System.out.println("이거실행?");
+            for(int i=0; i<items.length;i++){
+                String img = items[i].getFirstimage();
+                if(img.isEmpty()){
+                    continue;
+                }
+                imglist.add(img);
+            }
+            for(String i: imglist){
+                System.out.println(i);
+            }
+//            model.addAttribute("items", response1.getResponse().getBody().getItems().getItem());
+            //이미지 리스트 추가'
+            req.setAttribute("img", imglist);
             model.addAttribute("keyword", keyword);
             model.addAttribute("currentPage", page);
             model.addAttribute("numOfRows", numOfRows);
@@ -57,7 +106,7 @@ public class TravelController {
         } catch (Exception e) {
             model.addAttribute("error", "An unexpected error occurred: " + e.getMessage());
         }
-        return "searchresult";
+        return "home";
     }
 
     @GetMapping("/searchresultinfo")
