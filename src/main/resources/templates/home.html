@@ -31,9 +31,7 @@
     <button>Reg 18</button>
   </div>
   <div th:each="img, iterStat : ${img}" th:if="${iterStat.index < 4}" class="image-row">
-    <div>
       <img th:src="${img}" alt="Image" class="image">
-    </div>
   </div>
 </div>
 <div class="content-division gray-background content-split">
@@ -57,9 +55,14 @@
     const url = `http://localhost:8080/search?${value}`;
     window.location.href = url;
   }
-  setInterval(function (){
-    window.location.reload();
-  },5000);
+  function checkImageCount() {
+    var images = document.querySelectorAll('.image');
+  }
+
+  // 페이지 로드 시 이미지 개수 확인
+  window.onload = function() {
+    checkImageCount();
+  };
 </script>
 </body>
 </html>
