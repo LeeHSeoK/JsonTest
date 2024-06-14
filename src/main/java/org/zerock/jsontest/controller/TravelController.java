@@ -39,20 +39,7 @@ public class TravelController {
 //    public String home(){
 //        return
 //    }
-    public class Check {
 
-    public static String typeof(String str) {
-        if (str == null) {
-            return "null";
-        } else if (str.isEmpty()) {
-            return "empty";
-        } else if (str.contains(" ")) {
-            return "contains spaces";
-        } else {
-            return "valid";
-        }
-    }
-}
 
     @GetMapping("/home")
     public String searchKeyword(@RequestParam(value = "keyword", required = false, defaultValue = "대구") String keyword,
@@ -60,7 +47,7 @@ public class TravelController {
                                 @RequestParam(value = "numOfRows", required = false, defaultValue = "20") int numOfRows,
                                 Model model, HttpServletRequest req) {
         Random random = new Random();
-        int page = random.nextInt(10)+1;
+        int page = random.nextInt(3)+1;
 
         try {
             String encodedServiceKey = URLEncoder.encode(SERVICE_KEY, "UTF-8");
@@ -86,12 +73,11 @@ public class TravelController {
                 }
                 imglist.add(img);
             }
-            for(String i: imglist){
-                System.out.println(i);
-            }
+
 //            model.addAttribute("items", response1.getResponse().getBody().getItems().getItem());
             //이미지 리스트 추가'
-            req.setAttribute("img", imglist);
+            model.addAttribute("img",imglist);
+//            req.setAttribute("img", imglist);
             model.addAttribute("keyword", keyword);
             model.addAttribute("currentPage", page);
             model.addAttribute("numOfRows", numOfRows);
