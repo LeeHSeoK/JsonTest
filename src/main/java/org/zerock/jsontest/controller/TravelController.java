@@ -1,10 +1,13 @@
 package org.zerock.jsontest.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Getter;
 import org.springframework.beans.NullValueInNestedPathException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.Banner;
 import org.springframework.cache.support.NullValue;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,22 +36,15 @@ public class TravelController {
     private String SERVICE_KEY; // Replace with your actual service key
     SearchListDTO response1;
     ReadOneDTO response2;
-
-
-//    @GetMapping("/home")
-//    public String home(){
-//        return
-//    }
+    Random random = new Random();
 
 
     @GetMapping("/home")
-    public String searchKeyword(@RequestParam(value = "keyword", required = false, defaultValue = "대구") String keyword,
+    public String home(@RequestParam(value = "keyword", required = false, defaultValue = "대구") String keyword,
 //                                @RequestParam(value = "page", required = false, defaultValue = "") int page,
                                 @RequestParam(value = "numOfRows", required = false, defaultValue = "20") int numOfRows,
                                 Model model, HttpServletRequest req) {
-        Random random = new Random();
         int page = random.nextInt(3)+1;
-
         try {
             String encodedServiceKey = URLEncoder.encode(SERVICE_KEY, "UTF-8");
             String encodedKeyword = URLEncoder.encode(keyword, "UTF-8");
@@ -65,18 +61,80 @@ public class TravelController {
             // 리스트 받아서 뿌려주고 ?
             SearchListDTO.Response.Body.Items.Item[] items = response1.getResponse().getBody().getItems().getItem();
             List<String> imglist = new ArrayList<>();
+            List<String> contentlist = new ArrayList<>();
             System.out.println("이거실행?");
             for(int i=0; i<items.length;i++){
                 String img = items[i].getFirstimage();
+                String contentid = items[i].getContentid();
                 if(img.isEmpty()){
                     continue;
                 }
+
                 imglist.add(img);
+                contentlist.add(contentid);
             }
 
 //            model.addAttribute("items", response1.getResponse().getBody().getItems().getItem());
             //이미지 리스트 추가'
             model.addAttribute("img",imglist);
+            model.addAttribute("content", contentlist);
+//            req.setAttribute("img", imglist);
+            model.addAttribute("keyword", keyword);
+            model.addAttribute("currentPage", page);
+            model.addAttribute("numOfRows", numOfRows);
+            model.addAttribute("totalCount", response1.getResponse().getBody().getTotalCount());
+
+        } catch (HttpClientErrorException e) {
+            model.addAttribute("error", "API key is invalid or not registered.");
+        } catch (URISyntaxException e) {
+            model.addAttribute("error", "URI Syntax Exception: " + e.getMessage());
+        } catch (UnsupportedEncodingException e) {
+            model.addAttribute("error", "Encoding Exception: " + e.getMessage());
+        } catch (Exception e) {
+            model.addAttribute("error", "An unexpected error occurred: " + e.getMessage());
+        }
+        return "home";
+    }
+
+    @GetMapping("/search")
+    public String searchKeyword(@RequestParam(value = "keyword", required = false, defaultValue = "대구") String keyword,
+//                                @RequestParam(value = "page", required = false, defaultValue = "") int page,
+                                @RequestParam(value = "numOfRows", required = false, defaultValue = "20") int numOfRows,
+                                Model model, HttpServletRequest req) {
+        int page = random.nextInt(3)+1;
+        try {
+            String encodedServiceKey = URLEncoder.encode(SERVICE_KEY, "UTF-8");
+            String encodedKeyword = URLEncoder.encode(keyword, "UTF-8");
+            String uri = "http://apis.data.go.kr/B551011/KorService1/searchKeyword1?serviceKey=" + encodedServiceKey +
+                    "&numOfRows=" + numOfRows + "&pageNo=" + page + "&MobileOS=ETC&MobileApp=AppTest&_type=json&listYN=Y&arrange=A&keyword=" + encodedKeyword + "&contentTypeId=12";
+
+            RestTemplate restTemplate = new RestTemplate();
+            URI url = new URI(uri);
+            String jsonResult = restTemplate.getForObject(url, String.class);
+
+            response1 = new ObjectMapper().readValue(jsonResult, SearchListDTO.class);
+
+            //검증 데이터 추가 06-14
+            // 리스트 받아서 뿌려주고 ?
+            SearchListDTO.Response.Body.Items.Item[] items = response1.getResponse().getBody().getItems().getItem();
+            List<String> imglist = new ArrayList<>();
+            List<String> contentlist = new ArrayList<>();
+            System.out.println("이거실행?");
+            for(int i=0; i<items.length;i++){
+                String img = items[i].getFirstimage();
+                String contentid = items[i].getContentid();
+                if(img.isEmpty()){
+                    continue;
+                }
+
+                imglist.add(img);
+                contentlist.add(contentid);
+            }
+
+//            model.addAttribute("items", response1.getResponse().getBody().getItems().getItem());
+            //이미지 리스트 추가'
+            model.addAttribute("img",imglist);
+            model.addAttribute("content", contentlist);
 //            req.setAttribute("img", imglist);
             model.addAttribute("keyword", keyword);
             model.addAttribute("currentPage", page);

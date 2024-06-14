@@ -9,29 +9,32 @@
   <div class="title">
     <h2>Recommended Travel Destinations by Region</h2>
   </div>
-
   <div class="button-row">
-    <button onclick="redirectToNaver('대구')">Reg 1</button>
-    <button>Reg 2</button>
-    <button>Reg 3</button>
-    <button>Reg 4</button>
-    <button>Reg 5</button>
-    <button>Reg 6</button>
-    <button>Reg 7</button>
-    <button>Reg 8</button>
-    <button>Reg 9</button>
-    <button>Reg 10</button>
-    <button>Reg 11</button>
-    <button>Reg 12</button>
-    <button>Reg 13</button>
-    <button>Reg 14</button>
-    <button>Reg 15</button>
-    <button>Reg 16</button>
-    <button>Reg 17</button>
-    <button>Reg 18</button>
+    <button onclick="redirectToNaver('서울')">서울</button>
+    <button onclick="redirectToNaver('인천')">인천</button>
+    <button onclick="redirectToNaver('대전')">대전</button>
+    <button onclick="redirectToNaver('대구')">대구</button>
+    <button onclick="redirectToNaver('경기')">경기</button>
+    <button onclick="redirectToNaver('부산')">부산</button>
+    <button onclick="redirectToNaver('울산')">울산</button>
+    <button onclick="redirectToNaver('광주')">광주</button>
+    <button onclick="redirectToNaver('강원')">강원</button>
+    <button onclick="redirectToNaver('제주')">제주</button>
+    <button onclick="redirectToNaver('세종')">세종</button>
   </div>
-  <div th:each="img, iterStat : ${img}" th:if="${iterStat.index < 4}" class="image-row">
-      <img th:src="${img}" alt="Image" class="image">
+  <div class="image-row">
+    <a th:href="@{'/searchresultinfo?contentId=' + ${content[0]}}" class="image-a">
+      <img th:src="${img[0]}" alt="Image" class="image-a">
+    </a>
+    <a th:href="@{'/searchresultinfo?contentId=' + ${content[1]}}" class="image-a">
+      <img th:src="${img[1]}" alt="Image" class="image-a">
+    </a>
+    <a th:href="@{'/searchresultinfo?contentId=' + ${content[2]}}" class="image-a">
+      <img th:src="${img[2]}" alt="Image" class="image-a">
+    </a>
+    <a th:href="@{'/searchresultinfo?contentId=' + ${content[3]}}" class="image-a">
+      <img th:src="${img[3]}" alt="Image" class="image-a">
+    </a>
   </div>
 </div>
 <div class="content-division gray-background content-split">
@@ -63,6 +66,12 @@
   window.onload = function() {
     checkImageCount();
   };
+  function redirectToNaver(keyword) {
+    const url = `http://localhost:8080/search?keyword=${encodeURIComponent(keyword)}`;
+
+    // 페이지 이동
+    window.location.href = url;
+  }
 </script>
 </body>
 </html>
