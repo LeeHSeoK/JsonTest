@@ -11,4 +11,8 @@ public class TravelDTO {
     private String contentid;
     private String title;
     private String code1;
+    private String contenttypeid;
+    private String info;
+    private String address1;
+    private String address2;
 }

@@ -34,14 +34,13 @@
         <button type="submit">Search</button>
     </form>
 
-    <!-- 검색 결과 -->
     <div>
         <h1>Search Results for: <span th:text="${keyword}">Keyword</span></h1>
         <div th:if="${items}">
             <div th:each="item : ${items}">
                 <div>
                     <p th:text="${item.addr1}">Address</p>
-                    <a th:href="@{/searchresultinfo(contentId=${item.contentid})}" th:text="${item.contentid}">contentid</a>
+                    <a th:href="@{/searchresultinfo(contentId=${item.contentid}, contentTypeId=${item.contenttypeid})}" th:text="${item.contentid}">contentid</a>
                     <p th:text="${item.mapx}">Mapx</p>
                     <p th:text="${item.mapy}">Mapy</p>
                     <img th:src="${item.firstimage}" alt="Image" class="responsive">

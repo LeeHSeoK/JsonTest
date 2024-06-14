@@ -22,6 +22,10 @@ public class TravelController {
 
     @Value("${service_key}")
     private String SERVICE_KEY; // Replace with your actual service key
+
+    @Value("${kakao.map.api.key}")
+    private String KAKAO_MAP_API_KEY;
+
     SearchListDTO response1;
     ReadOneDTO response2;
 
@@ -61,13 +65,16 @@ public class TravelController {
     }
 
     @GetMapping("/searchresultinfo")
-    public String searchcontentId(@RequestParam(value = "contentId") String contentId, Model model) {
+    public String searchcontentId(@RequestParam(value = "contentId") String contentId,
+                                  @RequestParam(value = "contentTypeId") String contentTypeId, Model model) {
         try {
+
             String encodedServiceKey = URLEncoder.encode(SERVICE_KEY, "UTF-8");
             String encodedcontentid = URLEncoder.encode(contentId, "UTF-8");
+            String encodedcontenttypeid = URLEncoder.encode(contentTypeId, "UTF-8");
 
             String uri = "https://apis.data.go.kr/B551011/KorService1/detailCommon1?serviceKey=" + encodedServiceKey +
-                    "&MobileOS=ETC&MobileApp=AppTest&_type=json&contentId=" + encodedcontentid + "&contentTypeId=12" +
+                    "&MobileOS=ETC&MobileApp=AppTest&_type=json&contentId=" + encodedcontentid + "&contentTypeId="+ encodedcontenttypeid +
                     "&defaultYN=Y&firstImageYN=Y&areacodeYN=Y&catcodeYN=Y&addrinfoYN=Y&mapinfoYN=Y&overviewYN=Y&numOfRows=10&pageNo=1";
 
             RestTemplate restTemplate = new RestTemplate();
@@ -79,11 +86,17 @@ public class TravelController {
             System.out.println(response2+"===================================");
 
             model.addAttribute("item", response2.getResponse().getBody().getItems().getItem()[0]);
-
+            model.addAttribute("kakaoMapApiKey", KAKAO_MAP_API_KEY);
         } catch (Exception e) {
 
             e.printStackTrace();
         }
         return "searchresultinfo";
+    }
+
+    @GetMapping("/kakao3")
+    public String kakao3(Model model) {
+        model.addAttribute("kakaoMapApiKey", KAKAO_MAP_API_KEY);
+        return "kakao3";
     }
 }

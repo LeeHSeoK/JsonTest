@@ -20,7 +20,7 @@ public class Travel {
 
     private String code1;
 
-    private String code2;
+    private String contenttypeid;
 
     private String info;
 
