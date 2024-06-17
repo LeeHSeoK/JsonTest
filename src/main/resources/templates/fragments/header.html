@@ -1,12 +1,49 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Header</title>
+    <link th:href="@{./css/header.css}" rel="stylesheet">
 </head>
 <body>
 <div th:fragment="header">
-    <h1>헤더다헤더</h1>
+    <div class="header">
+        <nav>
+            <div class="logo">
+                <a href="/home">Logo</a>
+            </div>
+            <ul class="menu">
+                <li><a href="#home">Home</a></li>
+                <li class="dropdown">
+                    <a href="#travel" class="dropbtn">Travel</a>
+                    <div class="dropdown-content">
+                        <a href="#recommendation">Travel Recommendation</a>
+                        <a href="#ai">AI Recommendation</a>
+                    </div>
+                </li>
+                <li class="dropdown">
+                    <a href="#map" class="dropbtn">Travel Map</a>
+                    <div class="dropdown-content">
+                        <a href="#travelmap">Travel Map</a>
+                    </div>
+                </li>
+                <li class="dropdown">
+                    <a href="#board" class="dropbtn">Board</a>
+                    <div class="dropdown-content">
+                        <a href="#freeboard">Free Board</a>
+                    </div>
+                </li>
+                <li><a href="#support">Customer Service</a></li>
+            </ul>
+            <div class="search-container">
+                <input type="text" placeholder="Search..">
+                <button type="submit">Search</button>
+                <button type="button" class="login-button">Login</button>
+                <!--회원가입 버튼 생성-->
+                <button type="button" class="login-button">Signup</button>
+            </div>
+        </nav>
+    </div>
 </div>
 </body>
 </html>
