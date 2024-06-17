@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/layout1.html}">
+    <link th:href="@{./css/searchresult.css}" rel="stylesheet">
 
 <head>
     <meta charset="UTF-8">
@@ -9,7 +10,6 @@
     <style>
         body {
             margin: 0 auto;
-            max-width: 1200px; /* 최대 너비 설정 */
         }
 
         .responsive {
@@ -34,16 +34,17 @@
         <button type="submit">Search</button>
     </form>
 
+    <!-- 검색 결과 -->
     <div>
         <h1>Search Results for: <span th:text="${keyword}">Keyword</span></h1>
         <div th:if="${items}">
             <div th:each="item : ${items}">
-                <div>
+                <div class="info">
                     <p th:text="${item.addr1}">Address</p>
-                    <a th:href="@{/searchresultinfo(contentId=${item.contentid}, contentTypeId=${item.contenttypeid})}" th:text="${item.contentid}">contentid</a>
+                    <a th:href="@{/searchresultinfo(contentId=${item.contentid})}" th:text="${item.contentid}">contentid</a>
                     <p th:text="${item.mapx}">Mapx</p>
                     <p th:text="${item.mapy}">Mapy</p>
-                    <img th:src="${item.firstimage}" alt="Image" class="responsive">
+                    <img th:src="${item.firstimage}" alt="Image" class="responsive" class="image-container">
                 </div>
             </div>
         </div>
