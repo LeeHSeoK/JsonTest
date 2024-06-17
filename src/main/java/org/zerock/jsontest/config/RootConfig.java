@@ -16,4 +16,5 @@ public class RootConfig {   //enum으로 사용하면 영속성컨텍스트가 �
                 .setMatchingStrategy(MatchingStrategies.LOOSE);
         return modelMapper;
     }
+
 }

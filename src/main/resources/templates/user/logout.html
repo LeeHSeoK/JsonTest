@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/login.css">
+    <link rel="stylesheet" href="/css/styles.css">
+    <!-- Core theme JS-->
+    <script src="/js/scripts.js"></script>
+</head>
+<body>
+<div class="modal" id="complete" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">로그아웃</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>[[${complete}]]</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script th:inline="javascript">
+
+    const complete = [[${complete}]];
+    if (complete) {
+        const modal2 = new bootstrap.Modal(document.querySelector("#complete"));
+        modal2.show();
+        setTimeout(function() {
+            window.location.href = '/board/list';
+        }, 3000); // 3초 후 이동
+    }
+</script>
+</html>

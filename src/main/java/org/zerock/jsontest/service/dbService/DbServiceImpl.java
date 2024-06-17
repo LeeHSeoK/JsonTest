@@ -1,4 +1,4 @@
-package org.zerock.jsontest.service;
+package org.zerock.jsontest.service.dbService;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
