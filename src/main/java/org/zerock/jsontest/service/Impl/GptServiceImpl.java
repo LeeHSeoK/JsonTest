@@ -9,7 +9,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.zerock.jsontest.dto.TravelDTO;
-import org.zerock.jsontest.service.DbService;
+import org.zerock.jsontest.service.dbService.DbService;
 import org.zerock.jsontest.service.GptService;
 
 import java.util.*;

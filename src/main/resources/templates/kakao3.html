@@ -191,6 +191,13 @@
 <body>
 <div layout:fragment="content">
 <button id="modalOpenButton">모달창 열기</button>
+<lable for="xxx">
+    <input type="text" id="xxx" name="xxx" value=""> x좌표
+</lable>
+
+<lable for="xxx">
+    <input type="text" id="yyy" name="yyy" value=""> y좌표
+</lable>
 
 <div id="modalContainer" class="hidden">
     <div id="modalContent">
@@ -216,13 +223,14 @@
     </div>
 </div>
 
-<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoMapApiKey}&libraries=services"></script>
+<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=ef1d2aa6811f99e2d06bc35a4229086a&libraries=services"></script>
 
 <script>
     // 모달 열기/닫기 버튼 이벤트 설정
     const modalOpenButton = document.getElementById('modalOpenButton');
     const modalCloseButton = document.getElementById('modalCloseButton');
     const modal = document.getElementById('modalContainer');
+
 
     // 마커를 담을 배열입니다
     let map;
@@ -312,6 +320,10 @@
                 marker = addMarker(placePosition, i),
                 itemEl = getListItem(i, places[i]); // 검색 결과 항목 Element를 생성합니다
 
+            // console.log(placePosition.getLat())
+            // console.log(placePosition.getLat())
+
+
             // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
             // LatLngBounds 객체에 좌표를 추가합니다
             bounds.extend(placePosition);
@@ -319,29 +331,24 @@
             // 마커와 검색결과 항목에 mouseover 했을때
             // 해당 장소에 인포윈도우에 장소명을 표시합니다
             // mouseout 했을 때는 인포윈도우를 닫습니다
-            (function(marker, title) {
-                kakao.maps.event.addListener(marker, 'mouseover', function() {
-                    displayInfowindow(marker, title);
-                });
-
-                kakao.maps.event.addListener(marker, 'mouseout', function() {
-                    infowindow.close();
-                });
-
-                itemEl.onmouseover =  function () {
-                    displayInfowindow(marker, title);
-                };
-
-                itemEl.onmouseout =  function () {
-                    infowindow.close();
-                };
-
-                // info 요소 클릭 시 좌표 출력
-                itemEl.querySelector('.info').addEventListener('click', function() {
-                    alert("좌표: " + placePosition.toString());
-                });
-
-            })(marker, places[i].place_name);
+            // (function(marker, title) {
+            //     kakao.maps.event.addListener(marker, 'mouseover', function() {
+            //         displayInfowindow(marker, title);
+            //     });
+            //
+            //     kakao.maps.event.addListener(marker, 'mouseout', function() {
+            //         infowindow.close();
+            //     });
+            //
+            //     itemEl.onmouseover =  function () {
+            //         displayInfowindow(marker, title);
+            //     };
+            //
+            //     itemEl.onmouseout =  function () {
+            //         infowindow.close();
+            //     };
+            //
+            // })(marker, places[i].place_name);
 
             fragment.appendChild(itemEl);
         }
@@ -356,24 +363,25 @@
 
     // 검색결과 항목을 Element로 반환하는 함수입니다
     function getListItem(index, places) {
-
         var el = document.createElement('li'),
             itemStr = '<span class="markerbg marker_' + (index+1) + '"></span>' +
-                '<div class="info">' +
-                '   <h5>' + places.place_name + '</h5>';
-
-        if (places.road_address_name) {
-            itemStr += '    <span>' + places.road_address_name + '</span>' +
-                '   <span class="jibun gray">' +  places.address_name  + '</span>';
-        } else {
-            itemStr += '    <span>' +  places.address_name  + '</span>';
-        }
-
-        itemStr += '  <span class="tel">' + places.phone  + '</span>' +
-            '</div>';
+                '<div class="info" id="info' + (index+1) + '">' +  // 수정된 부분
+                '   <h5 id="name' + (index+1) + '">' + places.place_name + '</h5>' + // *
+                '   <span id="address' + (index+1) + '">' + (places.road_address_name || places.address_name) + '</span>' + // *
+                '   <span class="tel" id="phone' + (index+1) + '">' + places.phone + '</span>' + // *
+                '</div>';
 
         el.innerHTML = itemStr;
         el.className = 'item';
+
+        // info 요소 클릭 시 좌표 및 ID 출력
+        el.querySelector('.info').addEventListener('click', function() {
+            var placePosition = new kakao.maps.LatLng(places.y, places.x);
+            document.getElementById('xxx').value = placePosition.getLat();
+            document.getElementById('yyy').value = placePosition.getLng();
+            // document.getElementById('idInput').value = this.id;  // 추가된 부분
+            modal.classList.add('hidden');
+        });
 
         return el;
     }

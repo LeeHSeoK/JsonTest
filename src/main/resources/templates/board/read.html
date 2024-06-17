@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+
+<head>
+    <title>Board Read</title>
+</head>
+
+<div layout:fragment="content">
+    <div class="row mt-3">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    Board Read
+                </div>
+                <div class="card-body">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Bno</span>
+                        <input type="text" name="Bno" class="form-control" th:value="${dto.bno}" readonly>
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Title</span>
+                        <input type="text" name="Title" class="form-control" th:value="${dto.title}" readonly>
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Content</span>
+                        <textarea name="Content" class="form-control col-sm-5"
+                                  rows="5" readonly>[[${dto.content}]] </textarea>
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Writer</span>
+                        <input type="text" name="name" class="form-control" th:value="${dto.name}" readonly>
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">RegDate</span>
+                        <input type="text" name="regDate" class="form-control"
+                               th:value="${#temporals.format(dto.regDate, 'yyyy-MM-dd HH:mm:ss')}" readonly>
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">ModDate</span>
+                        <input type="text" name="modDate" class="form-control"
+                               th:value="${#temporals.format(dto.modDate, 'yyyy-MM-dd HH:mm:ss')}" readonly>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Xaixs</span>
+                        <input type="text" name="xaixs" class="form-control"
+                               th:value="${dto.xaixs}" readonly>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Yaixs</span>
+                        <input type="text" name="yaixs" class="form-control"
+                               th:value="${dto.yaixs}" readonly>
+                    </div>
+
+                    <div class="wrap_content">
+                        <div class="wrap_map">
+                            <div id="map" style="width:100%;height:100%"></div> <!-- 지도를 표시할 div 입니다 -->
+                            <div class="wrap_button">
+                                <a href="javascript:;" class="btn_comm btn_linkMap" target="_blank" onclick="moveKakaoMap(this)"><span
+                                        class="screen_out">지도 크게보기</span></a> <!-- 지도 크게보기 버튼입니다 -->
+                                <a href="javascript:;" class="btn_comm btn_resetMap" onclick="resetKakaoMap()"><span class="screen_out">지도 초기화</span></a>
+                                <!-- 지도 크게보기 버튼입니다 -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="my-4">
+                        <div class="float-end" th:with="link=${pageRequestDTO.getLink()}">
+                            <a th:href="|@{/board/list}?${link}|" class="text-decoration-none">
+                                <button type="button" class="btn btn-primary">List</button>
+                            </a>
+                            <a th:if="${loginSession eq dto.id}" th:href="|@{/board/modify(bno=${dto.bno})}&${link}|" class="text-decoration-none">
+                                <button type="button" class="btn btn-secondary">Modify</button>
+                            </a>
+                        </div>
+                    </div>
+                </div><!--end card body-->
+
+                <div class="col">
+                    <div class="card" th:if="${dto.fileNames!=null && dto.fileNames.size()>0}">
+                        <img class="card-img-top" th:each="fileName: ${dto.fileNames}" th:src="|/view/${fileName}|">
+                    </div>
+                </div>
+
+
+            </div><!--end card-->
+        </div><!-- end col-->
+    </div><!-- end row-->
+
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <div class="my-4">
+                    <button class="btn btn-info addReplyBtn">ADD REPLY</button>
+                </div>
+                <ul class="list-group replyList">
+
+                </ul>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col">
+                <ul class="pagination replyPaging">
+
+                </ul>
+            </div>
+        </div>
+
+        <div class="modal registerModal" tabindex="-1"> <!-- 댓글등록 모달 -->
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Register Reply</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Reply Text</span>
+                            <input type="text" class="form-control replyText" >
+                        </div>
+                        <div class="input-group mb-3" >
+                            <span class="input-group-text">name</span>
+                            <input type="text" class="form-control name" th:value="${userName}" readonly>
+                        </div>
+                        <div class="input-group mb-3" >
+                            <span class="input-group-text">id</span>
+                            <input type="text" class="form-control replyRegisterLoginSession" th:value="${loginSession}" readonly>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary registerBtn">Register</button>
+                        <button type="button" class="btn btn-outline-dark closeRegisterBtn" >Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal modifyModal" tabindex="-1"> <!-- 댓글수정 모달 -->
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title replyHeader">Modify Reply</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Modify Text</span>
+                            <input type="text" class="form-control modifyText" >
+                            <input type="text" id="loginSession" th:sessiondata="${loginSession}" hidden>
+                            <!-- session값 받아서 비교할때 사용하기 -->
+                        </div>
+                    </div>
+                    <div id="modalFooter" class="modal-footer">
+                        <button type="button" class="btn btn-primary modifyBtn">Modify</button>
+                        <button type="button" class="btn btn-danger removeBtn">Delete</button>
+<!--                        <button type="button" class="btn btn-outline-dark closeModifyBtn" >Close</button>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    <script type="text/javascript"
+            src="//dapi.kakao.com/v2/maps/sdk.js?appkey=ef1d2aa6811f99e2d06bc35a4229086a"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/js/reply.js"></script>
+</div>
+
+<script layout:fragment="script" th:inline="javascript">
+    const bno = [[${dto.bno}]]
+    const replyList = document.querySelector('.replyList')
+    const replyPaging = document.querySelector('.replyPaging')
+
+    function printlist(dtoList){    //댓글 목록 출력
+        let str=''
+        if(dtoList && dtoList.length>0){
+            for(const dto of dtoList){
+                str += `<li class="list-group-item d-flex replyItem">
+                    <span class="col-2">${dto.rno}</span>
+                    <span class="col-6" data-rno="${dto.rno}">${dto.replyText}</span>
+                    <span class="col-2">${dto.name}</span>
+                    <span class="col-2">${dto.regDate}</span>
+                    </li>`
+            }
+        }
+        replyList.innerHTML = str
+    }
+
+    function printPage(data){   //페이지 목록 출력
+        //pagination
+        let pageStr = '';
+        if(data.prev){
+            pageStr += `<li class="page-item">
+                            <a class="page-link" data-page="${data.start-1}">PREV</a>
+                        </li>`
+        }
+
+        for(let i=data.start; i<=data.end; i++){
+            pageStr += `<li class="page-item ${i==data.page?"active":""}">
+                            <a class="page-link" data-page="${i}">${i}</a>
+                        </li>`
+        }
+
+        if(data.next){
+            pageStr += `<li class="page-item">
+                            <a class="page-link" data-page="${data.end+1}">NEXT</a>
+                        </li>`
+        }
+        replyPaging.innerHTML = pageStr
+    }
+
+    function printReplies(page,size,goLast){
+        getList({bno,page,size,goLast}).then(
+            data=>{
+                printlist(data.dtoList) //목록처리
+                printPage(data)
+        }).catch(e=>{
+            console.error(e)
+        })
+    }
+
+    printReplies(0,10,true)
+
+    //댓글모달 DOM 객체변수
+    const replyText = document.querySelector('.replyText')
+    const name = document.querySelector('.name')
+    const id = document.querySelector('.replyRegisterLoginSession')
+
+    const registerModal = new bootstrap.Modal(document.querySelector(".registerModal"))
+    const registerBtn = document.querySelector(".registerBtn")
+    // const closeRegisterBtn = document.querySelector(".closeRegisterBtn")
+
+    document.querySelector(".addReplyBtn").addEventListener("click", function (e){
+        if(name.value){
+            registerModal.show()
+        }else{
+            const currentUrl = window.location.href;
+            self.location = `/user/login?redirectURL=${encodeURIComponent(currentUrl)}`;
+        }
+    },false)
+
+    // closeRegisterBtn.addEventListener("click", function (e){
+    //     registerModal.hide()
+    // },false)
+
+    registerBtn.addEventListener("click", function (e){
+        const replyObj = {bno:bno, replyText:replyText.value, name:name.value, id:id.value}
+        addReply(replyObj).then(result=>{
+            alert(result.rno)
+            registerModal.hide()
+            replyText.value = ''
+            name.value = ''
+            printReplies(0,10,true) //댓글목록갱신 마지막 댓글로이동
+        }).catch(e=>{
+            alert("Exception...")
+        })
+    }, false)
+
+    let page = 1
+    let size = 10
+    replyPaging.addEventListener("click", function (e){
+        e.preventDefault()
+        e.stopPropagation()
+        const target = e.target
+        if(!target || target.tagName != 'A'){   //하이퍼링크가 아니면
+            return
+        }
+
+        const pageNum = target.getAttribute("data-page")
+        page = pageNum
+        printReplies(page, size)
+
+    }, false)
+
+    //modifyModal
+    const modifyModal = new bootstrap.Modal(document.querySelector(".modifyModal"))
+    const modifyText = document.querySelector(".modifyText")
+    const modifyBtn = document.querySelector(".modifyBtn")
+    const removeBtn = document.querySelector(".removeBtn")
+    // const closeModifyBtn = document.querySelector(".closeModifyBtn")
+    const replyHeader = document.querySelector('.replyHeader')
+    //session을 js에서 쓰게 받아오기
+    const loginSession = document.getElementById('loginSession').getAttribute('sessiondata');
+    const modalFooter = document.getElementById('modalFooter');
+
+    // const idText = document.querySelector('.idText')
+
+
+    replyList.addEventListener("click", function (e){
+        e.preventDefault()
+        e.stopPropagation()
+        const target = e.target
+        if(!target || target.tagName != 'SPAN'){
+            return
+        }
+        const rno = target.getAttribute("data-rno")
+        if(!rno){
+            return;
+        }
+
+        getReply(rno).then(reply=>{
+            console.log(reply)
+            replyHeader.innerHTML = reply.rno
+            modifyText.value = reply.replyText
+            modifyModal.show()
+
+            //reply.id에 값과 위에 세션값이 일치하면 modalFooter출력
+            if (reply.id === loginSession) {
+                modalFooter.style.display = 'flex';
+            } else {
+                modalFooter.style.display = 'none';
+            }
+
+        }).catch(e=>alert('error'))
+    },false)
+
+    modifyBtn.addEventListener("click", function (e){
+
+        const replyObj = { rno:replyHeader.innerHTML, replyText:modifyText.value}
+        modifyReply(replyObj).then(result=>{
+            alert(result.rno+'수정됨')
+            replyText.value=''
+            modifyModal.hide()
+            printReplies(page, size)
+        }).catch(e=>{console.log(e)})
+    }, false)
+
+    // closeModifyBtn.addEventListener("click",function (e){
+    //     modifyModal.hide()
+    // }, false)
+
+    removeBtn.addEventListener("click", function (e){
+        e.stopPropagation()
+
+        removeReply(replyHeader.innerHTML).then(result=>{
+            alert(result.rno+'삭제됨')
+            replyText.value=''
+            modifyModal.hide()
+            page=1
+            printReplies(page,size)
+        }).catch(e=>{console.log(e)})
+    })
+
+    // name.addEventListener("click", function (e){
+    //     e.stopPropagation()
+    //     e.preventDefault()
+    //
+    //     if(name == null){
+    //         window.location.href='/user/login'
+    //     }
+    //
+    // })
+
+    //=====================================================================
+
+    var mapx = [[${dto.xaixs}]];
+    var mapy = [[${dto.yaixs}]];
+    var title = '[[${dto.title}]]';
+
+
+    var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+        mapCenter = new kakao.maps.LatLng(mapx, mapy), // 지도의 중심 좌표
+        mapOption = {
+            center: mapCenter, // 지도의 중심 좌표
+            level: 4 // 지도의 확대 레벨
+        };
+
+    // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
+    var map = new kakao.maps.Map(mapContainer, mapOption);
+
+    // 지도에 올릴 마커를 생성합니다.
+    var mMarker = new kakao.maps.Marker({
+        position: mapCenter, // 지도의 중심좌표에 올립니다.
+        map: map // 생성하면서 지도에 올립니다.
+    });
+
+    //지도 이동 이벤트 핸들러
+    function moveKakaoMap(self) {
+
+        var center = map.getCenter(),
+            lat = center.getLat(),
+            lng = center.getLng();
+
+        self.href = 'https://map.kakao.com/link/map/' + encodeURIComponent(title) + ',' + lat + ',' + lng; //Kakao 지도로 보내는 링크
+    }
+
+    //지도 초기화 이벤트 핸들러
+    function resetKakaoMap() {
+        map.setCenter(mapCenter); //지도를 초기화 했던 값으로 다시 셋팅합니다.
+        map.setLevel(mapOption.level);
+    }
+</script>
+</html>
