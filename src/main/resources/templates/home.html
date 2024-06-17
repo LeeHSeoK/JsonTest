@@ -1,77 +1,82 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:layout="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout1.html}">
+<!--layout:decorate에 보내줘야지 적용가능!-->
 <head>
   <meta charset="UTF-8">
   <link th:href="@{./css/main.css}" rel="stylesheet">
 </head>
 <body>
-<div class="content-division gray-background">
-  <div class="title">
-    <h2>Recommended Travel Destinations by Region</h2>
+<div layout:fragment="main">
+  <div class="content-division gray-background">
+    <div class="title">
+      <h2>Recommended Travel Destinations by Region</h2>
+    </div>
+    <div class="button-row">
+      <button onclick="redirectToNaver('서울')">서울</button>
+      <button onclick="redirectToNaver('인천')">인천</button>
+      <button onclick="redirectToNaver('대전')">대전</button>
+      <button onclick="redirectToNaver('대구')">대구</button>
+      <button onclick="redirectToNaver('경기')">경기</button>
+      <button onclick="redirectToNaver('부산')">부산</button>
+      <button onclick="redirectToNaver('울산')">울산</button>
+      <button onclick="redirectToNaver('광주')">광주</button>
+      <button onclick="redirectToNaver('강원')">강원</button>
+      <button onclick="redirectToNaver('제주')">제주</button>
+      <button onclick="redirectToNaver('세종')">세종</button>
+    </div>
+    <div class="image-row">
+      <a th:href="@{'/searchresultinfo?contentId=' + ${content[0]}}" th:unless="null" class="image-a">
+        <img th:src="${img[0]}" alt="Image" class="image-a">
+      </a>
+      <a th:href="@{'/searchresultinfo?contentId=' + ${content[1]}}"  th:unless="null" class="image-a">
+        <img th:src="${img[1]}" alt="Image" class="image-a">
+      </a>
+      <a th:href="@{'/searchresultinfo?contentId=' + ${content[2]}}"  th:unless="null" class="image-a">
+        <img th:src="${img[2]}" alt="Image" class="image-a">
+      </a>
+      <a th:href="@{'/searchresultinfo?contentId=' + ${content[3]}}"  th:unless="null" class="image-a">
+        <img th:src="${img[3]}" alt="Image" class="image-a">
+      </a>
+    </div>
   </div>
-  <div class="button-row">
-    <button onclick="redirectToNaver('서울')">서울</button>
-    <button onclick="redirectToNaver('인천')">인천</button>
-    <button onclick="redirectToNaver('대전')">대전</button>
-    <button onclick="redirectToNaver('대구')">대구</button>
-    <button onclick="redirectToNaver('경기')">경기</button>
-    <button onclick="redirectToNaver('부산')">부산</button>
-    <button onclick="redirectToNaver('울산')">울산</button>
-    <button onclick="redirectToNaver('광주')">광주</button>
-    <button onclick="redirectToNaver('강원')">강원</button>
-    <button onclick="redirectToNaver('제주')">제주</button>
-    <button onclick="redirectToNaver('세종')">세종</button>
+  <div class="content-division gray-background content-split">
+    <div class="left-side">
+      <img th:src="${notice[5]}"  th:unless="null" alt="Image" class="square-image">
+    </div>
+    <div class="right-side">
+      <h2>Notices</h2>
+      <ul class="notice-list">
+        <li><a href="#notice1">Notice 1</a></li>
+        <li><a href="#notice2">Notice 2</a></li>
+        <li><a href="#notice3">Notice 3</a></li>
+        <li><a href="#notice4">Notice 4</a></li>
+        <li><a href="#notice5">Notice 5</a></li>
+      </ul>
+    </div>
   </div>
-  <div class="image-row">
-    <a th:href="@{'/searchresultinfo?contentId=' + ${content[0]}}" class="image-a">
-      <img th:src="${img[0]}" alt="Image" class="image-a">
-    </a>
-    <a th:href="@{'/searchresultinfo?contentId=' + ${content[1]}}" class="image-a">
-      <img th:src="${img[1]}" alt="Image" class="image-a">
-    </a>
-    <a th:href="@{'/searchresultinfo?contentId=' + ${content[2]}}" class="image-a">
-      <img th:src="${img[2]}" alt="Image" class="image-a">
-    </a>
-    <a th:href="@{'/searchresultinfo?contentId=' + ${content[3]}}" class="image-a">
-      <img th:src="${img[3]}" alt="Image" class="image-a">
-    </a>
-  </div>
-</div>
-<div class="content-division gray-background content-split">
-  <div class="left-side">
-    <img src="images/sample04.jpg" class="square-image">
-  </div>
-  <div class="right-side">
-    <h2>Notices</h2>
-    <ul class="notice-list">
-      <li><a href="#notice1">Notice 1</a></li>
-      <li><a href="#notice2">Notice 2</a></li>
-      <li><a href="#notice3">Notice 3</a></li>
-      <li><a href="#notice4">Notice 4</a></li>
-      <li><a href="#notice5">Notice 5</a></li>
-    </ul>
-  </div>
-</div>
-</div>
-<script>
-  function redirectToNaver(value) {
-    const url = `http://localhost:8080/search?${value}`;
-    window.location.href = url;
-  }
-  function checkImageCount() {
-    var images = document.querySelectorAll('.image');
-  }
+  <script>
+    function redirectToNaver(value) {
+      const url = `http://localhost:8080/search?${value}`;
+      window.location.href = url;
+    }
+    function checkImageCount() {
+      var images = document.querySelectorAll('.image');
+    }
 
-  // 페이지 로드 시 이미지 개수 확인
-  window.onload = function() {
-    checkImageCount();
-  };
-  function redirectToNaver(keyword) {
-    const url = `http://localhost:8080/search?keyword=${encodeURIComponent(keyword)}`;
+    // 페이지 로드 시 이미지 개수 확인
+    window.onload = function() {
+      checkImageCount();
+    };
+    function redirectToNaver(keyword) {
+      const url = `http://localhost:8080/search?keyword=${encodeURIComponent(keyword)}`;
 
-    // 페이지 이동
-    window.location.href = url;
-  }
-</script>
+      // 페이지 이동
+      window.location.href = url;
+    }
+  </script>
+</div>
+
 </body>
 </html>

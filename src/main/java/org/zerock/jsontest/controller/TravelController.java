@@ -44,7 +44,7 @@ public class TravelController {
 //                                @RequestParam(value = "page", required = false, defaultValue = "") int page,
                                 @RequestParam(value = "numOfRows", required = false, defaultValue = "20") int numOfRows,
                                 Model model, HttpServletRequest req) {
-        int page = random.nextInt(3)+1;
+        int page = random.nextInt(1)+1;
         try {
             String encodedServiceKey = URLEncoder.encode(SERVICE_KEY, "UTF-8");
             String encodedKeyword = URLEncoder.encode(keyword, "UTF-8");
@@ -74,11 +74,16 @@ public class TravelController {
                 contentlist.add(contentid);
             }
 
+            if (imglist.isEmpty() || contentlist.isEmpty()) {
+                // 만약 필요한 데이터가 null이거나 비어있다면 다시 데이터를 받아옴
+                return "redirect:/home?keyword=" + URLEncoder.encode(keyword, "UTF-8") + "&numOfRows=" + numOfRows;
+            }
+
 //            model.addAttribute("items", response1.getResponse().getBody().getItems().getItem());
             //이미지 리스트 추가'
             model.addAttribute("img",imglist);
             model.addAttribute("content", contentlist);
-//            req.setAttribute("img", imglist);
+            req.setAttribute("notice", imglist);
             model.addAttribute("keyword", keyword);
             model.addAttribute("currentPage", page);
             model.addAttribute("numOfRows", numOfRows);
@@ -100,8 +105,8 @@ public class TravelController {
     public String searchKeyword(@RequestParam(value = "keyword", required = false, defaultValue = "대구") String keyword,
 //                                @RequestParam(value = "page", required = false, defaultValue = "") int page,
                                 @RequestParam(value = "numOfRows", required = false, defaultValue = "20") int numOfRows,
-                                Model model, HttpServletRequest req) {
-        int page = random.nextInt(3)+1;
+                                Model model, HttpServletRequest req) throws UnsupportedEncodingException {
+        int page = random.nextInt(1)+1;
         try {
             String encodedServiceKey = URLEncoder.encode(SERVICE_KEY, "UTF-8");
             String encodedKeyword = URLEncoder.encode(keyword, "UTF-8");
@@ -131,11 +136,9 @@ public class TravelController {
                 contentlist.add(contentid);
             }
 
-//            model.addAttribute("items", response1.getResponse().getBody().getItems().getItem());
-            //이미지 리스트 추가'
             model.addAttribute("img",imglist);
             model.addAttribute("content", contentlist);
-//            req.setAttribute("img", imglist);
+            model.addAttribute("notice", imglist);
             model.addAttribute("keyword", keyword);
             model.addAttribute("currentPage", page);
             model.addAttribute("numOfRows", numOfRows);
@@ -149,6 +152,7 @@ public class TravelController {
             model.addAttribute("error", "Encoding Exception: " + e.getMessage());
         } catch (Exception e) {
             model.addAttribute("error", "An unexpected error occurred: " + e.getMessage());
+            return "redirect:/home?keyword=" + URLEncoder.encode(keyword, "UTF-8") + "&numOfRows=" + numOfRows;
         }
         return "home";
     }
@@ -174,7 +178,6 @@ public class TravelController {
             model.addAttribute("item", response2.getResponse().getBody().getItems().getItem()[0]);
 
         } catch (Exception e) {
-
             e.printStackTrace();
         }
         return "searchresultinfo";

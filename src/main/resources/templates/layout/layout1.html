@@ -7,11 +7,13 @@
     <title>Title</title>
     <link th:href="@{/css/header.css}" rel="stylesheet">
     <link th:href="@{./css/footer.css}" rel="stylesheet">
+    <th:block layout:fragment="script"></th:block>
 </head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
 <div layout:fragment="content">
-
+</div>
+<div layout:fragment="main">
 </div>
 <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
