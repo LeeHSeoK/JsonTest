@@ -30,6 +30,7 @@ public interface BoardService {
                 .name(boardDTO.getName())
                 .xaixs(boardDTO.getXaixs())
                 .yaixs(boardDTO.getYaixs())
+                .placeName(boardDTO.getPlaceName())
                 .build();
 
         if(boardDTO.getFileNames() != null){
@@ -38,6 +39,7 @@ public interface BoardService {
                 board.addImage(arr[0], arr[1]);
             });
         }
+
         return board;
     }
 
@@ -52,6 +54,7 @@ public interface BoardService {
                 .modDate(board.getModDate())
                 .xaixs(board.getXaixs())
                 .yaixs(board.getYaixs())
+                .placeName(board.getPlaceName())
                 .build();
 
         List<String> fileNames = board.getImageSet().stream().sorted().map(boardImage ->

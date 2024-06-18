@@ -16,7 +16,7 @@ public class DbServiceImpl implements DbService{
     private final ModelMapper modelMapper;
     private final DbRepository dbRepository;
 
-    public TravelDTO seachOne(String title) {
+    public TravelDTO searchOne(String title) {
         String sanitizedTitle = title.replaceAll("\\s", "");
 
         // 1. 정확히 일치하는 제목을 우선 검색

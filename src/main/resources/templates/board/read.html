@@ -118,13 +118,14 @@
                         <div class="wrap_map">
                             <div id="map" style="width:100%;height:100%"></div> <!-- 지도를 표시할 div 입니다 -->
                             <div class="wrap_button">
-                                <a href="javascript:;" class="btn_comm btn_linkMap" target="_blank" onclick="moveKakaoMap(this)"><span
-                                        class="screen_out">지도 크게보기</span></a> <!-- 지도 크게보기 버튼입니다 -->
-                                <a href="javascript:;" class="btn_comm btn_resetMap" onclick="resetKakaoMap()"><span class="screen_out">지도 초기화</span></a>
-                                <!-- 지도 크게보기 버튼입니다 -->
+                                <a href="javascript:;" class="btn_comm btn_linkMap" target="_blank" onclick="moveKakaoMap(this)"><span class="screen_out">지도 크게보기</span></a> <!-- 지도 크게보기 버튼입니다 -->
+                                <a href="javascript:;" class="btn_comm btn_resetMap" onclick="resetKakaoMap()"><span class="screen_out">지도 초기화</span></a> <!-- 지도 크게보기 버튼입니다 -->
                             </div>
                         </div>
                     </div>
+
+                    <input type="text" name="likeCount" class="likeCountInput">
+                    <button class="likebutton" th:value="true">좋아요버튼</button>
 
                     <div class="my-4">
                         <div class="float-end" th:with="link=${pageRequestDTO.getLink()}">
@@ -219,8 +220,7 @@
                 </div>
             </div>
         </div>
-    <script type="text/javascript"
-            src="//dapi.kakao.com/v2/maps/sdk.js?appkey=ef1d2aa6811f99e2d06bc35a4229086a"></script>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=ef1d2aa6811f99e2d06bc35a4229086a"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/js/reply.js"></script>
 </div>
@@ -267,6 +267,7 @@
         }
         replyPaging.innerHTML = pageStr
     }
+
 
     function printReplies(page,size,goLast){
         getList({bno,page,size,goLast}).then(
@@ -410,48 +411,108 @@
     //
     // })
 
-    //=====================================================================
+    //////////////////////////////////////////////////////////////////////////// 카카오 지도
 
-    document.addEventListener('DOMContentLoaded', (event) => {
-        // DOM이 로드된 후에 실행
-        var mapx = [[${dto.xaixs}]];
-        var mapy = [[${dto.yaixs}]];
-        var title = '[[${dto.title}]]'; // 따옴표 추가
 
-        console.log("mapx: " + mapx);
-        console.log("mapy: " + mapy);
-        console.log("title: " + title);
+    var mapx = [[${dto.xaixs}]];
+    var mapy = [[${dto.yaixs}]];
+    var placeName = [[${dto.placeName}]];
 
-        var mapContainer = document.getElementById('map'); // 지도를 표시할 div
-        var mapCenter = new kakao.maps.LatLng(mapy, mapx); // 지도의 중심 좌표
-        var mapOption = {
+    var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+        mapCenter = new kakao.maps.LatLng(mapy, mapx), // 지도의 중심 좌표
+        mapOption = {
             center: mapCenter, // 지도의 중심 좌표
             level: 4 // 지도의 확대 레벨
         };
 
-        // 지도를 표시할 div와 지도 옵션으로 지도를 생성합니다
-        var map = new kakao.maps.Map(mapContainer, mapOption);
+    // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
+    var map = new kakao.maps.Map(mapContainer, mapOption);
 
-        // 지도에 올릴 마커를 생성합니다.
-        var mMarker = new kakao.maps.Marker({
-            position: mapCenter, // 지도의 중심좌표에 올립니다.
-            map: map // 생성하면서 지도에 올립니다.
-        });
-
-        // 지도 이동 이벤트 핸들러
-        function moveKakaoMap(self) {
-            var center = map.getCenter(),
-                lat = center.getLat(),
-                lng = center.getLng();
-
-            self.href = 'https://map.kakao.com/link/map/' + encodeURIComponent(title) + ',' + lat + ',' + lng; // Kakao 지도로 보내는 링크
-        }
-
-        // 지도 초기화 이벤트 핸들러
-        function resetKakaoMap() {
-            map.setCenter(mapCenter); // 지도를 초기화 했던 값으로 다시 셋팅합니다.
-            map.setLevel(mapOption.level);
-        }
+    // 지도에 올릴 마커를 생성합니다.
+    var mMarker = new kakao.maps.Marker({
+        position: mapCenter, // 지도의 중심좌표에 올립니다.
+        map: map // 생성하면서 지도에 올립니다.
     });
+
+    // 지도에 올릴 장소명 인포윈도우 입니다.
+    var mLabel = new kakao.maps.InfoWindow({
+        position: mapCenter, // 지도의 중심좌표에 올립니다.
+        content: placeName // 인포윈도우 내부에 들어갈 컨텐츠 입니다.
+    });
+    mLabel.open(map, mMarker); // 지도에 올리면서, 두번째 인자로 들어간 마커 위에 올라가도록 설정합니다.
+
+
+
+    //지도 이동 이벤트 핸들러
+    function moveKakaoMap(self){
+
+        var center = map.getCenter(),
+            lat = center.getLat(),
+            lng = center.getLng();
+
+        self.href = 'https://map.kakao.com/link/map/' + encodeURIComponent(placeName) + ',' + lat + ',' + lng; //Kakao 지도로 보내는 링크
+    }
+
+    //지도 초기화 이벤트 핸들러
+    function resetKakaoMap(){
+        map.setCenter(mapCenter); //지도를 초기화 했던 값으로 다시 셋팅합니다.
+        map.setLevel(mapOption.level);
+    }
+
+
+    //////////////////////////////////////////////////////////////////////////// 좋아요 버튼
+
+    async function get2(bno) {
+        try {
+            const result = await axios.get(`/like/${bno}`);
+            return result.data; // 응답 데이터만 반환
+        } catch (error) {
+            console.error("Error fetching like count:", error);
+            throw error;
+        }
+    }
+
+    function printCount() {
+        get2(bno).then(data => {
+            document.querySelector(".likeCountInput").value = data;
+        }).catch(e => {
+            console.error(e);
+        });
+    }
+
+    printCount();
+
+
+
+    const likeButton = document.querySelector(".likebutton");
+    likeButton.addEventListener("click", function (e) {
+        if (likeButton.value === "true") {
+            addCount(bno).then(result => {
+                alert(result.data.message); // 서버로부터의 응답 메시지를 알림으로 표시
+                updateLikeCount(result.data.likeCount); // 최신 좋아요 수를 표시
+                likeButton.value = "false";
+            }).catch(e => {
+                alert("Exception...");
+            });
+        } else {
+            minusCount(bno).then(result => {
+                alert(result.data.message); // 서버로부터의 응답 메시지를 알림으로 표시
+                updateLikeCount(result.data.likeCount); // 최신 좋아요 수를 표시
+                likeButton.value = "true";
+            }).catch(e => {
+                alert("Exception...");
+            });
+        }
+    }, false);
+
+
+    function updateLikeCount(newCount) {
+        document.querySelector(".likeCountInput").value = newCount;
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////
+
+
 </script>
 </html>

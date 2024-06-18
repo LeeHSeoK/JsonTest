@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.BatchSize;
 import org.zerock.jsontest.domain.BaseEntity;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -32,6 +33,8 @@ public class Board extends BaseEntity {
     private String xaixs;
     @Column(length=50)
     private String yaixs;
+    @Column(length=50)
+    private String placeName;
 
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
@@ -42,6 +45,10 @@ public class Board extends BaseEntity {
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @BatchSize(size=20)
     private List<Reply> replies;
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<LikeC> likes = new ArrayList<>();
+
 
     public void change(String title, String content, String name){
         this.title = title;
@@ -63,4 +70,5 @@ public class Board extends BaseEntity {
         imageSet.forEach(boardImage -> boardImage.changeBoard(null));
         this.imageSet.clear();
     }
+
 }

@@ -48,11 +48,15 @@
                         </div>
 
                         <lable for="xxx">
-                            <input type="text" id="xxx" name="xaixs" value=""> x좌표
+                            <input type="text" id="xxx" name="xaixs"> x좌표
                         </lable>
 
                         <lable for="xxx">
-                            <input type="text" id="yyy" name="yaixs" value=""> y좌표
+                            <input type="text" id="yyy" name="yaixs"> y좌표
+                        </lable>
+
+                        <lable for="placeName">
+                        <input type="text" id="placeName" name="placeName"> 장소
                         </lable>
 
                         <div class="my-4">
@@ -385,6 +389,9 @@
 
                 document.getElementById('xxx').value = xaixs;
                 document.getElementById('yyy').value = yaixs;
+
+                document.getElementById('placeName').value = places.place_name;
+
                 mapModal.hide();
             });
 

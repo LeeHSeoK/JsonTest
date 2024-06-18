@@ -27,7 +27,7 @@ public class TravelController {
     @Value("${service_key}")
     private String SERVICE_KEY; // Replace with your actual service key
 
-    @Value("${kakao.map.api.key}")
+    @Value("${kakaoApiKey}")
     private String KAKAO_MAP_API_KEY;
 
     SearchListDTO response1;
@@ -189,7 +189,7 @@ public class TravelController {
 
     @GetMapping("/kakao3")
     public String kakao3(Model model) {
-        model.addAttribute("kakaoMapApiKey", KAKAO_MAP_API_KEY);
+        model.addAttribute("kakaoApiKey", KAKAO_MAP_API_KEY);
         return "kakao3";
     }
 }

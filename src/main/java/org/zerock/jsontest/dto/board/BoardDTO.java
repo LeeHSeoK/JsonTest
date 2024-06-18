@@ -39,4 +39,5 @@ public class BoardDTO {
 
     private String yaixs;
 
+    private String placeName;
 }

@@ -65,7 +65,7 @@ public class GptServiceImpl implements GptService {
     public ResponseEntity<?> getAssistantMsg(String userMsg) throws JsonProcessingException {
         JsonNode jsonNode = callChatGpt(userMsg);
         String content = jsonNode.path("choices").get(0).path("message").path("content").asText();
-        TravelDTO travelDTO = dbService.seachOne(content);
+        TravelDTO travelDTO = dbService.searchOne(content);
         content = travelDTO.getContentid()+"_"+travelDTO.getContenttypeid();
         System.out.println(content+"=========================content");
         return ResponseEntity.status(HttpStatus.OK).body(content);

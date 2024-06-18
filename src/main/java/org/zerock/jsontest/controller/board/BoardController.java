@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.zerock.jsontest.dto.board.*;
 import org.zerock.jsontest.service.board.BoardService;
+import org.zerock.jsontest.service.board.LikeService;
 import org.zerock.jsontest.service.board.LoginService;
 
 import java.io.File;
@@ -34,6 +35,7 @@ public class BoardController {
 
     private final BoardService boardService;
     private final LoginService loginService;
+    private final LikeService likeService;
 
     @GetMapping("list")
     public void list(PageRequestDTO pageRequestDTO, Model model) {
@@ -59,6 +61,7 @@ public class BoardController {
 
         System.out.println(boardDTO.toString()+"==============================boardDTO");
         Long bno = boardService.register(boardDTO);
+        likeService.registerLike(bno);
         redirectAttributes.addFlashAttribute("result", bno);
         return "redirect:/board/list";
     }
@@ -130,4 +133,5 @@ public class BoardController {
             }
         }
     }
+
 }

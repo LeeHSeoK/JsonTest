@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.zerock.jsontest.dto.board.LikeDTO;
 import org.zerock.jsontest.dto.board.PageRequestDTO;
 import org.zerock.jsontest.dto.board.PageResponseDTO;
 import org.zerock.jsontest.dto.board.ReplyDTO;
@@ -72,4 +73,5 @@ public class ReplyController {
         return resultMap;
 
     }
+
 }
