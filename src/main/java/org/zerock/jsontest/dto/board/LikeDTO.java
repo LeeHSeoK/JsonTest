@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+//좋아요 카운트를 받아오는 DTO
 @Data
 @Builder
 @AllArgsConstructor

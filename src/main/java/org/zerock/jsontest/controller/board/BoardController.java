@@ -61,6 +61,7 @@ public class BoardController {
 
         System.out.println(boardDTO.toString()+"==============================boardDTO");
         Long bno = boardService.register(boardDTO);
+        //게시판 작성시 해당 게시글에 대한 좋아요 수 DB도 작성한다.
         likeService.registerLike(bno);
         redirectAttributes.addFlashAttribute("result", bno);
         return "redirect:/board/list";

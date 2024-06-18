@@ -16,6 +16,7 @@ public class DbServiceImpl implements DbService{
     private final ModelMapper modelMapper;
     private final DbRepository dbRepository;
 
+    //OpenAI를 통해 받아온 값을 가지고 DB에서 찾아서 출력
     public TravelDTO searchOne(String title) {
         String sanitizedTitle = title.replaceAll("\\s", "");
 
