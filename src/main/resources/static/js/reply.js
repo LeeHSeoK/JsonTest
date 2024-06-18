@@ -1,3 +1,22 @@
+
+//////////////////////////////////////////////////////좋아요버튼
+async function get2(bno) {
+    const result = await axios.get(`/like/${bno}`)
+    return result
+}
+
+async function addCount(bno) {
+    const result = await axios.post(`/like/${bno}`);
+    return result;
+}
+
+async function minusCount(bno) {
+    const result = await axios.post(`/dislike/${bno}`);
+    return result;
+}
+
+////////////////////////////////////////////////////////
+
 async function get1(bno){
     const result = await axios.get(`/replies/list/${bno}`)  //비동기
     return result
