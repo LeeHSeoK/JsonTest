@@ -3,6 +3,8 @@ package org.zerock.jsontest.domain.board;
 import jakarta.persistence.*;
 import lombok.*;
 
+
+//게시글에 대한 좋아요 카운트 DB
 @Entity
 @Getter
 @Builder

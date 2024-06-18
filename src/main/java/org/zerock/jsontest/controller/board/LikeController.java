@@ -19,11 +19,13 @@ public class LikeController {
     private final LikeService likeService;
     private final LikeUserService likeUserService;
 
+    //게시글을 열면 좋아요 카운트도 함께 출력(비동기)
     @GetMapping(value = "/like/{bno}")
     public Long getCount(@PathVariable("bno") Long bno) {
         return likeService.getLikeCount(bno);
     }
 
+    //좋아요 버튼 클릭시 +1 카운트 , 값을 DB에 저장
     @PostMapping(value = "/like/{bno}")
     public ResponseEntity<Map<String, Object>> incrementLikeCount(@PathVariable("bno") Long bno, HttpSession session) {
         try {
@@ -33,7 +35,6 @@ public class LikeController {
                     .id(loginSession)
                     .build();
             likeUserService.registerUserLike(likeUserDTO);
-
 
             Long newLikeCount = likeService.incrementLikeCount(bno);
             Map<String, Object> response = new HashMap<>();
@@ -45,6 +46,7 @@ public class LikeController {
         }
     }
 
+    //좋아요 버튼이 이미 눌렸다면 한번 더 눌렀을때 -1 카운트 값을 DB에 저장
     @PostMapping(value = "/dislike/{bno}")
     public ResponseEntity<Map<String, Object>> decrementLikeCount(@PathVariable("bno") Long bno) {
         try {

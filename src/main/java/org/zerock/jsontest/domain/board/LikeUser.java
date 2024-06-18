@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+//좋아요 버튼을 사용자가 눌렀는지 기억하는 DB
 @Entity
 @Getter
 @Builder

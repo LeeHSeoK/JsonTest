@@ -2,6 +2,8 @@ package org.zerock.jsontest.dto;
 
 import lombok.*;
 
+
+// 공공기관 API 중 필요한 부분만 가져온 DTO
 @Builder
 @Getter
 @Setter

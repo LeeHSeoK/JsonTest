@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+//유저와 게시글에 대한 좋아요 클릭여부 확인 DTO
 @Data
 @Builder
 @AllArgsConstructor

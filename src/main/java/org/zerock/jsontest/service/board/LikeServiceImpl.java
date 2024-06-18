@@ -18,6 +18,7 @@ public class LikeServiceImpl implements LikeService {
     private final BoardRepository boardRepository;
     private final ModelMapper modelMapper;
 
+    //게시글에 대한 좋아요 수 출력
     @Override
     public Long getLikeCount(Long bno) {
         Optional<LikeC> result = likeRepository.findByBoard_Bno(bno);
@@ -25,6 +26,8 @@ public class LikeServiceImpl implements LikeService {
         return like.getLikeCount();
     }
 
+
+    //게시글 작성시 좋아요 DB 초기화
     @Override
     public void registerLike(Long bno) {
         Board board = boardRepository.findById(bno)
@@ -45,6 +48,8 @@ public class LikeServiceImpl implements LikeService {
 //        likeRepository.save(like);
 //    }
 
+
+    //좋아요 클릭시 1증가
     @Override
     public Long incrementLikeCount(Long bno) {
         Optional<LikeC> result = likeRepository.findByBoard_Bno(bno);
@@ -54,6 +59,7 @@ public class LikeServiceImpl implements LikeService {
         return like.getLikeCount();
     }
 
+    //좋아요 재클릭시 1감소
     @Override
     public Long decrementLikeCount(Long bno) {
         Optional<LikeC> result = likeRepository.findByBoard_Bno(bno);
