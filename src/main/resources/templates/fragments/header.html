@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Header</title>
+    <title>구석구석 proto</title>
     <link th:href="@{./css/header.css}" rel="stylesheet">
 </head>
 <body>
@@ -13,12 +13,12 @@
                 <a href="/home">Logo</a>
             </div>
             <ul class="menu">
-                <li><a href="#home">Home</a></li>
+                <li><a href="/home">Home</a></li>
                 <li class="dropdown">
                     <a href="#travel" class="dropbtn">Travel</a>
                     <div class="dropdown-content">
                         <a href="#recommendation">Travel Recommendation</a>
-                        <a href="#ai">AI Recommendation</a>
+                        <a href="/api/v1/gpt">AI Recommendation</a>
                     </div>
                 </li>
                 <li class="dropdown">
@@ -38,9 +38,13 @@
             <div class="search-container">
                 <input type="text" placeholder="Search..">
                 <button type="submit">Search</button>
-                <button type="button" class="login-button">Login</button>
+                <a href="/user/login">
+                    <button type="button" class="login-button">Login</button>
+                </a>
                 <!--회원가입 버튼 생성-->
-                <button type="button" class="login-button">Signup</button>
+                <a href="/user/signup">
+                    <button type="button" class="login-button">Signup</button>
+                </a>
             </div>
         </nav>
     </div>

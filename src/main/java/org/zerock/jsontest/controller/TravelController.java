@@ -52,18 +52,20 @@ public class TravelController {
             response1 = new ObjectMapper().readValue(jsonResult, SearchListDTO.class);
 
             //검증 데이터 추가 06-14
-            // 리스트 받아서 뿌려주고 ?
             SearchListDTO.Response.Body.Items.Item[] items = response1.getResponse().getBody().getItems().getItem();
+            //해쉬맵 해보기 수정 중
             List<String> imglist = new ArrayList<>();
             List<String> contentlist = new ArrayList<>();
+            List<String> contenttypeidlist = new ArrayList<>();
             System.out.println("이거실행?");
             for(int i=0; i<items.length;i++){
                 String img = items[i].getFirstimage();
                 String contentid = items[i].getContentid();
+                String contenttypeid = items[i].getContenttypeid();
                 if(img.isEmpty()){
                     continue;
                 }
-
+                contenttypeidlist.add(contenttypeid);
                 imglist.add(img);
                 contentlist.add(contentid);
             }
@@ -73,15 +75,10 @@ public class TravelController {
                 return "redirect:/home?keyword=" + URLEncoder.encode(keyword, "UTF-8") + "&numOfRows=" + numOfRows;
             }
 
-//            model.addAttribute("items", response1.getResponse().getBody().getItems().getItem());
-            //이미지 리스트 추가'
             model.addAttribute("img",imglist);
             model.addAttribute("content", contentlist);
             req.setAttribute("notice", imglist);
-            model.addAttribute("keyword", keyword);
-            model.addAttribute("currentPage", page);
-            model.addAttribute("numOfRows", numOfRows);
-            model.addAttribute("totalCount", response1.getResponse().getBody().getTotalCount());
+            model.addAttribute("contenttype", contenttypeidlist);
 
         } catch (HttpClientErrorException e) {
             model.addAttribute("error", "API key is invalid or not registered.");
@@ -114,7 +111,6 @@ public class TravelController {
             response1 = new ObjectMapper().readValue(jsonResult, SearchListDTO.class);
 
             //검증 데이터 추가 06-14
-            // 리스트 받아서 뿌려주고 ?
             SearchListDTO.Response.Body.Items.Item[] items = response1.getResponse().getBody().getItems().getItem();
             List<String> imglist = new ArrayList<>();
             List<String> contentlist = new ArrayList<>();
@@ -123,13 +119,10 @@ public class TravelController {
             for(int i=0; i<items.length;i++){
                 String img = items[i].getFirstimage();
                 String contentid = items[i].getContentid();
-//수정
-//                String contenttypeid = items[i].getContenttypeid();
-                if(img.isEmpty()){
-                    continue;
-                }
-//수정
-//                contenttypeidlist.add(contenttypeid);
+                String contenttypeid = items[i].getContenttypeid();
+
+                if(img.isEmpty()){continue;}
+                contenttypeidlist.add(contenttypeid);
                 imglist.add(img);
                 contentlist.add(contentid);
             }
@@ -137,12 +130,10 @@ public class TravelController {
             model.addAttribute("img",imglist);
             model.addAttribute("content", contentlist);
             model.addAttribute("notice", imglist);
-            model.addAttribute("keyword", keyword);
-            model.addAttribute("currentPage", page);
-            model.addAttribute("numOfRows", numOfRows);
-//수정
-//            model.addAttribute("contentTypeId",contenttypeidlist);
-            model.addAttribute("totalCount", response1.getResponse().getBody().getTotalCount());
+            model.addAttribute("contenttype", contenttypeidlist);
+//            model.addAttribute("currentPage", page);
+//            model.addAttribute("numOfRows", numOfRows);
+////            model.addAttribute("totalCount", response1.getResponse().getBody().getTotalCount());
 
         } catch (HttpClientErrorException e) {
             model.addAttribute("error", "API key is invalid or not registered.");
