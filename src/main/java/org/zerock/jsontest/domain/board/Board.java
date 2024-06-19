@@ -46,6 +46,7 @@ public class Board extends BaseEntity {
     @BatchSize(size=20)
     private List<Reply> replies;
 
+    @Builder.Default
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<LikeC> likes = new ArrayList<>();
 

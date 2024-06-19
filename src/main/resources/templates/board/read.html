@@ -125,7 +125,7 @@
                     </div>
 
                     <input type="text" name="likeCount" class="likeCountInput">
-                    <button class="likebutton" th:value="true">좋아요버튼</button>
+                    <button th:if="${loginSession != null}" class="likebutton" th:value="true">좋아요버튼</button>
 
                     <div class="my-4">
                         <div class="float-end" th:with="link=${pageRequestDTO.getLink()}">

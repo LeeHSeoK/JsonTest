@@ -22,6 +22,7 @@ public class LikeC {
     private Board board; // LikeC 엔티티에서 Board 엔티티를 참조합니다.
 
     @Column(nullable = false)
+    @Builder.Default
     private Long likeCount = 0L;
 
     // 좋아요 수 변경 메서드
