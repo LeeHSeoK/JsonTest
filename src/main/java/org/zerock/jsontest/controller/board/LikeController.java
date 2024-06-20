@@ -22,16 +22,35 @@ public class LikeController {
     private final LikeUserService likeUserService;
 
     //게시글을 열면 좋아요 카운트도 함께 출력(비동기)
+    // 게시글을 열면 좋아요 카운트와 좋아요 상태를 함께 반환
     @GetMapping(value = "/like/{bno}")
-    public Long getCount(@PathVariable("bno") Long bno) {
-        return likeService.getLikeCount(bno);
+    public ResponseEntity<Map<String, Object>> getCount(@PathVariable("bno") Long bno, HttpSession session) {
+        Map<String, Object> response = new HashMap<>();
+        String loginSession = (String) session.getAttribute("loginSession");
+
+        Long likeCount = likeService.getLikeCount(bno);
+        response.put("likeCount", likeCount);
+
+        if (loginSession != null) {
+            LikeUserDTO likeUserDTO = LikeUserDTO.builder()
+                    .bno(bno)
+                    .id(loginSession)
+                    .build();
+            boolean likeUserAlready = likeUserService.searchLikeUser(likeUserDTO);
+            response.put("likeStatus", likeUserAlready);
+        } else {
+            response.put("likeStatus", false);
+        }
+
+        return ResponseEntity.ok(response);
     }
 
     //좋아요 버튼 클릭시 +1 카운트 , 값을 DB에 저장
     @PostMapping(value = "/like/{bno}")
     public ResponseEntity<Map<String, Object>> incrementLikeCount(@PathVariable("bno") Long bno, HttpSession session) {
         try {
-            //좋아요 버튼 누른 유저 체크
+            //좋아요 버튼 누른 유저 체크'
+
             String loginSession = (String) session.getAttribute("loginSession");
             System.out.println("로그인 세션: " + loginSession);
             LikeUserDTO likeUserDTO = LikeUserDTO.builder()
@@ -49,6 +68,7 @@ public class LikeController {
             Map<String, Object> response = new HashMap<>();
             response.put("message", "좋아욘!");
             response.put("likeCount", newLikeCount);
+            response.put("likeStatus", true);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("message", "Failed to increment like count"));
@@ -76,6 +96,7 @@ public class LikeController {
             Map<String, Object> response = new HashMap<>();
             response.put("message", "좋아욘취소!");
             response.put("likeCount", newLikeCount);
+            response.put("likeStatus", false);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("message", "Failed to increment like count"));

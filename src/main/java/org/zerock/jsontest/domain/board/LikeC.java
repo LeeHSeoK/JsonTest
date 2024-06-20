@@ -15,7 +15,7 @@ public class LikeC {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // LikeC 엔티티의 기본 키
+    private Long increasekey; // LikeC 엔티티의 기본 키
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bno") // JoinColumn을 통해 외래 키를 지정합니다.

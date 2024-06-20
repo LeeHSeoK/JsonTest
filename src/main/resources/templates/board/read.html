@@ -4,6 +4,8 @@
       layout:decorate="~{layout/basic.html}">
 
 <head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
     <title>Board Read</title>
     <style>
         body {
@@ -103,36 +105,40 @@
                     </div>
 
                     <div class="input-group mb-3">
-                        <span class="input-group-text">Xaixs</span>
-                        <input type="text" name="xaixs" class="form-control"
-                               th:value="${dto.xaixs}" readonly>
+                        <span class="input-group-text">Xaxis</span>
+                        <input type="text" name="xaxis" class="form-control"
+                               th:value="${dto.xaxis}" readonly>
                     </div>
 
                     <div class="input-group mb-3">
-                        <span class="input-group-text">Yaixs</span>
-                        <input type="text" name="yaixs" class="form-control"
-                               th:value="${dto.yaixs}" readonly>
+                        <span class="input-group-text">Yaxis</span>
+                        <input type="text" name="yaxis" class="form-control"
+                               th:value="${dto.yaxis}" readonly>
                     </div>
 
                     <div class="wrap_content">
                         <div class="wrap_map">
                             <div id="map" style="width:100%;height:100%"></div> <!-- 지도를 표시할 div 입니다 -->
                             <div class="wrap_button">
-                                <a href="javascript:;" class="btn_comm btn_linkMap" target="_blank" onclick="moveKakaoMap(this)"><span class="screen_out">지도 크게보기</span></a> <!-- 지도 크게보기 버튼입니다 -->
-                                <a href="javascript:;" class="btn_comm btn_resetMap" onclick="resetKakaoMap()"><span class="screen_out">지도 초기화</span></a> <!-- 지도 크게보기 버튼입니다 -->
+                                <a href="javascript:;" class="btn_comm btn_linkMap" target="_blank"
+                                   onclick="moveKakaoMap(this)"><span class="screen_out">지도 크게보기</span></a>
+                                <!-- 지도 크게보기 버튼입니다 -->
+                                <a href="javascript:;" class="btn_comm btn_resetMap" onclick="resetKakaoMap()"><span
+                                        class="screen_out">지도 초기화</span></a> <!-- 지도 크게보기 버튼입니다 -->
                             </div>
                         </div>
                     </div>
 
                     <input type="text" name="likeCount" class="likeCountInput">
-                    <button th:if="${loginSession != null}" class="likebutton" th:value="true">좋아요버튼</button>
+                    <button th:if="${loginSession != null}" class="likebutton" th:value="true" readonly>좋아요 버튼</button>
 
                     <div class="my-4">
                         <div class="float-end" th:with="link=${pageRequestDTO.getLink()}">
                             <a th:href="|@{/board/list}?${link}|" class="text-decoration-none">
                                 <button type="button" class="btn btn-primary">List</button>
                             </a>
-                            <a th:if="${loginSession eq dto.id}" th:href="|@{/board/modify(bno=${dto.bno})}&${link}|" class="text-decoration-none">
+                            <a th:if="${loginSession eq dto.id}" th:href="|@{/board/modify(bno=${dto.bno})}&${link}|"
+                               class="text-decoration-none">
                                 <button type="button" class="btn btn-secondary">Modify</button>
                             </a>
                         </div>
@@ -150,77 +156,79 @@
         </div><!-- end col-->
     </div><!-- end row-->
 
-        <div class="row mt-3">
-            <div class="col-md-12">
-                <div class="my-4">
-                    <button class="btn btn-info addReplyBtn">ADD REPLY</button>
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <div class="my-4">
+                <button class="btn btn-info addReplyBtn">ADD REPLY</button>
+            </div>
+            <ul class="list-group replyList">
+
+            </ul>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col">
+            <ul class="pagination replyPaging">
+
+            </ul>
+        </div>
+    </div>
+
+    <div class="modal registerModal" tabindex="-1"> <!-- 댓글등록 모달 -->
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Register Reply</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <ul class="list-group replyList">
-
-                </ul>
-            </div>
-        </div>
-        <div class="row mt-3">
-            <div class="col">
-                <ul class="pagination replyPaging">
-
-                </ul>
-            </div>
-        </div>
-
-        <div class="modal registerModal" tabindex="-1"> <!-- 댓글등록 모달 -->
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Register Reply</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Reply Text</span>
+                        <input type="text" class="form-control replyText">
                     </div>
-                    <div class="modal-body">
-                        <div class="input-group mb-3">
-                            <span class="input-group-text">Reply Text</span>
-                            <input type="text" class="form-control replyText" >
-                        </div>
-                        <div class="input-group mb-3" >
-                            <span class="input-group-text">name</span>
-                            <input type="text" class="form-control name" th:value="${userName}" readonly>
-                        </div>
-                        <div class="input-group mb-3" >
-                            <span class="input-group-text">id</span>
-                            <input type="text" class="form-control replyRegisterLoginSession" th:value="${loginSession}" readonly>
-                        </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">name</span>
+                        <input type="text" class="form-control name" th:value="${userName}" readonly>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary registerBtn">Register</button>
-                        <button type="button" class="btn btn-outline-dark closeRegisterBtn" >Close</button>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">id</span>
+                        <input type="text" class="form-control replyRegisterLoginSession" th:value="${loginSession}"
+                               readonly>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <div class="modal modifyModal" tabindex="-1"> <!-- 댓글수정 모달 -->
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title replyHeader">Modify Reply</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="input-group mb-3">
-                            <span class="input-group-text">Modify Text</span>
-                            <input type="text" class="form-control modifyText" >
-                            <input type="text" id="loginSession" th:sessiondata="${loginSession}" hidden>
-                            <!-- session값 받아서 비교할때 사용하기 -->
-                        </div>
-                    </div>
-                    <div id="modalFooter" class="modal-footer">
-                        <button type="button" class="btn btn-primary modifyBtn">Modify</button>
-                        <button type="button" class="btn btn-danger removeBtn">Delete</button>
-<!--                        <button type="button" class="btn btn-outline-dark closeModifyBtn" >Close</button>-->
-                    </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary registerBtn">Register</button>
+                    <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>
                 </div>
             </div>
         </div>
-    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=ef1d2aa6811f99e2d06bc35a4229086a"></script>
+    </div>
+
+    <div class="modal modifyModal" tabindex="-1"> <!-- 댓글수정 모달 -->
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title replyHeader">Modify Reply</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">Modify Text</span>
+                        <input type="text" class="form-control modifyText">
+                        <input type="text" id="loginSession" th:sessiondata="${loginSession}" hidden>
+                        <!-- session값 받아서 비교할때 사용하기 -->
+                    </div>
+                </div>
+                <div id="modalFooter" class="modal-footer">
+                    <button type="button" class="btn btn-primary modifyBtn">Modify</button>
+                    <button type="button" class="btn btn-danger removeBtn">Delete</button>
+                    <!--                        <button type="button" class="btn btn-outline-dark closeModifyBtn" >Close</button>-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript"
+            src="//dapi.kakao.com/v2/maps/sdk.js?appkey=ef1d2aa6811f99e2d06bc35a4229086a"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/js/reply.js"></script>
 </div>
@@ -230,10 +238,10 @@
     const replyList = document.querySelector('.replyList')
     const replyPaging = document.querySelector('.replyPaging')
 
-    function printlist(dtoList){    //댓글 목록 출력
-        let str=''
-        if(dtoList && dtoList.length>0){
-            for(const dto of dtoList){
+    function printlist(dtoList) {    //댓글 목록 출력
+        let str = ''
+        if (dtoList && dtoList.length > 0) {
+            for (const dto of dtoList) {
                 str += `<li class="list-group-item d-flex replyItem">
                     <span class="col-2">${dto.rno}</span>
                     <span class="col-6" data-rno="${dto.rno}">${dto.replyText}</span>
@@ -245,41 +253,41 @@
         replyList.innerHTML = str
     }
 
-    function printPage(data){   //페이지 목록 출력
+    function printPage(data) {   //페이지 목록 출력
         //pagination
         let pageStr = '';
-        if(data.prev){
+        if (data.prev) {
             pageStr += `<li class="page-item">
-                            <a class="page-link" data-page="${data.start-1}">PREV</a>
+                            <a class="page-link" data-page="${data.start - 1}">PREV</a>
                         </li>`
         }
 
-        for(let i=data.start; i<=data.end; i++){
-            pageStr += `<li class="page-item ${i==data.page?"active":""}">
+        for (let i = data.start; i <= data.end; i++) {
+            pageStr += `<li class="page-item ${i == data.page ? "active" : ""}">
                             <a class="page-link" data-page="${i}">${i}</a>
                         </li>`
         }
 
-        if(data.next){
+        if (data.next) {
             pageStr += `<li class="page-item">
-                            <a class="page-link" data-page="${data.end+1}">NEXT</a>
+                            <a class="page-link" data-page="${data.end + 1}">NEXT</a>
                         </li>`
         }
         replyPaging.innerHTML = pageStr
     }
 
 
-    function printReplies(page,size,goLast){
-        getList({bno,page,size,goLast}).then(
-            data=>{
+    function printReplies(page, size, goLast) {
+        getList({bno, page, size, goLast}).then(
+            data => {
                 printlist(data.dtoList) //목록처리
                 printPage(data)
-        }).catch(e=>{
+            }).catch(e => {
             console.error(e)
         })
     }
 
-    printReplies(0,10,true)
+    printReplies(0, 10, true)
 
     //댓글모달 DOM 객체변수
     const replyText = document.querySelector('.replyText')
@@ -290,39 +298,35 @@
     const registerBtn = document.querySelector(".registerBtn")
     // const closeRegisterBtn = document.querySelector(".closeRegisterBtn")
 
-    document.querySelector(".addReplyBtn").addEventListener("click", function (e){
-        if(name.value){
+    document.querySelector(".addReplyBtn").addEventListener("click", function (e) {
+        if (name.value) {
             registerModal.show()
-        }else{
+        } else {
             const currentUrl = window.location.href;
             self.location = `/user/login?redirectURL=${encodeURIComponent(currentUrl)}`;
         }
-    },false)
+    }, false)
 
-    // closeRegisterBtn.addEventListener("click", function (e){
-    //     registerModal.hide()
-    // },false)
-
-    registerBtn.addEventListener("click", function (e){
-        const replyObj = {bno:bno, replyText:replyText.value, name:name.value, id:id.value}
-        addReply(replyObj).then(result=>{
+    registerBtn.addEventListener("click", function (e) {
+        const replyObj = {bno: bno, replyText: replyText.value, name: name.value, id: id.value}
+        addReply(replyObj).then(result => {
             alert(result.rno)
             registerModal.hide()
             replyText.value = ''
             name.value = ''
-            printReplies(0,10,true) //댓글목록갱신 마지막 댓글로이동
-        }).catch(e=>{
+            printReplies(0, 10, true) //댓글목록갱신 마지막 댓글로이동
+        }).catch(e => {
             alert("Exception...")
         })
     }, false)
 
     let page = 1
     let size = 10
-    replyPaging.addEventListener("click", function (e){
+    replyPaging.addEventListener("click", function (e) {
         e.preventDefault()
         e.stopPropagation()
         const target = e.target
-        if(!target || target.tagName != 'A'){   //하이퍼링크가 아니면
+        if (!target || target.tagName != 'A') {   //하이퍼링크가 아니면
             return
         }
 
@@ -346,19 +350,19 @@
     // const idText = document.querySelector('.idText')
 
 
-    replyList.addEventListener("click", function (e){
+    replyList.addEventListener("click", function (e) {
         e.preventDefault()
         e.stopPropagation()
         const target = e.target
-        if(!target || target.tagName != 'SPAN'){
+        if (!target || target.tagName != 'SPAN') {
             return
         }
         const rno = target.getAttribute("data-rno")
-        if(!rno){
+        if (!rno) {
             return;
         }
 
-        getReply(rno).then(reply=>{
+        getReply(rno).then(reply => {
             console.log(reply)
             replyHeader.innerHTML = reply.rno
             modifyText.value = reply.replyText
@@ -371,51 +375,43 @@
                 modalFooter.style.display = 'none';
             }
 
-        }).catch(e=>alert('error'))
-    },false)
-
-    modifyBtn.addEventListener("click", function (e){
-
-        const replyObj = { rno:replyHeader.innerHTML, replyText:modifyText.value}
-        modifyReply(replyObj).then(result=>{
-            alert(result.rno+'수정됨')
-            replyText.value=''
-            modifyModal.hide()
-            printReplies(page, size)
-        }).catch(e=>{console.log(e)})
+        }).catch(e => alert('error'))
     }, false)
 
-    // closeModifyBtn.addEventListener("click",function (e){
-    //     modifyModal.hide()
-    // }, false)
+    modifyBtn.addEventListener("click", function (e) {
 
-    removeBtn.addEventListener("click", function (e){
+        const replyObj = {rno: replyHeader.innerHTML, replyText: modifyText.value}
+        modifyReply(replyObj).then(result => {
+            alert(result.rno + '수정됨')
+            replyText.value = ''
+            modifyModal.hide()
+            printReplies(page, size)
+        }).catch(e => {
+            console.log(e)
+        })
+    }, false)
+
+
+    removeBtn.addEventListener("click", function (e) {
         e.stopPropagation()
 
-        removeReply(replyHeader.innerHTML).then(result=>{
-            alert(result.rno+'삭제됨')
-            replyText.value=''
+        removeReply(replyHeader.innerHTML).then(result => {
+            alert(result.rno + '삭제됨')
+            replyText.value = ''
             modifyModal.hide()
-            page=1
-            printReplies(page,size)
-        }).catch(e=>{console.log(e)})
+            page = 1
+            printReplies(page, size)
+        }).catch(e => {
+            console.log(e)
+        })
     })
 
-    // name.addEventListener("click", function (e){
-    //     e.stopPropagation()
-    //     e.preventDefault()
-    //
-    //     if(name == null){
-    //         window.location.href='/user/login'
-    //     }
-    //
-    // })
 
     //////////////////////////////////////////////////////////////////////////// 카카오 지도
 
 
-    var mapx = [[${dto.xaixs}]];
-    var mapy = [[${dto.yaixs}]];
+    var mapx = [[${dto.xaxis}]];
+    var mapy = [[${dto.yaxis}]];
     var placeName = [[${dto.placeName}]];
 
     var mapContainer = document.getElementById('map'), // 지도를 표시할 div
@@ -442,9 +438,8 @@
     mLabel.open(map, mMarker); // 지도에 올리면서, 두번째 인자로 들어간 마커 위에 올라가도록 설정합니다.
 
 
-
     //지도 이동 이벤트 핸들러
-    function moveKakaoMap(self){
+    function moveKakaoMap(self) {
 
         var center = map.getCenter(),
             lat = center.getLat(),
@@ -454,7 +449,7 @@
     }
 
     //지도 초기화 이벤트 핸들러
-    function resetKakaoMap(){
+    function resetKakaoMap() {
         map.setCenter(mapCenter); //지도를 초기화 했던 값으로 다시 셋팅합니다.
         map.setLevel(mapOption.level);
     }
@@ -462,35 +457,36 @@
 
     //////////////////////////////////////////////////////////////////////////// 좋아요 버튼
 
-    async function get2(bno) {
-        try {
-            const result = await axios.get(`/like/${bno}`);
-            return result.data; // 응답 데이터만 반환
-        } catch (error) {
-            console.error("Error fetching like count:", error);
-            throw error;
-        }
-    }
-
-    function printCount() {
-        get2(bno).then(data => {
-            document.querySelector(".likeCountInput").value = data;
+    function initialize() {
+        getLikeInfo(bno).then(data => {
+            updateLikeCount(data.likeCount);
+            setLikeButtonStatus(data.likeStatus);
         }).catch(e => {
             console.error(e);
         });
     }
 
-    printCount();
+    initialize();
 
+    function setLikeButtonStatus(status) {
+        const likeButton = document.querySelector(".likebutton");
+        likeButton.value = status ? "true" : "false";
+        likeButton.textContent = status ? "좋아요 취소" : "좋아요";
+    }
+
+
+    function updateLikeCount(newCount) {
+        document.querySelector(".likeCountInput").value = newCount;
+    }
 
 
     const likeButton = document.querySelector(".likebutton");
     likeButton.addEventListener("click", function (e) {
-        if (likeButton.value === "true") {
+        if (likeButton.value === "false") {
             addCount(bno).then(result => {
                 alert(result.data.message); // 서버로부터의 응답 메시지를 알림으로 표시
                 updateLikeCount(result.data.likeCount); // 최신 좋아요 수를 표시
-                likeButton.value = "false";
+                setLikeButtonStatus(true);
             }).catch(e => {
                 alert("Exception...");
             });
@@ -498,17 +494,12 @@
             minusCount(bno).then(result => {
                 alert(result.data.message); // 서버로부터의 응답 메시지를 알림으로 표시
                 updateLikeCount(result.data.likeCount); // 최신 좋아요 수를 표시
-                likeButton.value = "true";
+                setLikeButtonStatus(false);
             }).catch(e => {
                 alert("Exception...");
             });
         }
     }, false);
-
-
-    function updateLikeCount(newCount) {
-        document.querySelector(".likeCountInput").value = newCount;
-    }
 
 
     ////////////////////////////////////////////////////////////////////////////

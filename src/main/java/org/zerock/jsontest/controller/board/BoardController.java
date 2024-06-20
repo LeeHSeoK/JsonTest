@@ -96,7 +96,7 @@ public class BoardController {
             redirectAttributes.addAttribute("bno", boardDTO.getBno());
             return "redirect:/board/modify?"+link;
         }
-
+        System.out.println(boardDTO+"=====================================");
         boardService.modify(boardDTO);
         redirectAttributes.addFlashAttribute("result", "modified");
         redirectAttributes.addAttribute("bno", boardDTO.getBno());
