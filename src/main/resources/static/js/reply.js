@@ -1,10 +1,16 @@
 
 //////////////////////////////////////////////////////좋아요버튼
 //좋아요 카운트 조회
-async function get2(bno) {
-    const result = await axios.get(`/like/${bno}`)
-    return result
+async function getLikeInfo(bno) {
+    try {
+        const result = await axios.get(`/like/${bno}`);
+        return result.data;
+    } catch (error) {
+        console.error("Error fetching like info:", error);
+        throw error;
+    }
 }
+
 // 좋아요 1증가
 async function addCount(bno) {
     const result = await axios.post(`/like/${bno}`);

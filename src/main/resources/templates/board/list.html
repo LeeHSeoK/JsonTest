@@ -38,7 +38,9 @@
                 <div class="card-body">
                     <div>
                         <span>Board List</span>
-                        <button type="button" style="float:right" class="btn btn-outline-secondary registerBtn">Register</button>
+                        <button type="button" style="float:right" class="btn btn-outline-secondary registerBtn">
+                            Register
+                        </button>
                     </div>
 
                     <table class="table">
@@ -51,21 +53,22 @@
                         </tr>
                         </thead>
                         <tbody th:with="link=${pageRequestDTO.getLink()}">
-                            <tr th:each="dto:${responseDTO.dtoList}">
-                                <td>[[${dto.bno}]]</td>
-                                <td>
-                                    <a th:href="|@{/board/read(bno=${dto.bno})}&${link}|" class="text-decoration-none">
-                                        [[${dto.title}]]
-                                        <span class="count">[[${dto.replyCount}]]</span>
-                                        <div th:if="${dto.boardImages!=null && dto.boardImages.size()>0}">
-                                            <img style="width:100px" th:each="boardImage: ${dto.boardImages}"
-                                                 th:src="|/view/s_${boardImage.uuid}_${boardImage.fileName}|">
-                                        </div>
-                                    </a>
-                                </td>
-                                <td>[[${dto.name}]]</td>
-                                <td>[[${#temporals.format(dto.regDate,'yyyy-MM-dd HH:mm')}]]</td>
-                            </tr>
+                        <tr th:each="dto:${responseDTO.dtoList}">
+                            <td>[[${dto.bno}]]</td>
+                            <td>
+                                <a th:href="|@{/board/read(bno=${dto.bno})}&${link}|" class="text-decoration-none">
+                                    [[${dto.title}]]
+                                    <span class="count">[[${dto.replyCount}]]</span>
+                                    <span class="likecount">[[${dto.likeCount}]]</span>
+                                    <div th:if="${dto.boardImages!=null && dto.boardImages.size()>0}">
+                                        <img style="width:100px" th:each="boardImage: ${dto.boardImages}"
+                                             th:src="|/view/s_${boardImage.uuid}_${boardImage.fileName}|">
+                                    </div>
+                                </a>
+                            </td>
+                            <td>[[${dto.name}]]</td>
+                            <td>[[${#temporals.format(dto.regDate,'yyyy-MM-dd HH:mm')}]]</td>
+                        </tr>
                         </tbody>
                     </table>
                     <div class="float-end">
@@ -108,7 +111,7 @@
 </div> <!-- layout end -->
 
 <script layout:fragment="script" th:inline="javascript">
-    document.querySelector(".pagination").addEventListener("click", function (e){
+    document.querySelector(".pagination").addEventListener("click", function (e) {
         e.preventDefault()
         e.stopPropagation()
 
@@ -117,30 +120,29 @@
         const formObj = document.querySelector("form")
         formObj.innerHTML += `<input type='hidden' name='page' value='${num}'>`
         formObj.submit()
-    },false)
+    }, false)
 
-    document.querySelector(".clearBtn").addEventListener("click",function (e){
+    document.querySelector(".clearBtn").addEventListener("click", function (e) {
         e.preventDefault()
         e.stopPropagation()
-        self.location='/board/list'
-    },false)
+        self.location = '/board/list'
+    }, false)
 
     //show modal
     const result = [[${result}]]
     const modal = new bootstrap.Modal(document.querySelector(".modal"))
-    if(result){
+    if (result) {
         modal.show()
     }
 
     const reigster = [[${loginSession}]]
-    document.querySelector(".registerBtn").addEventListener("click", function (e){
+    document.querySelector(".registerBtn").addEventListener("click", function (e) {
         e.preventDefault()
         e.stopPropagation()
-        if(reigster){
-            window.location.href='/board/register'
-        }
-        else{
-            window.location.href='/user/login'
+        if (reigster) {
+            window.location.href = '/board/register'
+        } else {
+            window.location.href = '/user/login'
         }
     })
 

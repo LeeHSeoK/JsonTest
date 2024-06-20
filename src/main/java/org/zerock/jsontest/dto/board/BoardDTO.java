@@ -35,9 +35,9 @@ public class BoardDTO {
     //첨부파일들의 이름
     private List<String> fileNames;
 
-    private String xaixs;
+    private String xaxis;
 
-    private String yaixs;
+    private String yaxis;
 
     private String placeName;
 }

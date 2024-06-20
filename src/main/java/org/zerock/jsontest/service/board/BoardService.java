@@ -11,10 +11,10 @@ public interface BoardService {
     BoardDTO readOne(Long bno);
     void modify(BoardDTO boardDTO);
     void remove(Long bno);
-    PageResponseDTO<BoardDTO> list(PageRequestDTO pageRequestDTO);
+//    PageResponseDTO<BoardDTO> list(PageRequestDTO pageRequestDTO);
 
     //댓글의 갯수까지 처리
-    PageResponseDTO<BoardListReplyCountDTO> listWithReplyCount(PageRequestDTO pageRequestDTO);
+//    PageResponseDTO<BoardListReplyCountDTO> listWithReplyCount(PageRequestDTO pageRequestDTO);
 
     //게시글의 이미지, 댓글의 갯수(숫자) 처리
     PageResponseDTO<BoardListAllDTO> listWithAll(PageRequestDTO pageRequestDTO);
@@ -28,8 +28,8 @@ public interface BoardService {
                 .title(boardDTO.getTitle())
                 .content(boardDTO.getContent())
                 .name(boardDTO.getName())
-                .xaixs(boardDTO.getXaixs())
-                .yaixs(boardDTO.getYaixs())
+                .xaxis(boardDTO.getXaxis())
+                .yaxis(boardDTO.getYaxis())
                 .placeName(boardDTO.getPlaceName())
                 .build();
 
@@ -52,8 +52,8 @@ public interface BoardService {
                 .name(board.getName())
                 .regDate(board.getRegDate())
                 .modDate(board.getModDate())
-                .xaixs(board.getXaixs())
-                .yaixs(board.getYaixs())
+                .xaxis(board.getXaxis())
+                .yaxis(board.getYaxis())
                 .placeName(board.getPlaceName())
                 .build();
 

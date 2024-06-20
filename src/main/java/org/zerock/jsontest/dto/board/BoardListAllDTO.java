@@ -19,4 +19,6 @@ public class BoardListAllDTO {
     private LocalDateTime regDate;
     private Long replyCount;
     private List<BoardImageDTO> boardImages;
+    //좋아요 카운트값 추가
+    private Long likeCount;
 }

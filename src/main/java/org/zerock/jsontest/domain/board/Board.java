@@ -30,9 +30,9 @@ public class Board extends BaseEntity {
     @Column(length=500, nullable=false)
     private String name;
     @Column(length=50)
-    private String xaixs;
+    private String xaxis;
     @Column(length=50)
-    private String yaixs;
+    private String yaxis;
     @Column(length=50)
     private String placeName;
 
@@ -51,10 +51,13 @@ public class Board extends BaseEntity {
     private List<LikeC> likes = new ArrayList<>();
 
 
-    public void change(String title, String content, String name){
+    public void change(String title, String content, String name, String xaxis, String yaxis, String placeName){
         this.title = title;
         this.content = content;
         this.name = name;
+        this.xaxis = xaxis;
+        this.yaxis = yaxis;
+        this.placeName = placeName;
     }
 
     public void addImage(String uuid, String FileName){

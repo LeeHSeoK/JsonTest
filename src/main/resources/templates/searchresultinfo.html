@@ -36,11 +36,11 @@
         var mapy = [[${item.mapy}]];
         var title = [[${item.title}]]; // 따옴표 추가
         // mapx 값을 소숫점 6자리까지 반올림
-        var xaixs = Math.round(mapx * 1000000) / 1000000;
-        var yaixs = Math.round(mapy * 1000000) / 1000000;
+        var xaxis = Math.round(mapx * 1000000) / 1000000;
+        var yaxis = Math.round(mapy * 1000000) / 1000000;
 
         var mapContainer = document.getElementById('map'), // 지도를 표시할 div
-            mapCenter = new kakao.maps.LatLng(yaixs, xaixs), // 지도의 중심 좌표
+            mapCenter = new kakao.maps.LatLng(yaxis, xaxis), // 지도의 중심 좌표
             mapOption = {
                 center: mapCenter, // 지도의 중심 좌표
                 level: 4 // 지도의 확대 레벨

@@ -29,4 +29,11 @@ public class LikeUserServiceImpl implements LikeUserService {
         // Repository의 deleteByUserIdAndBno 메서드를 사용하여 삭제
         likeUserRepository.deleteByUserIdAndBno(userId, bno);
     }
+
+    @Override
+    public boolean searchLikeUser(LikeUserDTO likeUserDTO){
+        String userId = likeUserDTO.getId();
+        Long bno = likeUserDTO.getBno();
+        return likeUserRepository.existsByUserIdAndBno(userId, bno);
+    }
 }
