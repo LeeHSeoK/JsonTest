@@ -6,9 +6,8 @@
 <head>
     <meta charset="UTF-8">
     <link th:href="@{./css/home.css}" rel="stylesheet">
-    <th:block layout:fragment="script">
-        <script th:src="@{/js/home.js}" type="text/javascript"></script>
-    </th:block>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script th:src="@{/js/home.js}" type="text/javascript"></script>
 </head>
 <body>
 <div layout:fragment="content">
@@ -31,36 +30,37 @@
                 <button class="pause" id="pauseButton" onclick="togglePause()">Pause</button>
                 <a class="next" onclick="plusSlides(1)">&#10095;</a>
             </div>
+
         </div>
         <div class="content-division gray-background">
             <div class="title">
                 <h2>Recommended Travel Destinations by Region</h2>
             </div>
             <div class="button-row">
-                <button onclick="redirectToNaver('서울')">서울</button>
-                <button onclick="redirectToNaver('인천')">인천</button>
-                <button onclick="redirectToNaver('대전')">대전</button>
-                <button onclick="redirectToNaver('대구')">대구</button>
-                <button onclick="redirectToNaver('경기')">경기</button>
-                <button onclick="redirectToNaver('부산')">부산</button>
-                <button onclick="redirectToNaver('울산')">울산</button>
-                <button onclick="redirectToNaver('광주')">광주</button>
-                <button onclick="redirectToNaver('강원')">강원</button>
-                <button onclick="redirectToNaver('제주')">제주</button>
-                <button onclick="redirectToNaver('세종')">세종</button>
+                <button onclick="updateImages('서울')">서울</button>
+                <button onclick="updateImages('인천')">인천</button>
+                <button onclick="updateImages('대전')">대전</button>
+                <button onclick="updateImages('대구')">대구</button>
+                <button onclick="updateImages('경기')">경기</button>
+                <button onclick="updateImages('부산')">부산</button>
+                <button onclick="updateImages('울산')">울산</button>
+                <button onclick="updateImages('광주')">광주</button>
+                <button onclick="updateImages('강원')">강원</button>
+                <button onclick="updateImages('제주')">제주</button>
+                <button onclick="updateImages('세종')">세종</button>
             </div>
-            <div class="image-row">
+            <div class="image-row" id="imgwrap">
                 <a th:href="@{'/searchresultinfo?contentId=' + ${content[0]}+'&contentTypeId='+${contenttype[0]}}" th:unless="null" class="image-a">
-                    <img th:src="${img[0]}" alt="Image" class="image-a">
+                    <img th:src="${img[0]}" alt="Image" class="image-a" id="image1">
                 </a>
                 <a th:href="@{'/searchresultinfo?contentId=' + ${content[1]}+'&contentTypeId='+${contenttype[1]}}" th:unless="null" class="image-a">
-                    <img th:src="${img[1]}" alt="Image" class="image-a">
+                    <img th:src="${img[1]}" alt="Image" class="image-a" id="image2">
                 </a>
                 <a th:href="@{'/searchresultinfo?contentId=' + ${content[2]}+'&contentTypeId='+${contenttype[2]}}" th:unless="null" class="image-a">
-                    <img th:src="${img[2]}" alt="Image" class="image-a">
+                    <img th:src="${img[2]}" alt="Image" class="image-a" id="image3">
                 </a>
                 <a th:href="@{'/searchresultinfo?contentId=' + ${content[3]}+'&contentTypeId='+${contenttype[3]}}" th:unless="null" class="image-a">
-                    <img th:src="${img[3]}" alt="Image" class="image-a">
+                    <img th:src="${img[3]}" alt="Image" class="image-a" id="image4">
                 </a>
             </div>
         </div>

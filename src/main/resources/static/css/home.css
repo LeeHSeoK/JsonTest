@@ -1,4 +1,4 @@
-body{
+body {
     padding: 0;
     margin: 0;
 }
@@ -107,31 +107,43 @@ img {
     background-color: #555;
 }
 /*이미지 태그 구간*/
-.image-row {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 10px; /* 이미지 사이의 간격 */
-}
+/*.image-row {*/
+/*    display: flex;*/
+/*    justify-content: center;*/
+/*    flex-wrap: wrap;*/
+/*    gap: 10px; !* 이미지 사이의 간격 *!*/
+/*}*/
 
-.image-a {
-    flex: 1 1 200px; /* 각 이미지 컨테이너의 기본 너비를 200px로 설정 */
-    /*max-width: 200px; !* 각 이미지 컨테이너의 최대 너비를 200px로 설정 *!*/
-    /*height: 150px; !* 각 이미지 컨테이너의 높이를 150px로 설정 *!*/
-    box-sizing: border-box;
-}
+/*.image-a {*/
+/*    flex: 1 1 200px; !* 각 이미지 컨테이너의 기본 너비를 200px로 설정 *!*/
+/*    !*max-width: 200px; !* 각 이미지 컨테이너의 최대 너비를 200px로 설정 *!*!*/
+/*    !*height: 150px; !* 각 이미지 컨테이너의 높이를 150px로 설정 *!*!*/
+/*    box-sizing: border-box;*/
+/*}*/
 
-.image-a img {
-    width: 100%;
-    height: 380px;
-    object-fit: cover; /* 이미지가 컨테이너에 맞게 조절되도록 설정 */
-    border-radius: 10px;
-    transition: transform 0.3s, box-shadow 0.3s;
-}
+/*.image-a img {*/
+/*    width: 100%;*/
+/*    height: 380px;*/
+/*    object-fit: cover; !* 이미지가 컨테이너에 맞게 조절되도록 설정 *!*/
+/*    border-radius: 10px;*/
+/*    transition: transform 0.3s, box-shadow 0.3s;*/
+/*}*/
 
 .image-a img:hover {
     transform: scale(1.05);
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+#imgwrap {
+    display: flex;
+    justify-content: space-around; /* 이미지 간 간격을 균등하게 배치 */
+    align-items: center; /* 세로 가운데 정렬 */
+    flex-wrap: wrap; /* 넘칠 경우 자동으로 다음 줄로 이동 */
+}
+.image-a {
+    width: 200px; /* 이미지 너비 조정 */
+    height: 340px; /* 높이 자동 조정 */
+    margin: 10px; /* 이미지 간 간격 설정 */
+    border-radius: 10px; /*모따기*/
 }
 
 .gray-background {

@@ -1,4 +1,3 @@
-
 $(document).ready(function(){
     $("#send-button").click(function(){
         var userInput = $("#user-input").val();

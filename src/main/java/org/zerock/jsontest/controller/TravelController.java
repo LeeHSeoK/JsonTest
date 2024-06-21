@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.client.HttpClientErrorException;
 import com.fasterxml.jackson.databind.ObjectMapper; // Jackson 라이브러리 추가 필요
@@ -126,15 +127,11 @@ public class TravelController {
                 imglist.add(img);
                 contentlist.add(contentid);
             }
-//수정 DTO로 바꿔주세요
+
             model.addAttribute("img",imglist);
             model.addAttribute("content", contentlist);
             model.addAttribute("notice", imglist);
             model.addAttribute("contenttype", contenttypeidlist);
-//            model.addAttribute("currentPage", page);
-//            model.addAttribute("numOfRows", numOfRows);
-////            model.addAttribute("totalCount", response1.getResponse().getBody().getTotalCount());
-
         } catch (HttpClientErrorException e) {
             model.addAttribute("error", "API key is invalid or not registered.");
         } catch (URISyntaxException e) {
@@ -143,7 +140,8 @@ public class TravelController {
             model.addAttribute("error", "Encoding Exception: " + e.getMessage());
         } catch (Exception e) {
             model.addAttribute("error", "An unexpected error occurred: " + e.getMessage());
-            return "redirect:/home?keyword=" + URLEncoder.encode(keyword, "UTF-8") + "&numOfRows=" + numOfRows;
+            return "home";
+
         }
         return "home";
     }
@@ -183,4 +181,7 @@ public class TravelController {
         model.addAttribute("kakaoMapApiKey", KAKAO_MAP_API_KEY);
         return "kakao3";
     }
+
+    @GetMapping("/event")
+    public void event(){}
 }

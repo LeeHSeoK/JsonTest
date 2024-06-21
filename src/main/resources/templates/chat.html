@@ -2,18 +2,13 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/layout1.html}">
-
 <head>
     <meta charset="UTF-8">
     <title>Chat with GPT</title>
-    <th:block layout:fragment="script">
-        <script th:src="@{/js/chat.js}" type="text/javascript"></script>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    </th:block>
-
+    <link th:href="@{/css/chat.css}" rel="stylesheet">
 </head>
 <body>
-<div th:fragment="content" class="chat-container">
+<div th:fragment="content">
     <h2>Chat with GPT</h2>
     <div class="chat-box" id="chat-box">
         <!-- Messages will appear here -->
@@ -21,32 +16,9 @@
     <input type="text" class="user-input" id="user-input" placeholder="Type your message here..."/>
     <button class="send-button" id="send-button">Send</button>
 </div>
-<script>
-    $(document).ready(function(){
-        $("#send-button").click(function(){
-            var userInput = $("#user-input").val();
-            if(userInput.trim() !== ""){
-                $("#chat-box").append("<div><strong>You:</strong> " + userInput + "</div>");
-                $.post("/api/v1/gpt", { msg: userInput }, function(data) {
-                    // data 값을 "contentId_contentTypeID" 형식으로 받아와서 split
-                    var parts = data.split('_');
-                    var contentId = parts[0];
-                    var contentTypeId = parts[1];
-
-                    if (contentId !== "1") {
-                        var button = '<button onclick="window.open(\'/searchresultinfo?contentId=' + contentId + '&contentTypeId=' + contentTypeId + '\', \'_blank\')">' + contentId + '</button>';
-                        $("#chat-box").append("<div><strong>GPT:</strong> " + button + "</div>");
-                    } else {
-                        $("#chat-box").append("<div><strong>GPT:</strong>미안해요. 원하는 결과를 가져오지 못했어요, 좀더 구체적인 내용을 입력해주세요!</div>");
-                    }
-                    console.log(data);
-                }).fail(function() {
-                    alert("Error communicating with GPT");
-                });
-                $("#user-input").val("");
-            }
-        });
-    });
-</script>
+    <th:block layout:fragment="script">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script th:src="@{/js/chat.js}" type="text/javascript"></script>
+    </th:block>
 </body>
 </html>
