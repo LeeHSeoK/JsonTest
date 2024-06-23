@@ -131,7 +131,6 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary uploadBtn">Upload</button>
-                    <button type="button" class="btn btn-outline-dark closeUploadBtn">Close</button>
                 </div>
             </div>
         </div>
@@ -163,7 +162,6 @@
                         <div id="pagination"></div>
                     </div>
                 </div>
-                <button id="modalCloseButton">닫기</button>
             </div>
         </div>
     </div>
@@ -352,12 +350,6 @@
         document.getElementById('placeName').value = "";
     });
 
-    const modalCloseButton = document.getElementById('modalCloseButton');
-    modalCloseButton.addEventListener('click', function (e) {
-        e.stopPropagation(); // 이벤트 전파를 막음
-        e.preventDefault();
-        mapModal.hide()
-    });
 
     function initializeMap() {
         const mapContainer = document.getElementById('map');

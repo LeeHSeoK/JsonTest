@@ -157,18 +157,20 @@
 
                     <div class="horizontal-line"></div>
 
-                    <div class="wrap_content">
+                    <div th:if="${!#strings.isEmpty(dto.xaxis)}" class="wrap_content">
                         <div class="wrap_map">
                             <div id="map" style="width:100%;height:100%"></div> <!-- 지도를 표시할 div 입니다 -->
                             <div class="wrap_button">
-                                <a href="javascript:;" class="btn_comm btn_linkMap" target="_blank"
-                                   onclick="moveKakaoMap(this)"><span class="screen_out">지도 크게보기</span></a>
-                                <!-- 지도 크게보기 버튼입니다 -->
-                                <a href="javascript:;" class="btn_comm btn_resetMap" onclick="resetKakaoMap()"><span
-                                        class="screen_out">지도 초기화</span></a> <!-- 지도 크게보기 버튼입니다 -->
+                                <a href="javascript:;" class="btn_comm btn_linkMap" target="_blank" onclick="moveKakaoMap(this)">
+                                    <span class="screen_out">지도 크게보기</span>
+                                </a> <!-- 지도 크게보기 버튼입니다 -->
+                                <a href="javascript:;" class="btn_comm btn_resetMap" onclick="resetKakaoMap()">
+                                    <span class="screen_out">지도 초기화</span>
+                                </a> <!-- 지도 초기화 버튼입니다 -->
                             </div>
                         </div>
                     </div>
+
 
                     <div class="like-container">
                         <input type="text" name="likeCount" class="likeCountInput form-control" readonly>
@@ -243,7 +245,6 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary registerBtn">Register</button>
-                    <button type="button" class="btn btn-outline-dark closeRegisterBtn">Close</button>
                 </div>
             </div>
         </div>
@@ -267,7 +268,6 @@
                 <div id="modalFooter" class="modal-footer">
                     <button type="button" class="btn btn-primary modifyBtn">Modify</button>
                     <button type="button" class="btn btn-danger removeBtn">Delete</button>
-                    <!--                        <button type="button" class="btn btn-outline-dark closeModifyBtn" >Close</button>-->
                 </div>
             </div>
         </div>
@@ -341,7 +341,6 @@
 
     const registerModal = new bootstrap.Modal(document.querySelector(".registerModal"))
     const registerBtn = document.querySelector(".registerBtn")
-    // const closeRegisterBtn = document.querySelector(".closeRegisterBtn")
 
     document.querySelector(".addReplyBtn").addEventListener("click", function (e) {
         if (name.value) {
@@ -386,7 +385,6 @@
     const modifyText = document.querySelector(".modifyText")
     const modifyBtn = document.querySelector(".modifyBtn")
     const removeBtn = document.querySelector(".removeBtn")
-    // const closeModifyBtn = document.querySelector(".closeModifyBtn")
     const replyHeader = document.querySelector('.replyHeader')
     //session을 js에서 쓰게 받아오기
     const loginSession = document.getElementById('loginSession').getAttribute('sessiondata');
@@ -455,32 +453,34 @@
     //////////////////////////////////////////////////////////////////////////// 카카오 지도
 
 
-    var mapx = [[${dto.xaxis}]];
-    var mapy = [[${dto.yaxis}]];
-    var placeName = [[${dto.placeName}]];
+    document.addEventListener("DOMContentLoaded", function() {
+        var mapx = [[${dto.xaxis}]];
+        var mapy = [[${dto.yaxis}]];
+        var placeName = [[${dto.placeName}]];
 
-    var mapContainer = document.getElementById('map'), // 지도를 표시할 div
-        mapCenter = new kakao.maps.LatLng(mapy, mapx), // 지도의 중심 좌표
-        mapOption = {
-            center: mapCenter, // 지도의 중심 좌표
-            level: 4 // 지도의 확대 레벨
-        };
+        var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+            mapCenter = new kakao.maps.LatLng(mapy, mapx), // 지도의 중심 좌표
+            mapOption = {
+                center: mapCenter, // 지도의 중심 좌표
+                level: 4 // 지도의 확대 레벨
+            };
 
-    // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
-    var map = new kakao.maps.Map(mapContainer, mapOption);
+        // 지도를 표시할 div와 지도 옵션으로 지도를 생성합니다
+        var map = new kakao.maps.Map(mapContainer, mapOption);
 
-    // 지도에 올릴 마커를 생성합니다.
-    var mMarker = new kakao.maps.Marker({
-        position: mapCenter, // 지도의 중심좌표에 올립니다.
-        map: map // 생성하면서 지도에 올립니다.
+        // 지도에 올릴 마커를 생성합니다.
+        var mMarker = new kakao.maps.Marker({
+            position: mapCenter, // 지도의 중심좌표에 올립니다.
+            map: map // 생성하면서 지도에 올립니다.
+        });
+
+        // 지도에 올릴 장소명 인포윈도우 입니다.
+        var mLabel = new kakao.maps.InfoWindow({
+            position: mapCenter, // 지도의 중심좌표에 올립니다.
+            content: placeName // 인포윈도우 내부에 들어갈 컨텐츠 입니다.
+        });
+        mLabel.open(map, mMarker); // 지도에 올리면서, 두번째 인자로 들어간 마커 위에 올라가도록 설정합니다.
     });
-
-    // 지도에 올릴 장소명 인포윈도우 입니다.
-    var mLabel = new kakao.maps.InfoWindow({
-        position: mapCenter, // 지도의 중심좌표에 올립니다.
-        content: placeName // 인포윈도우 내부에 들어갈 컨텐츠 입니다.
-    });
-    mLabel.open(map, mMarker); // 지도에 올리면서, 두번째 인자로 들어간 마커 위에 올라가도록 설정합니다.
 
 
     //지도 이동 이벤트 핸들러
