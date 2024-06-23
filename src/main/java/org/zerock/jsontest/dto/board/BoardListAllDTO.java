@@ -15,10 +15,12 @@ import java.util.List;
 public class BoardListAllDTO {
     private Long bno;
     private String title;
+    private String content;
     private String name;
     private LocalDateTime regDate;
     private Long replyCount;
     private List<BoardImageDTO> boardImages;
     //좋아요 카운트값 추가
     private Long likeCount;
+    private Long viewCount;
 }

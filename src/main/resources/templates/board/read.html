@@ -65,6 +65,56 @@
             background-position: -69px 0;
         }
 
+        .input-group-text {
+            width: 100px; /* 동일한 너비로 설정 */
+            text-align: right; /* 텍스트 정렬 */
+        }
+
+        .input-group.mb-3 {
+            display: flex;
+            align-items: center;
+        }
+
+        /* input과 버튼을 붙이고 테두리 없애기 */
+        .like-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px; /* 버튼과 input을 조금 아래로 내려서 중앙에 맞춤 */
+        }
+
+        .likeCountInput {
+            width: 70px; /* 크기를 자동으로 설정 */
+            margin-right: 5px; /* 버튼과의 간격 조정 */
+            text-align: center;
+        }
+
+        .likebutton {
+            margin-left: 5px; /* input과 버튼 사이 간격 조정 */
+        }
+
+        .horizontal-line {
+            width: 100%;
+            height: 2px;
+            background-color: #e0e0e0; /* 연한 회색 색상 */
+            margin: 20px 0; /* 위아래에 여백 추가 */
+        }
+
+        .bottom-info {
+            text-align: right;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+
+        .bottom-info .writer {
+            font-weight: bold;
+            font-size: 1.3em;
+        }
+
+        .bottom-info .date {
+            color: gray;
+            font-size: 0.8em;
+        }
     </style>
 </head>
 
@@ -76,45 +126,36 @@
                     Board Read
                 </div>
                 <div class="card-body">
-                    <div class="input-group mb-3">
-                        <span class="input-group-text">Bno</span>
-                        <input type="text" name="Bno" class="form-control" th:value="${dto.bno}" readonly>
-                    </div>
+                        <input type="text" name="Bno" class="form-control" th:value="${dto.bno}" hidden>
                     <div class="input-group mb-3">
                         <span class="input-group-text">Title</span>
                         <input type="text" name="Title" class="form-control" th:value="${dto.title}" readonly>
                     </div>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text">Content</span>
+
+                    <div class="horizontal-line"></div>
+
+                    <div>
                         <textarea name="Content" class="form-control col-sm-5"
                                   rows="5" readonly>[[${dto.content}]] </textarea>
                     </div>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text">Writer</span>
-                        <input type="text" name="name" class="form-control" th:value="${dto.name}" readonly>
-                    </div>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text">RegDate</span>
-                        <input type="text" name="regDate" class="form-control"
-                               th:value="${#temporals.format(dto.regDate, 'yyyy-MM-dd HH:mm:ss')}" readonly>
-                    </div>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text">ModDate</span>
-                        <input type="text" name="modDate" class="form-control"
-                               th:value="${#temporals.format(dto.modDate, 'yyyy-MM-dd HH:mm:ss')}" readonly>
-                    </div>
 
-                    <div class="input-group mb-3">
-                        <span class="input-group-text">Xaxis</span>
+
                         <input type="text" name="xaxis" class="form-control"
-                               th:value="${dto.xaxis}" readonly>
+                               th:value="${dto.xaxis}" hidden>
+
+                        <input type="text" name="yaxis" class="form-control"
+                               th:value="${dto.yaxis}" hidden>
+
+
+                    <div class="col">
+                        <div class="horizontal-line"></div>
+                        <div class="card" th:if="${dto.fileNames!=null && dto.fileNames.size()>0}">
+                            <img class="card-img-top" th:each="fileName: ${dto.fileNames}" th:src="|/view/${fileName}|">
+                        </div>
+
                     </div>
 
-                    <div class="input-group mb-3">
-                        <span class="input-group-text">Yaxis</span>
-                        <input type="text" name="yaxis" class="form-control"
-                               th:value="${dto.yaxis}" readonly>
-                    </div>
+                    <div class="horizontal-line"></div>
 
                     <div class="wrap_content">
                         <div class="wrap_map">
@@ -129,8 +170,19 @@
                         </div>
                     </div>
 
-                    <input type="text" name="likeCount" class="likeCountInput">
-                    <button th:if="${loginSession != null}" class="likebutton" th:value="true" readonly>좋아요 버튼</button>
+                    <div class="like-container">
+                        <input type="text" name="likeCount" class="likeCountInput form-control" readonly>
+                        <button th:if="${loginSession != null}" class="likebutton btn btn-outline-primary" th:value="false">
+                            <i class="far fa-thumbs-up"></i> 좋아요
+                        </button>
+                    </div>
+
+                    <div class="bottom-info">
+                        <span>작성자</span><div class="writer" th:text="${dto.name}"></div>
+                        <div class="date" th:text="${#temporals.format(dto.regDate, 'yyyy.MM.dd. HH:mm')}"></div>
+                        <div class="date" th:text="${#temporals.format(dto.modDate, 'yyyy-MM-dd HH:mm')}"></div>
+                    </div>
+
 
                     <div class="my-4">
                         <div class="float-end" th:with="link=${pageRequestDTO.getLink()}">
@@ -144,13 +196,6 @@
                         </div>
                     </div>
                 </div><!--end card body-->
-
-                <div class="col">
-                    <div class="card" th:if="${dto.fileNames!=null && dto.fileNames.size()>0}">
-                        <img class="card-img-top" th:each="fileName: ${dto.fileNames}" th:src="|/view/${fileName}|">
-                    </div>
-                </div>
-
 
             </div><!--end card-->
         </div><!-- end col-->
@@ -471,7 +516,7 @@
     function setLikeButtonStatus(status) {
         const likeButton = document.querySelector(".likebutton");
         likeButton.value = status ? "true" : "false";
-        likeButton.textContent = status ? "좋아요 취소" : "좋아요";
+        likeButton.innerHTML = status ? '<i class="fas fa-thumbs-up"></i> 좋아요 취소' : '<i class="far fa-thumbs-up"></i> 좋아요';
     }
 
 

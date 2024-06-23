@@ -2,7 +2,9 @@ package org.zerock.jsontest.repository.board;
 
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.zerock.jsontest.domain.board.Board;
 
 import java.util.Optional;
@@ -16,4 +18,9 @@ public interface BoardRepository extends JpaRepository<Board, Long>, BoardSearch
     @EntityGraph(attributePaths = {"imageSet"})
     @Query("select b from Board b where b.bno=:bno")
     Optional<Board> findByIdWithImages(Long bno);
+
+    //조회수 증가
+    @Modifying
+    @Query("UPDATE Board b SET b.viewCount = b.viewCount + 1 WHERE b.bno = :bno")
+    void incrementViewCount(@Param("bno") Long bno);
 }

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layout/basic.html}">
+
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .travel-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .travel-card .card-body {
+            text-align: center;
+        }
+        .travel-card .price {
+            font-size: 1.2rem;
+            color: #e74c3c;
+        }
+        .travel-card .details {
+            font-size: 0.9rem;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container mt-3">
+        <div class="row">
+            <form action="/board/list" method="get" class="col">
+                <input type="hidden" name="size" th:value="${pageRequestDTO.size}">
+                <input type="hidden" name="page" th:value="${pageRequestDTO.page}">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <select class="form-select" name="type">
+                            <option value="">---</option>
+                            <option value="t" th:selected="${pageRequestDTO.type == 't'}">제목</option>
+                            <option value="c" th:selected="${pageRequestDTO.type == 'c'}">내용</option>
+                            <option value="w" th:selected="${pageRequestDTO.type == 'w'}">작성자</option>
+                            <option value="tc" th:selected="${pageRequestDTO.type == 'tc'}">제목 내용</option>
+                            <option value="tcw" th:selected="${pageRequestDTO.type == 'tcw'}">제목 내용 작성자</option>
+                        </select>
+                    </div>
+                    <input type="text" class="form-control" name="keyword" th:value="${pageRequestDTO.keyword}">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary searchBtn" type="submit">Search</button>
+                        <button class="btn btn-outline-secondary clearBtn" type="button">Clear</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        Board List
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <span>Board List</span>
+                            <button type="button" style="float:right" class="btn btn-outline-secondary registerBtn">
+                                Register
+                            </button>
+                        </div>
+
+                        <div class="card-deck" th:with="link=${pageRequestDTO.getLink()}">
+                            <div class="card travel-card" th:each="dto : ${responseDTO.dtoList}">
+                                <div>
+                                    [[${dto.bno}]]
+                                </div>
+                                <a th:href="|@{/board/read(bno=${dto.bno})}&${link}|" class="text-decoration-none">
+                                    [[${dto.title}]]
+                                    <span class="count">[[${dto.replyCount}]]</span>
+                                    <span class="likecount">[[${dto.likeCount}]]</span>
+                                    <div th:if="${dto.boardImages != null && dto.boardImages.size() > 0}">
+                                        <img style="width:100px" th:each="boardImage: ${dto.boardImages}"
+                                             th:src="|/view/s_${boardImage.uuid}_${boardImage.fileName}|">
+                                    </div>
+                                </a>
+                                <div>
+                                    [[${dto.name}]]
+                                </div>
+                                <div>
+                                    [[${#temporals.format(dto.regDate,'yyyy-MM-dd HH:mm')}]]
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="float-end mt-3">
+                            <ul class="pagination flex-wrap">
+                                <li class="page-item" th:if="${responseDTO.prev}">
+                                    <a class="page-link" th:data-num="${responseDTO.start - 1}" href="#">Previous</a>
+                                </li>
+                                <li th:each="i : ${#numbers.sequence(responseDTO.start, responseDTO.end)}"
+                                    th:classappend="${responseDTO.page == i} ? 'page-item active' : 'page-item'">
+                                    <a class="page-link" th:href="#" th:data-num="${i}" th:text="${i}">1</a>
+                                </li>
+                                <li class="page-item" th:if="${responseDTO.next}">
+                                    <a class="page-link" th:data-num="${responseDTO.end + 1}" href="#">Next</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Modal title</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p th:text="${result}">Modal body text goes here.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> <!-- layout end -->
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script th:inline="javascript">
+    document.querySelector(".pagination").addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const target = e.target;
+        const num = target.getAttribute("data-num");
+        const formObj = document.querySelector("form");
+        const pageInput = document.createElement("input");
+        pageInput.setAttribute("type", "hidden");
+        pageInput.setAttribute("name", "page");
+        pageInput.setAttribute("value", num);
+        formObj.appendChild(pageInput);
+        formObj.submit();
+    }, false);
+
+    document.querySelector(".clearBtn").addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        self.location = '/board/list';
+    }, false);
+
+    const result = [[${result}]];
+    const modal = new bootstrap.Modal(document.querySelector(".modal"));
+    if (result) {
+        modal.show();
+    }
+
+    const register = [[${loginSession}]];
+    document.querySelector(".registerBtn").addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (register) {
+            window.location.href = '/board/register';
+        } else {
+            window.location.href = '/user/login';
+        }
+    });
+</script>
+
+</body>
+</html>

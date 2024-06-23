@@ -69,6 +69,7 @@ public class BoardController {
 
     @GetMapping({"/read", "/modify"})
     public void read(@RequestParam("bno")Long bno, PageRequestDTO pageRequestDTO, Model model, HttpSession session){
+        boardService.incrementViewCount(bno); // 조회수 증가
         BoardDTO boardDTO = boardService.readOne(bno);
         model.addAttribute("dto", boardDTO);
         String loginSession = (String) session.getAttribute("loginSession");

@@ -13,6 +13,8 @@ public interface BoardService {
     void remove(Long bno);
 //    PageResponseDTO<BoardDTO> list(PageRequestDTO pageRequestDTO);
 
+    void incrementViewCount(Long bno);
+
     //댓글의 갯수까지 처리
 //    PageResponseDTO<BoardListReplyCountDTO> listWithReplyCount(PageRequestDTO pageRequestDTO);
 
@@ -31,6 +33,7 @@ public interface BoardService {
                 .xaxis(boardDTO.getXaxis())
                 .yaxis(boardDTO.getYaxis())
                 .placeName(boardDTO.getPlaceName())
+                .viewCount(boardDTO.getViewCount())
                 .build();
 
         if(boardDTO.getFileNames() != null){
@@ -55,6 +58,7 @@ public interface BoardService {
                 .xaxis(board.getXaxis())
                 .yaxis(board.getYaxis())
                 .placeName(board.getPlaceName())
+                .viewCount(board.getViewCount())
                 .build();
 
         List<String> fileNames = board.getImageSet().stream().sorted().map(boardImage ->

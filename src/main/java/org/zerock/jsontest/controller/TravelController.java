@@ -192,4 +192,5 @@ public class TravelController {
         model.addAttribute("kakaoApiKey", KAKAO_MAP_API_KEY);
         return "kakao3";
     }
+
 }

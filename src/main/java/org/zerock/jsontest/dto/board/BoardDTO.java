@@ -40,4 +40,7 @@ public class BoardDTO {
     private String yaxis;
 
     private String placeName;
+
+    private Long viewCount;
+
 }

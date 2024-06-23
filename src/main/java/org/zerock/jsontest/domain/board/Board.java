@@ -16,10 +16,9 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString(exclude = {"imageSet","replies"})
-//@ToString
 public class Board extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) //primarykey로 쓰겠다(auto Increasement). identity,sequence,table,auto
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bno;
 
     private String id;
@@ -35,7 +34,8 @@ public class Board extends BaseEntity {
     private String yaxis;
     @Column(length=50)
     private String placeName;
-
+    @Column(nullable = false)
+    private Long viewCount = 0L; // 조회수 컬럼 기본값 설정
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Builder.Default
@@ -49,7 +49,6 @@ public class Board extends BaseEntity {
     @Builder.Default
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<LikeC> likes = new ArrayList<>();
-
 
     public void change(String title, String content, String name, String xaxis, String yaxis, String placeName){
         this.title = title;
@@ -74,5 +73,4 @@ public class Board extends BaseEntity {
         imageSet.forEach(boardImage -> boardImage.changeBoard(null));
         this.imageSet.clear();
     }
-
 }
