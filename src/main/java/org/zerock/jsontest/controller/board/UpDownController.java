@@ -2,6 +2,7 @@ package org.zerock.jsontest.controller.board;
 
 import lombok.extern.log4j.Log4j2;
 import net.coobird.thumbnailator.Thumbnailator;
+import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -41,7 +42,11 @@ public class UpDownController {
                     if (Files.probeContentType(savePath).startsWith("image")) { //저장한 파일이 이미지이면
                         image = true;
                         File thumbFile = new File(uploadPath, "s_" + uuid + "_" + originalName);    //썸네일 파일을 새롭게 만듭니다.
-                        Thumbnailator.createThumbnail(savePath.toFile(), thumbFile, 100, 100);  //썸네일을 만들때 사이즈
+//                        Thumbnailator.createThumbnail(savePath.toFile(), thumbFile, 200, 200);  //썸네일을 만들때 사이즈
+                        Thumbnails.of(savePath.toFile())
+                                .size(400, 400)
+                                .outputQuality(1.0)  // 썸네일 품질을 1.0으로 설정
+                                .toFile(thumbFile);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();

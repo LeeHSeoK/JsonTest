@@ -43,6 +43,7 @@ public class BoardRepositroyTests {
                     .content("Content....." + i%10)
                     .name("name" + i%10)
                     .id("user" + i%10)
+                    .viewCount(0L)
                     .build();
 
             boardRepository.save(board);

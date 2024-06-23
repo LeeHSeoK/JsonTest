@@ -3,6 +3,90 @@
       xmlns:th="http://www.thymeleaf.org"
       layout:decorate="~{layout/basic.html}">
 
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .travel-card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+            width: 100%; /* 카드의 고정 너비 */
+            height: 350px; /* 카드의 고정 높이 */
+        }
+        .travel-card:hover {
+            transform: scale(1.05);
+        }
+        .travel-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .travel-card .card-body {
+            padding: 15px;
+        }
+        .travel-card .title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #333;
+        }
+        .travel-card .price {
+            font-size: 1.5rem;
+            color: #e74c3c;
+            margin-top: 10px;
+        }
+        .travel-card .details {
+            font-size: 0.9rem;
+            color: #555;
+            margin-top: 10px;
+        }
+        .travel-card .meta {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 3px;
+        }
+        .card-deck.custom-deck {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start; /* Left align the cards */
+        }
+        .card.custom-card {
+            flex: 0 0 18%; /* Adjust width as needed */
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .registerBtn {
+            display: inline-block;
+            width: 50%;
+            text-align: center;
+            padding: 10px 20px;
+            margin: 10px 0;
+        }
+        .likecount {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            color: #555;
+            margin-top: 10px;
+        }
+        .likecount i {
+            margin-right: 5px;
+            color: #e74c3c;
+        }
+
+        .content {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%; /* 너비를 제한합니다. 필요에 따라 조정하세요. */
+        }
+    </style>
+</head>
+
 <div layout:fragment="content">
     <div class="row mt-3">
         <form action="/board/list" method="get">
@@ -36,42 +120,41 @@
                     Board List
                 </div>
                 <div class="card-body">
-                    <div>
-                        <span>Board List</span>
-                        <button type="button" style="float:right" class="btn btn-outline-secondary registerBtn">
+                    <div class="card-deck custom-deck" th:with="link=${pageRequestDTO.getLink()}">
+                        <div class="card travel-card custom-card" th:each="dto : ${responseDTO.dtoList}">
+
+                            <a th:href="|@{/board/read(bno=${dto.bno})}&${link}|" class="text-decoration-none">
+                                <img style="width:100%" th:each="boardImage: ${dto.boardImages}"
+                                     th:src="|/view/s_${boardImage.uuid}_${boardImage.fileName}|">
+                                <div class="card-body">
+                                    <div class="title">
+                                        [[${dto.title}]]
+                                        <span class="count">[<span th:text="${dto.replyCount}">0</span>]</span>
+                                    </div>
+                                    <div class="content">
+                                        [[${dto.content}]]
+                                    </div>
+                                    <div class="meta">
+                                        [[${dto.name}]]
+                                        <br>
+                                        [[${#temporals.format(dto.regDate,'yyyy-MM-dd HH:mm')}]]
+                                    </div>
+                                    <div>
+                                        <div class="likecount">
+                                            <i class="fas fa-thumbs-up"></i>[[${dto.likeCount}]] <span style="margin-left: 10px" class="viewCount">  조회수 [[${dto.viewCount}]]</span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4"> <!-- Add this div for centering the button -->
+                        <button type="button" class="btn btn-outline-secondary registerBtn">
                             Register
                         </button>
                     </div>
-
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th scope="col">Bno</th>
-                            <th scope="col">Title</th>
-                            <th scope="col">Writer</th>
-                            <th scope="col">RegDate</th>
-                        </tr>
-                        </thead>
-                        <tbody th:with="link=${pageRequestDTO.getLink()}">
-                        <tr th:each="dto:${responseDTO.dtoList}">
-                            <td>[[${dto.bno}]]</td>
-                            <td>
-                                <a th:href="|@{/board/read(bno=${dto.bno})}&${link}|" class="text-decoration-none">
-                                    [[${dto.title}]]
-                                    <span class="count">[[${dto.replyCount}]]</span>
-                                    <span class="likecount">[[${dto.likeCount}]]</span>
-                                    <div th:if="${dto.boardImages!=null && dto.boardImages.size()>0}">
-                                        <img style="width:100px" th:each="boardImage: ${dto.boardImages}"
-                                             th:src="|/view/s_${boardImage.uuid}_${boardImage.fileName}|">
-                                    </div>
-                                </a>
-                            </td>
-                            <td>[[${dto.name}]]</td>
-                            <td>[[${#temporals.format(dto.regDate,'yyyy-MM-dd HH:mm')}]]</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    <div class="float-end">
+                    <div class="float-end mt-4">
                         <ul class="pagination flex-wrap">
                             <li class="page-item" th:if="${responseDTO.prev}">
                                 <a class="page-link" th:data-num="${responseDTO.start -1}">Previous</a>

@@ -8,6 +8,7 @@
     <link href="/css/kakoamap.css" rel="stylesheet"/>
 </head>
 
+
 <div layout:fragment="content">
     <div class="row mt-3">
         <div class="col">
@@ -45,19 +46,18 @@
                             <div class="float-end mapHidden">
                                 <button type="button" class="btn btn-primary MapOpenBtn">Map OPEN</button>
                             </div>
+                            <button type="button" class="btn btn-secondary resetMapBtn">Map Reset</button>
+
+                        </div>
+                            <input type="text" id="xxx" name="xaxis" hidden>
+                            <input type="text" id="yyy" name="yaxis" hidden>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">장소명</span>
+                            <input type="text" id="placeName" name="placeName" class="form-control" readonly>
                         </div>
 
-                        <lable for="xxx">
-                            <input type="text" id="xxx" name="xaxis" readonly> x좌표
-                        </lable>
-
-                        <lable for="xxx">
-                            <input type="text" id="yyy" name="yaxis" readonly> y좌표
-                        </lable>
-
-                        <lable for="placeName">
-                            <input type="text" id="placeName" name="placeName" readonly> 장소
-                        </lable>
+                        <input type="number" name="viewCount" th:value="0" hidden>
 
                         <div class="my-4">
                             <div class="float-end">
@@ -219,6 +219,10 @@
         const target = document.querySelector(".uploadHidden")
         const uploadFiles = uploadResult.querySelectorAll("img")
 
+        if (uploadFiles.length === 0) {
+            alert("파일을 업로드 해야 합니다.");
+            return;
+        }
 
         let str = ''
         for (let i = 0; i < uploadFiles.length; i++) {
@@ -251,6 +255,15 @@
             initializeMap();
         }
     })
+
+    document.querySelector(".resetMapBtn").addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        document.getElementById('xxx').value = "";
+        document.getElementById('yyy').value = "";
+        document.getElementById('placeName').value = "";
+    });
 
     const modalCloseButton = document.getElementById('modalCloseButton');
     modalCloseButton.addEventListener('click', function (e) {

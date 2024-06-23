@@ -24,6 +24,11 @@ public class BoardServiceImpl implements BoardService {
     private final LikeService likeService;
 
     @Override
+    public void incrementViewCount(Long bno) {
+        boardRepository.incrementViewCount(bno);
+    }
+
+    @Override
     public Long register(BoardDTO boardDTO) {
 //        Board board = modelMapper.map(boardDTO, Board.class);
         Board board = dtoToEntity(boardDTO);
