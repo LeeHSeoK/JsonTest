@@ -140,7 +140,8 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
             query.where(booleanBuilder);
         }
 //        query.where(board.bno.gt(0L));
-        query.groupBy(board);
+//        query.groupBy(board);
+
 
         getQuerydsl().applyPagination(pageable, query);
 
