@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.zerock.jsontest.dto.board.*;
 import org.zerock.jsontest.service.board.BoardService;
-import org.zerock.jsontest.service.board.LikeService;
 import org.zerock.jsontest.service.board.LoginService;
 
 import java.io.File;
@@ -35,13 +34,11 @@ public class BoardController {
 
     private final BoardService boardService;
     private final LoginService loginService;
-    private final LikeService likeService;
 
     @GetMapping("list")
     public void list(PageRequestDTO pageRequestDTO, Model model) {
         PageResponseDTO<BoardListAllDTO> responseDTO = boardService.listWithAll(pageRequestDTO);
         model.addAttribute("responseDTO", responseDTO);
-
     }
 
     @GetMapping("/register")
@@ -61,25 +58,21 @@ public class BoardController {
 
         System.out.println(boardDTO.toString()+"==============================boardDTO");
         Long bno = boardService.register(boardDTO);
-        //게시판 작성시 해당 게시글에 대한 좋아요 수 DB도 작성한다.
-        likeService.registerLike(bno);
         redirectAttributes.addFlashAttribute("result", bno);
         return "redirect:/board/list";
     }
 
     @GetMapping({"/read", "/modify"})
-    public void read(@RequestParam("bno")Long bno, PageRequestDTO pageRequestDTO, Model model, HttpSession session){
+    public void read(@RequestParam("bno") Long bno, PageRequestDTO pageRequestDTO, Model model, HttpSession session){
         boardService.incrementViewCount(bno); // 조회수 증가
         BoardDTO boardDTO = boardService.readOne(bno);
         model.addAttribute("dto", boardDTO);
         String loginSession = (String) session.getAttribute("loginSession");
 
-
-        if(loginSession != null){
+        if (loginSession != null) {
             SignUpDTO signUpDTO = loginService.searchOne(loginSession);
             model.addAttribute("userName", signUpDTO.getName());
-        }
-        else{
+        } else {
             model.addAttribute("userName", "");
         }
     }
@@ -95,24 +88,24 @@ public class BoardController {
             redirectAttributes.addFlashAttribute("errors",
                     bindingResult.getAllErrors());
             redirectAttributes.addAttribute("bno", boardDTO.getBno());
-            return "redirect:/board/modify?"+link;
+            return "redirect:/board/modify?" + link;
         }
-        System.out.println(boardDTO+"=====================================");
+        System.out.println(boardDTO + "=====================================");
         boardService.modify(boardDTO);
         redirectAttributes.addFlashAttribute("result", "modified");
         redirectAttributes.addAttribute("bno", boardDTO.getBno());
         return "redirect:/board/read";
     }
-//    @RequestParam("bno")Long bno
+
     @PostMapping("/delete")
     public String delete(BoardDTO boardDTO, RedirectAttributes redirectAttributes){
 
         Long bno = boardDTO.getBno();
         boardService.remove(bno);
 
-        //게시물이 삭제되었고 첨부파일 삭제
+        // 게시물이 삭제되었고 첨부파일 삭제
         List<String> fileNames = boardDTO.getFileNames();
-        if(fileNames != null && fileNames.size()>0){
+        if(fileNames != null && fileNames.size() > 0){
             removeFiles(fileNames);
         }
         redirectAttributes.addFlashAttribute("result", "deleted");
@@ -121,16 +114,16 @@ public class BoardController {
 
     public void removeFiles(List<String> fileNames){
         for(String fileName : fileNames){
-            Resource resource = new FileSystemResource(uploadPath + File.separator+fileName);
+            Resource resource = new FileSystemResource(uploadPath + File.separator + fileName);
 
             try{
                 String contentType = Files.probeContentType(resource.getFile().toPath());
                 resource.getFile().delete();
                 if(contentType.startsWith("image")){
-                    File thumbnailFile = new File(uploadPath + File.separator+"s_"+fileName);
+                    File thumbnailFile = new File(uploadPath + File.separator + "s_" + fileName);
                     thumbnailFile.delete();
                 }
-            }catch (Exception e){
+            } catch (Exception e){
                 log.error(e.getMessage());
             }
         }

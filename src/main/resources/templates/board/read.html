@@ -500,8 +500,42 @@
     }
 
 
-    //////////////////////////////////////////////////////////////////////////// 좋아요 버튼
+    /////////////////////////////////////////////////////////////////////// 좋아요 버튼
 
+    // // 좋아요 카운트 조회
+    // async function getLikeInfo(bno) {
+    //     try {
+    //         const result = await axios.get(`/like/${bno}`);
+    //         return result.data;
+    //     } catch (error) {
+    //         console.error("Error fetching like info:", error);
+    //         throw error;
+    //     }
+    // }
+    //
+    // // 좋아요 1 증가
+    // async function addCount(bno) {
+    //     try {
+    //         const result = await axios.post(`/like/${bno}`);
+    //         return result.data; // 서버 응답에서 data를 반환
+    //     } catch (error) {
+    //         console.error("Error adding like count:", error);
+    //         throw error;
+    //     }
+    // }
+    //
+    // // 좋아요 1 감소
+    // async function minusCount(bno) {
+    //     try {
+    //         const result = await axios.post(`/dislike/${bno}`);
+    //         return result.data; // 서버 응답에서 data를 반환
+    //     } catch (error) {
+    //         console.error("Error subtracting like count:", error);
+    //         throw error;
+    //     }
+    // }
+
+    // 좋아요 상태 초기화
     function initialize() {
         getLikeInfo(bno).then(data => {
             updateLikeCount(data.likeCount);
@@ -511,40 +545,42 @@
         });
     }
 
-    initialize();
+    initialize()
 
+    // 좋아요 버튼 상태 설정
     function setLikeButtonStatus(status) {
         const likeButton = document.querySelector(".likebutton");
         likeButton.value = status ? "true" : "false";
         likeButton.innerHTML = status ? '<i class="fas fa-thumbs-up"></i> 좋아요 취소' : '<i class="far fa-thumbs-up"></i> 좋아요';
     }
 
-
+    // 좋아요 수 업데이트
     function updateLikeCount(newCount) {
         document.querySelector(".likeCountInput").value = newCount;
     }
 
-
+    // 좋아요 버튼 클릭 이벤트 처리
     const likeButton = document.querySelector(".likebutton");
     likeButton.addEventListener("click", function (e) {
         if (likeButton.value === "false") {
             addCount(bno).then(result => {
-                alert(result.data.message); // 서버로부터의 응답 메시지를 알림으로 표시
-                updateLikeCount(result.data.likeCount); // 최신 좋아요 수를 표시
+                alert(result.message); // 서버로부터의 응답 메시지를 알림으로 표시
+                updateLikeCount(result.likeCount); // 최신 좋아요 수를 표시
                 setLikeButtonStatus(true);
             }).catch(e => {
                 alert("Exception...");
             });
         } else {
             minusCount(bno).then(result => {
-                alert(result.data.message); // 서버로부터의 응답 메시지를 알림으로 표시
-                updateLikeCount(result.data.likeCount); // 최신 좋아요 수를 표시
+                alert(result.message); // 서버로부터의 응답 메시지를 알림으로 표시
+                updateLikeCount(result.likeCount); // 최신 좋아요 수를 표시
                 setLikeButtonStatus(false);
             }).catch(e => {
                 alert("Exception...");
             });
         }
     }, false);
+
 
 
     ////////////////////////////////////////////////////////////////////////////

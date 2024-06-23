@@ -11,5 +11,5 @@ public interface LikeService {
     //좋아요 재클릭시 1감소
     Long decrementLikeCount(Long bno);
     //게시글 작성시 좋아요 DB 초기화
-    void registerLike(Long bno);
+//    void registerLike(Long bno);
 }

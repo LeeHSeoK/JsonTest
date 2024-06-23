@@ -11,17 +11,8 @@ public interface BoardService {
     BoardDTO readOne(Long bno);
     void modify(BoardDTO boardDTO);
     void remove(Long bno);
-//    PageResponseDTO<BoardDTO> list(PageRequestDTO pageRequestDTO);
-
     void incrementViewCount(Long bno);
-
-    //댓글의 갯수까지 처리
-//    PageResponseDTO<BoardListReplyCountDTO> listWithReplyCount(PageRequestDTO pageRequestDTO);
-
-    //게시글의 이미지, 댓글의 갯수(숫자) 처리
     PageResponseDTO<BoardListAllDTO> listWithAll(PageRequestDTO pageRequestDTO);
-
-    //mapping이 복잡할때 메서드를 생성해서 맵핑하는게 효율적이다.
 
     default Board dtoToEntity(BoardDTO boardDTO){
         Board board = Board.builder()
@@ -34,6 +25,7 @@ public interface BoardService {
                 .yaxis(boardDTO.getYaxis())
                 .placeName(boardDTO.getPlaceName())
                 .viewCount(boardDTO.getViewCount())
+                .likeCount(boardDTO.getLikeCount())  // 좋아요 수 추가
                 .build();
 
         if(boardDTO.getFileNames() != null){
@@ -59,10 +51,11 @@ public interface BoardService {
                 .yaxis(board.getYaxis())
                 .placeName(board.getPlaceName())
                 .viewCount(board.getViewCount())
+                .likeCount(board.getLikeCount())  // 좋아요 수 추가
                 .build();
 
         List<String> fileNames = board.getImageSet().stream().sorted().map(boardImage ->
-                boardImage.getUuid()+"_"+boardImage.getFileName()).collect(Collectors.toList());
+                boardImage.getUuid() + "_" + boardImage.getFileName()).collect(Collectors.toList());
 
         boardDTO.setFileNames(fileNames);
         return boardDTO;
