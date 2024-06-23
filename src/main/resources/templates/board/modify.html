@@ -108,7 +108,7 @@
                             </button>
                         </div>
                         <div class="card-body">
-                            <img th:src="|/view/s_${fileName}|" th:data-src="${fileName}">
+                            <img th:src="|/view/s_${fileName}|" th:data-src="${fileName}" alt="#">
                         </div>
                     </div><!-- card -->
                 </th:block>
@@ -239,7 +239,7 @@
     const removeFileList = []
 
     function appendNotShownData() {
-        if (removeFileList.length == 0) {
+        if (removeFileList.length === 0) {
             return
         }
         const target = document.querySelector(".uploadHidden")
@@ -293,32 +293,57 @@
         const str = `<div class="card col-4">
                 <div class="card-header d-flex justify-content-center">
                     ${fileName}
-                    <button class="btn-sm btn-danger" onclick="javascript:removeFile('${uuid}','${fileName}',this)">X</button>
+                    <button class="btn-sm btn-danger" onclick="removeFile('${uuid}','${fileName}',this)">X</button>
                 </div>
                 <div class="card-body">
-                    <img src="/view/${link}" data-src="${uuid + "_" + fileName}">
+                    <img src="/view/${link}" data-src="${uuid + "_" + fileName}" alt="#">
                 </div>
             </div> `
         uploadResult.innerHTML += str
     }
 
     document.querySelector(".uploadBtn").addEventListener("click", function (e) {
-
         const formObj = new FormData();
-        const fileInput = document.querySelector("input[name='files']")
-        const files = fileInput.files
+        const fileInput = document.querySelector("input[name='files']");
+        const files = fileInput.files;
+        let validFiles = true;
+
         for (let i = 0; i < files.length; i++) {
-            formObj.append("files", files[i])
-        }
-        uploadToServer(formObj).then(result => {
-            for (const uploadResult of result) {
-                showUploadFile(uploadResult)
+            if (!files[i].type.startsWith("image/")) {
+                alert("이미지 파일만 업로드할 수 있습니다.");
+                validFiles = false;
+                break;
             }
-            uploadModal.hide()
+            formObj.append("files", files[i]);
+        }
+
+        if (!validFiles) {
+            return;
+        }
+
+        uploadToServer(formObj).then(result => {
+            console.log(result);
+            for (const uploadResult of result) {
+                showUploadFile(uploadResult);
+            }
+            uploadModal.hide();
         }).catch(e => {
-            uploadModal.hide()
-        })
-    }, false)
+            uploadModal.hide();
+        });
+    }, false);
+
+    function showUploadFile({uuid, fileName, link}) {
+        const str = `<div class="card col-4">
+            <div class="card-header d-flex justify-content-center">
+                ${fileName}
+                <button class="btn-sm btn-danger" onclick="removeFile('${uuid}','${fileName}',this)">X</button>
+            </div>
+            <div class="card-body">
+                <img src="/view/${link}" data-src="${uuid + "_" + fileName}" alt="#">
+            </div>
+        </div>`;
+        uploadResult.innerHTML += str;
+    }
 
     //////////////////////////////////////////////////////////////////////////// kakaoMap
 
