@@ -37,6 +37,9 @@ public class Board extends BaseEntity {
     @Column(nullable = false)
     private Long viewCount = 0L; // 조회수 컬럼 기본값 설정
 
+    @Column(nullable = false)
+    private Long likeCount = 0L; // 좋아요 수 컬럼 기본값 설정
+
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Builder.Default
     @BatchSize(size=20)
@@ -45,10 +48,6 @@ public class Board extends BaseEntity {
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @BatchSize(size=20)
     private List<Reply> replies;
-
-    @Builder.Default
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<LikeC> likes = new ArrayList<>();
 
     public void change(String title, String content, String name, String xaxis, String yaxis, String placeName){
         this.title = title;
@@ -72,5 +71,10 @@ public class Board extends BaseEntity {
     public void clearImage(){
         imageSet.forEach(boardImage -> boardImage.changeBoard(null));
         this.imageSet.clear();
+    }
+
+    // 좋아요 수 변경 메서드
+    public void changeLikeCount(Long likeCount) {
+        this.likeCount = likeCount;
     }
 }

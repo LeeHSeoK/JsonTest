@@ -33,12 +33,18 @@ public class PageRequestDTO {
     }
 
     public Pageable getSortedPageable() {
-        if (this.sort != null && this.sort.equals("viewCount")) {
-            return PageRequest.of(this.page - 1, this.size, Sort.by("viewCount").descending());
+        if (this.sort != null) {
+            switch (this.sort) {
+                case "viewCount":
+                    return PageRequest.of(this.page - 1, this.size, Sort.by("viewCount").descending());
+                case "likeCount":
+                    return PageRequest.of(this.page - 1, this.size, Sort.by("likeCount").descending());
+                default:
+                    return PageRequest.of(this.page - 1, this.size, Sort.by("bno").descending());
+            }
         } else {
             return PageRequest.of(this.page - 1, this.size, Sort.by("bno").descending());
         }
-
     }
 
     public String getLink() {

@@ -160,7 +160,7 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
                     .replyCount(replyCount)
                     .viewCount(board1.getViewCount())
                     .content(board1.getContent())
-                    .viewCount(board1.getViewCount())
+                    .likeCount(board1.getLikeCount())
                     .build();
             //BoardImage를 BoardImageDTO로 처리
             List<BoardImageDTO> imageDTOS = board1.getImageSet().stream().sorted()

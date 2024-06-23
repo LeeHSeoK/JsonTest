@@ -43,4 +43,5 @@ public class BoardDTO {
 
     private Long viewCount;
 
+    private Long likeCount;
 }
