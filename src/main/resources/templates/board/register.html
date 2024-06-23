@@ -6,6 +6,12 @@
 <head>
     <title>Board Register</title>
     <link href="/css/kakoamap.css" rel="stylesheet"/>
+    <style>
+        .input-group-text {
+            width: 100px; /* 동일한 너비로 설정 */
+            text-align: right; /* 텍스트 정렬 */
+        }
+    </style>
 </head>
 
 
@@ -21,23 +27,22 @@
                         <input type="text" name="id" class="form-control" th:value="${userInfo.id}" hidden>
                         <div class="input-group mb-3">
                             <span class="input-group-text">Title</span>
-                            <input type="text" name="title" class="form-control" placeholder="Title">
+                            <input type="text" name="title" class="form-control" placeholder="Title" maxlength="20" required>
                         </div>
 
                         <div class="input-group mb-3">
                             <span class="input-group-text">Content</span>
-                            <textarea class="form-control col-sm-5" rows="5" name="content"></textarea>
+                            <textarea class="form-control col-sm-5" rows="5" name="content" id="content" maxlength="500" required></textarea>
                         </div>
-
-                        <div class="input-group mb-3">
-                            <span class="input-group-text">Writer</span>
-                            <input type="text" name="name" class="form-control" th:value="${userInfo.name}" readonly>
+                        <div class="text-right">
+                            <span id="charCount" style="float: right">0 / 500</span>
                         </div>
+                            <input type="text" name="name" class="form-control" th:value="${userInfo.name}" hidden>
 
                         <div class="input-group mb-3">
                             <span class="input-group-text">Images</span>
                             <div class="float-end uploadHidden">
-                                <button type="button" class="btn btn-primary uploadFileBtn">ADD Files</button>
+                                <button type="button" class="btn btn-primary uploadFileBtn">ADD Files</button> <span style="color: red">*사진필수</span>
                             </div>
                         </div>
 
@@ -100,7 +105,6 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary uploadBtn">Upload</button>
-                    <button type="button" class="btn btn-outline-dark closeUploadBtn">Close</button>
                 </div>
             </div>
         </div>
@@ -131,7 +135,6 @@
                         <div id="pagination"></div>
                     </div>
                 </div>
-                <button id="modalCloseButton">닫기</button>
             </div>
         </div>
     </div>
@@ -260,16 +263,9 @@
         e.preventDefault();
         e.stopPropagation();
 
-        document.getElementById('xxx').value = "";
-        document.getElementById('yyy').value = "";
-        document.getElementById('placeName').value = "";
-    });
-
-    const modalCloseButton = document.getElementById('modalCloseButton');
-    modalCloseButton.addEventListener('click', function (e) {
-        e.stopPropagation(); // 이벤트 전파를 막음
-        e.preventDefault();
-        mapModal.hide()
+        document.getElementById('xxx').value = null;
+        document.getElementById('yyy').value = null;
+        document.getElementById('placeName').value = null;
     });
 
     function initializeMap() {
@@ -495,5 +491,16 @@
         var centerPosition = new kakao.maps.LatLng(37.566826, 126.9786567);
         map.setCenter(centerPosition);
     }
+
+    //////////////////////////////////////////////////////////////////////////
+
+    //content 글자수 표시
+    const contentTextarea = document.getElementById('content');
+    const charCountSpan = document.getElementById('charCount');
+
+    contentTextarea.addEventListener('input', function () {
+        const currentLength = contentTextarea.value.length;
+        charCountSpan.textContent = `${currentLength} / 500`;
+    });
 </script>
 </html>

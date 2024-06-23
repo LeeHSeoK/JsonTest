@@ -75,6 +75,7 @@ public class BoardController {
         } else {
             model.addAttribute("userName", "");
         }
+
     }
 
     @PostMapping("/modify")

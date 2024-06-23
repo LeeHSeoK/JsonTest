@@ -125,9 +125,9 @@
     <div class="row mt-3">
         <div class="col">
             <div class="card">
-                <div class="card-header">
-                    Board List
-                </div>
+<!--                <div class="card-header">-->
+<!--                    Board List-->
+<!--                </div>-->
                 <div class="card-body">
                     <div class="card-deck custom-deck" th:with="link=${pageRequestDTO.getLink()}">
                         <div class="card travel-card custom-card" th:each="dto : ${responseDTO.dtoList}">
@@ -191,11 +191,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>Modal body text goes here.[[${result}]]</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <p>게시글 등록이 완료되었습니다.</p>
                 </div>
             </div>
         </div>
