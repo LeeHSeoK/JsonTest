@@ -23,6 +23,7 @@ public class PageRequestDTO {
     private String type; //t, c, w, tc, tw, twc
     private String keyword;
     private String link;
+    private String sort;
 
     public String[] getTypes() {
         if (type == null || type.isEmpty()) {
@@ -31,8 +32,13 @@ public class PageRequestDTO {
         return type.split("");
     }
 
-    public Pageable getPageable(String... props) {
-        return PageRequest.of(this.page - 1, this.size, Sort.by(props).descending());
+    public Pageable getSortedPageable() {
+        if (this.sort != null && this.sort.equals("viewCount")) {
+            return PageRequest.of(this.page - 1, this.size, Sort.by("viewCount").descending());
+        } else {
+            return PageRequest.of(this.page - 1, this.size, Sort.by("bno").descending());
+        }
+
     }
 
     public String getLink() {

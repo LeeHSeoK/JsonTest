@@ -115,6 +115,14 @@
 
     <div class="row mt-3">
         <div class="col">
+            <button type="button" class="btn btn-outline-secondary sortViewCountBtn">조회수순</button>
+            <button type="button" class="btn btn-outline-secondary sortBnoBtn">최신순</button>
+
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col">
             <div class="card">
                 <div class="card-header">
                     Board List
@@ -194,6 +202,28 @@
 </div> <!-- layout end -->
 
 <script layout:fragment="script" th:inline="javascript">
+
+    //조회수순으로 정렬
+    document.querySelector(".sortViewCountBtn").addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const formObj = document.querySelector("form");
+        formObj.innerHTML += `<input type='hidden' name='sort' value='viewCount'>`;
+        formObj.submit();
+    });
+
+    //최신순으로 정렬
+    document.querySelector(".sortBnoBtn").addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const formObj = document.querySelector("form");
+        formObj.innerHTML += `<input type='hidden' name='sort' value='bno'>`;
+        formObj.submit();
+    });
+
+
     document.querySelector(".pagination").addEventListener("click", function (e) {
         e.preventDefault()
         e.stopPropagation()
