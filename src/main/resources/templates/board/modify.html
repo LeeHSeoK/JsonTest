@@ -302,6 +302,7 @@
         uploadResult.innerHTML += str
     }
 
+    //업로드모달 창 내의 파일첨부버튼처리 이미지 파일만 업로드가능하게
     document.querySelector(".uploadBtn").addEventListener("click", function (e) {
         const formObj = new FormData();
         const fileInput = document.querySelector("input[name='files']");
