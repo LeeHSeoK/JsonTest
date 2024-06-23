@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/basic.html}">
+      layout:decorate="~{layout/basic.html}" lang="ko">
 
 <head>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -11,11 +11,6 @@
         body {
             margin: 0 auto;
             max-width: 1200px; /* 최대 너비 설정 */
-        }
-
-        .responsive {
-            max-width: 100%;
-            height: auto;
         }
 
         .screen_out {
@@ -150,7 +145,7 @@
                     <div class="col">
                         <div class="horizontal-line"></div>
                         <div class="card" th:if="${dto.fileNames!=null && dto.fileNames.size()>0}">
-                            <img class="card-img-top" th:each="fileName: ${dto.fileNames}" th:src="|/view/${fileName}|">
+                            <img class="card-img-top" th:each="fileName: ${dto.fileNames}" th:src="|/view/${fileName}|" alt="#">
                         </div>
 
                     </div>
@@ -161,10 +156,10 @@
                         <div class="wrap_map">
                             <div id="map" style="width:100%;height:100%"></div> <!-- 지도를 표시할 div 입니다 -->
                             <div class="wrap_button">
-                                <a href="javascript:;" class="btn_comm btn_linkMap" target="_blank" onclick="moveKakaoMap(this)">
+                                <a href="javascript:" class="btn_comm btn_linkMap" target="_blank" onclick="moveKakaoMap(this)">
                                     <span class="screen_out">지도 크게보기</span>
                                 </a> <!-- 지도 크게보기 버튼입니다 -->
-                                <a href="javascript:;" class="btn_comm btn_resetMap" onclick="resetKakaoMap()">
+                                <a href="javascript:" class="btn_comm btn_resetMap" onclick="resetKakaoMap()">
                                     <span class="screen_out">지도 초기화</span>
                                 </a> <!-- 지도 초기화 버튼입니다 -->
                             </div>
@@ -308,7 +303,7 @@
         }
 
         for (let i = data.start; i <= data.end; i++) {
-            pageStr += `<li class="page-item ${i == data.page ? "active" : ""}">
+            pageStr += `<li class="page-item ${i === data.page ? "active" : ""}">
                             <a class="page-link" data-page="${i}">${i}</a>
                         </li>`
         }
@@ -342,7 +337,7 @@
     const registerModal = new bootstrap.Modal(document.querySelector(".registerModal"))
     const registerBtn = document.querySelector(".registerBtn")
 
-    document.querySelector(".addReplyBtn").addEventListener("click", function (e) {
+    document.querySelector(".addReplyBtn").addEventListener("click", function () {
         if (name.value) {
             registerModal.show()
         } else {
@@ -370,7 +365,7 @@
         e.preventDefault()
         e.stopPropagation()
         const target = e.target
-        if (!target || target.tagName != 'A') {   //하이퍼링크가 아니면
+        if (!target || target.tagName !== 'A') {   //하이퍼링크가 아니면
             return
         }
 
@@ -397,7 +392,7 @@
         e.preventDefault()
         e.stopPropagation()
         const target = e.target
-        if (!target || target.tagName != 'SPAN') {
+        if (!target || target.tagName !== 'SPAN') {
             return
         }
         const rno = target.getAttribute("data-rno")

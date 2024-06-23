@@ -32,16 +32,7 @@
             font-weight: bold;
             color: #333;
         }
-        .travel-card .price {
-            font-size: 1.5rem;
-            color: #e74c3c;
-            margin-top: 10px;
-        }
-        .travel-card .details {
-            font-size: 0.9rem;
-            color: #555;
-            margin-top: 10px;
-        }
+
         .travel-card .meta {
             font-size: 0.8rem;
             color: #888;
@@ -131,10 +122,9 @@
                 <div class="card-body">
                     <div class="card-deck custom-deck" th:with="link=${pageRequestDTO.getLink()}">
                         <div class="card travel-card custom-card" th:each="dto : ${responseDTO.dtoList}">
-
                             <a th:href="|@{/board/read(bno=${dto.bno})}&${link}|" class="text-decoration-none">
-                                <img style="width:100%" th:each="boardImage: ${dto.boardImages}"
-                                     th:src="|/view/s_${boardImage.uuid}_${boardImage.fileName}|">
+                                <img style="width:100%" th:if="${dto.boardImages != null && dto.boardImages.size() > 0}"
+                                     th:src="|/view/s_${dto.boardImages[0].uuid}_${dto.boardImages[0].fileName}|"> <!-- 첫 번째 이미지 만을 출력 -->
                                 <div class="card-body">
                                     <div class="title">
                                         [[${dto.title}]]
@@ -153,7 +143,6 @@
                                             <i class="fas fa-thumbs-up"></i>[[${dto.likeCount}]] <span style="margin-left: 10px" class="viewCount">  조회수 [[${dto.viewCount}]]</span>
                                         </div>
                                     </div>
-
                                 </div>
                             </a>
                         </div>
