@@ -1,6 +1,7 @@
 package org.zerock.jsontest.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +12,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import com.fasterxml.jackson.databind.ObjectMapper; // Jackson 라이브러리 추가 필요
 import org.zerock.jsontest.dto.ReadOneDTO;
 import org.zerock.jsontest.dto.SearchListDTO;
+import org.zerock.jsontest.dto.TravelDTO;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -159,7 +161,7 @@ public class TravelController {
 
     @GetMapping("/searchresultinfo")
     public String searchcontentId(@RequestParam(value = "contentId") String contentId,
-                                  @RequestParam(value = "contentTypeId") String contentTypeId, Model model) {
+                                  @RequestParam(value = "contentTypeId") String contentTypeId ,Model model) {
         try {
 
             String encodedServiceKey = URLEncoder.encode(SERVICE_KEY, "UTF-8");

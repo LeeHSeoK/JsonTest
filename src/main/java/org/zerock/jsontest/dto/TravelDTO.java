@@ -9,6 +9,7 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class TravelDTO {
     private String contentid;
     private String title;

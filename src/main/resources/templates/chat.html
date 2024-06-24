@@ -50,16 +50,6 @@
 </div>
 
 <script>
-
-    // function extractFromLastColon(str) {
-    //     var colonIndex = str.lastIndexOf(':');
-    //     if (colonIndex === -1) {
-    //         return ''; // 콜론이 없는 경우 빈 문자열 반환
-    //     }
-    //     var extracted = str.substring(colonIndex + 1).trim(); // 콜론 이후의 값을 반환하고 공백 제거
-    //     return extracted.replace(/['"]/g, ''); // 따옴표 제거
-    // }
-
     function sendMessage() {
         var question = $('#question').val();
         if (question.trim() === '') {
@@ -76,14 +66,15 @@
             contentType: 'application/json',
             data: JSON.stringify({ question: question }),
             success: function(response) {
+                var responseText = response.response.replace(/\\n/g, '<br>').replace(/\\"/g, '');
+                $('#chat-box').append('<div class="message assistant-message">' + responseText + '</div>');
 
-                var response = response.replace(/\\n/g, '<br>');
-                response = response.replace(/\\"/g, '');
+                var contentId = response.contentid;
+                var contentTypeId = response.contenttypeid;
 
-                // var recom = extractFromLastColon(response);
-                // console.log(recom)
-
-                $('#chat-box').append('<div class="message assistant-message">' + response + '</div>');
+                if (contentId && contentTypeId) {
+                    $('#chat-box').append('<div class="message assistant-message"><button onclick="window.open(\'/searchresultinfo?contentId=' + contentId + '&contentTypeId=' + contentTypeId + '\', \'_blank\')">Go to Place</button></div>');
+                }
             },
             error: function(error) {
                 alert('Error: ' + error.responseText);
