@@ -41,7 +41,6 @@ public class BoardController {
     public void list(PageRequestDTO pageRequestDTO, Model model) {
         PageResponseDTO<BoardListAllDTO> responseDTO = boardService.listWithAll(pageRequestDTO);
         model.addAttribute("responseDTO", responseDTO);
-
     }
 
     @GetMapping("/register")
@@ -72,7 +71,6 @@ public class BoardController {
         BoardDTO boardDTO = boardService.readOne(bno);
         model.addAttribute("dto", boardDTO);
         String loginSession = (String) session.getAttribute("loginSession");
-
 
         if(loginSession != null){
             SignUpDTO signUpDTO = loginService.searchOne(loginSession);

@@ -2,6 +2,7 @@ package org.zerock.jsontest.service.dbService;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.zerock.jsontest.domain.Travel;
 import org.zerock.jsontest.dto.TravelDTO;
@@ -14,7 +15,11 @@ import java.util.Optional;
 public class DbServiceImpl implements DbService{
 
     private final ModelMapper modelMapper;
+
+    @Autowired
     private final DbRepository dbRepository;
+
+
 
     //OpenAI를 통해 받아온 값을 가지고 DB에서 찾아서 출력
     public TravelDTO searchOne(String title) {

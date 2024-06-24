@@ -1,68 +1,101 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Chat with GPT</title>
+    <title>Chat with AI</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
         }
         .chat-container {
-            width: 50%;
-            margin: auto;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-        }
-        .chat-box {
-            height: 300px;
+            width: 80%;
+            margin: 0 auto;
+            max-width: 600px;
             border: 1px solid #ccc;
             padding: 10px;
-            overflow-y: scroll;
-            margin-bottom: 10px;
+            background-color: #f9f9f9;
         }
-        .user-input {
-            width: calc(100% - 22px);
+        .message {
+            padding: 5px;
+            border-bottom: 1px solid #ddd;
+        }
+        .user-message {
+            text-align: right;
+        }
+        .assistant-message {
+            text-align: left;
+        }
+        .input-container {
+            display: flex;
+            margin-top: 10px;
+        }
+        .input-container input {
+            flex: 1;
             padding: 10px;
         }
-        .send-button {
-            padding: 10px 20px;
+        .input-container button {
+            padding: 10px;
         }
     </style>
 </head>
 <body>
 <div class="chat-container">
-    <h2>Chat with GPT</h2>
-    <div class="chat-box" id="chat-box">
-        <!-- Messages will appear here -->
+    <div id="chat-box">
+        <!-- Chat messages will be appended here -->
     </div>
-    <input type="text" class="user-input" id="user-input" placeholder="Type your message here..."/>
-    <button class="send-button" id="send-button">Send</button>
+    <div class="input-container">
+        <input type="text" id="question" placeholder="Type your question..." />
+        <button onclick="sendMessage()">Send</button>
+    </div>
 </div>
-<script>
-    $(document).ready(function(){
-        $("#send-button").click(function(){
-            var userInput = $("#user-input").val();
-            if(userInput.trim() !== ""){
-                $("#chat-box").append("<div><strong>You:</strong> " + userInput + "</div>");
-                $.post("/api/v1/gpt", { msg: userInput }, function(data) {
-                    // data 값을 "contentId_contentTypeID" 형식으로 받아와서 split
-                    var parts = data.split('_');
-                    var contentId = parts[0];
-                    var contentTypeId = parts[1];
 
-                    if (contentId !== "1") {
-                        var button = '<button onclick="window.open(\'/searchresultinfo?contentId=' + contentId + '&contentTypeId=' + contentTypeId + '\', \'_blank\')">' + contentId + '</button>';
-                        $("#chat-box").append("<div><strong>GPT:</strong> " + button + "</div>");
-                    } else {
-                        $("#chat-box").append("<div><strong>GPT:</strong>미안해요. 원하는 결과를 가져오지 못했어요, 좀더 구체적인 내용을 입력해주세요!</div>");
-                    }
-                    console.log(data);
-                }).fail(function() {
-                    alert("Error communicating with GPT");
-                });
-                $("#user-input").val("");
+<script>
+
+    // function extractFromLastColon(str) {
+    //     var colonIndex = str.lastIndexOf(':');
+    //     if (colonIndex === -1) {
+    //         return ''; // 콜론이 없는 경우 빈 문자열 반환
+    //     }
+    //     var extracted = str.substring(colonIndex + 1).trim(); // 콜론 이후의 값을 반환하고 공백 제거
+    //     return extracted.replace(/['"]/g, ''); // 따옴표 제거
+    // }
+
+    function sendMessage() {
+        var question = $('#question').val();
+        if (question.trim() === '') {
+            alert('Please enter a question');
+            return;
+        }
+
+        $('#chat-box').append('<div class="message user-message">' + question + '</div>');
+        $('#question').val('');
+
+        $.ajax({
+            url: '/api/ask',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ question: question }),
+            success: function(response) {
+
+                var response = response.replace(/\\n/g, '<br>');
+                response = response.replace(/\\"/g, '');
+
+                // var recom = extractFromLastColon(response);
+                // console.log(recom)
+
+                $('#chat-box').append('<div class="message assistant-message">' + response + '</div>');
+            },
+            error: function(error) {
+                alert('Error: ' + error.responseText);
+            }
+        });
+    }
+
+    $(document).ready(function() {
+        $('#question').keydown(function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                sendMessage();
             }
         });
     });
