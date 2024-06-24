@@ -35,9 +35,11 @@ public class Board extends BaseEntity {
     @Column(length=50)
     private String placeName;
     @Column(nullable = false)
+    @Builder.Default
     private Long viewCount = 0L; // 조회수 컬럼 기본값 설정
 
     @Column(nullable = false)
+    @Builder.Default
     private Long likeCount = 0L; // 좋아요 수 컬럼 기본값 설정
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)

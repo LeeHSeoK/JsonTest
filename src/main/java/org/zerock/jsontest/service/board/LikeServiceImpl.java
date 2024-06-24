@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.zerock.jsontest.domain.board.Board;
-import org.zerock.jsontest.domain.board.LikeC;
+//import org.zerock.jsontest.domain.board.LikeC;
 import org.zerock.jsontest.repository.board.BoardRepository;
-import org.zerock.jsontest.repository.board.LikeRepository;
+//import org.zerock.jsontest.repository.board.LikeRepository;
 
 import java.util.Optional;
 

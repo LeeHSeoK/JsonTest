@@ -19,11 +19,9 @@ public class LoginServiceImpl implements LoginService {
     private final ModelMapper modelMapper;
     private final LoginRepository loginRepository;
 
-    public boolean login(LoginDTO loginDTO){
+    public boolean login(LoginDTO loginDTO) {
         Optional<User> result = loginRepository.findById(loginDTO.getId());
-        User user = result.orElseThrow();
-
-        if(result.isPresent() && user.getPassword().equals(loginDTO.getPassword())){
+        if (result.isPresent() && result.get().getPassword().equals(loginDTO.getPassword())) { // 변경된 부분
             return true;
         }
         return false;
@@ -45,12 +43,9 @@ public class LoginServiceImpl implements LoginService {
 
     }
 
-    public SignUpDTO searchOne(String id){
+    public Optional<SignUpDTO> searchOne(String id) {
         Optional<User> result = loginRepository.findById(id);
-        User user = result.orElseThrow();
-        SignUpDTO signUpDTO = modelMapper.map(user, SignUpDTO.class);
-        return signUpDTO;
-
+        return result.map(user -> modelMapper.map(user, SignUpDTO.class)); // 변경된 부분
     }
 
     public void modify(SignUpDTO signUpDTO){

@@ -22,6 +22,7 @@ import org.zerock.jsontest.service.board.LoginService;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/board")
@@ -44,9 +45,14 @@ public class BoardController {
     @GetMapping("/register")
     public void registerGET(HttpSession session, Model model){
         String loginSession = (String) session.getAttribute("loginSession");
-        SignUpDTO signUpDTO = loginService.searchOne(loginSession);
-        model.addAttribute("userInfo", signUpDTO);
+        Optional<SignUpDTO> optionalSignUpDTO = loginService.searchOne(loginSession); // 변경된 부분
+        if (optionalSignUpDTO.isPresent()) { // 변경된 부분
+            model.addAttribute("userInfo", optionalSignUpDTO.get()); // 변경된 부분
+        } else { // 변경된 부분
+            model.addAttribute("userInfo", null); // 변경된 부분
+        } // 변경된 부분
     }
+
 
     @PostMapping("/register")
     public String registerPOST(@Valid BoardDTO boardDTO, BindingResult bindingResult,
@@ -70,13 +76,17 @@ public class BoardController {
         String loginSession = (String) session.getAttribute("loginSession");
 
         if (loginSession != null) {
-            SignUpDTO signUpDTO = loginService.searchOne(loginSession);
-            model.addAttribute("userName", signUpDTO.getName());
+            Optional<SignUpDTO> optionalSignUpDTO = loginService.searchOne(loginSession); // 변경된 부분
+            if (optionalSignUpDTO.isPresent()) { // 변경된 부분
+                model.addAttribute("userName", optionalSignUpDTO.get().getName()); // 변경된 부분
+            } else { // 변경된 부분
+                model.addAttribute("userName", ""); // 변경된 부분
+            } // 변경된 부분
         } else {
             model.addAttribute("userName", "");
         }
-
     }
+
 
     @PostMapping("/modify")
     public String modify(PageRequestDTO pageRequestDTO,
