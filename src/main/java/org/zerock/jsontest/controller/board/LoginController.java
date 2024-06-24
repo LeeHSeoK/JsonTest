@@ -15,6 +15,8 @@ import org.zerock.jsontest.dto.board.LoginDTO;
 import org.zerock.jsontest.dto.board.SignUpDTO;
 import org.zerock.jsontest.service.board.LoginService;
 
+import java.util.Optional;
+
 @Controller
 @RequiredArgsConstructor
 public class LoginController {
@@ -30,23 +32,24 @@ public class LoginController {
     public String logincheck(@Valid LoginDTO loginDTO, BindingResult bindingResult,
                              RedirectAttributes redirectAttributes, HttpSession session , @RequestParam String redirectURL){
 
-        if(bindingResult.hasErrors() || !(loginService.login(loginDTO))) {
+        if(bindingResult.hasErrors() || !loginService.login(loginDTO)) {
             redirectAttributes.addFlashAttribute("message", "아이디 혹은 비밀번호가 잘못되었습니다.");
             return "redirect:/user/login";
         }
 
-        if(loginService.login(loginDTO)){
-            SignUpDTO signUpDTO = loginService.searchOne(loginDTO.getId());
+        Optional<SignUpDTO> optionalSignUpDTO = loginService.searchOne(loginDTO.getId()); // 변경된 부분
+        if (optionalSignUpDTO.isPresent()) { // 변경된 부분
+            SignUpDTO signUpDTO = optionalSignUpDTO.get(); // 변경된 부분
             session.setAttribute("loginSession", signUpDTO.getId());
-            if(redirectURL != null && !redirectURL.isEmpty()){
+            if (redirectURL != null && !redirectURL.isEmpty()) {
                 return "redirect:" + redirectURL;
-            }else{
+            } else {
                 return "redirect:/board/list";
             }
+        } else {
+            redirectAttributes.addFlashAttribute("message", "사용자를 찾을 수 없습니다."); // 변경된 부분
+            return "redirect:/user/login"; // 변경된 부분
         }
-
-        return "/user/login";
-
     }
 
     @GetMapping("/user/signup")
@@ -75,12 +78,17 @@ public class LoginController {
     }
 
     @GetMapping("/user/userinfologin")
-    public void userInfoLogin(HttpSession session, Model model) {
+    public String userInfoLogin(HttpSession session, Model model) { // 변경된 부분
         String loginSession = (String) session.getAttribute("loginSession");
-        SignUpDTO signUpDTO = loginService.searchOne(loginSession);
+        Optional<SignUpDTO> optionalSignUpDTO = loginService.searchOne(loginSession); // 변경된 부분
 
-        model.addAttribute("loginSession", signUpDTO);
-
+        if (optionalSignUpDTO.isPresent()) { // 변경된 부분
+            model.addAttribute("loginSession", optionalSignUpDTO.get()); // 변경된 부분
+            return "user/userinfologin"; // 변경된 부분
+        } else {
+            model.addAttribute("message", "사용자를 찾을 수 없습니다."); // 변경된 부분
+            return "redirect:/user/login"; // 변경된 부분
+        }
     }
 
     @PostMapping("user/userinfologin")
@@ -98,10 +106,17 @@ public class LoginController {
     public String modifyCheckuserinfo(HttpSession session, Model model) {
 
         String loginId = (String) session.getAttribute("loginSession");
-        SignUpDTO signUpDTO = loginService.searchOne(loginId);
-        model.addAttribute("userInfoId", signUpDTO);
-        return "/user/modifyuserinfo";
+        Optional<SignUpDTO> optionalSignUpDTO = loginService.searchOne(loginId); // 변경된 부분
+
+        if (optionalSignUpDTO.isPresent()) {
+            model.addAttribute("userInfoId", optionalSignUpDTO.get()); // 변경된 부분
+            return "user/modifyuserinfo";
+        } else {
+            model.addAttribute("message", "사용자를 찾을 수 없습니다."); // 변경된 부분
+            return "redirect:/user/login";
+        }
     }
+
 
 
     @PostMapping("/user/modifyuserinfo")
@@ -110,7 +125,7 @@ public class LoginController {
         if(bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("errors", bindingResult.getAllErrors());
 
-            return "redirect:/user/modifyuserinfo";
+            return "redirect:user/modifyuserinfo";
         }
 
         else {
@@ -123,24 +138,19 @@ public class LoginController {
 
     @GetMapping("/user/logout")
     public String logout(HttpSession session, Model model) {
-        // 세션에서 로그인 ID 삭제
-//        session.removeAttribute("loginSession");
-        // 세션 무효화 (옵션)
+        // 세션 무효화
         session.invalidate();
         model.addAttribute("complete", "로그아웃되었습니다.");
-        // 로그아웃 후 로그인 페이지로 리다이렉트
-        return "/user/logout";
+        // 로그아웃 후 메인 페이지로 리다이렉트
+        return "redirect:/board/list"; // 또는 "redirect:/user/login" 으로 변경 가능
     }
 
     @PostMapping("/user/logout")
-    public String logout(HttpSession session) {
-
-        // 세션에서 로그인 ID 삭제
-//        session.removeAttribute("loginSession");
-        // 세션 무효화 (옵션)
+    public String logoutPost(HttpSession session) {
+        // 세션 무효화
         session.invalidate();
-        // 로그아웃 후 로그인 페이지로 리다이렉트
-        return "redirect:/board/list";
+        // 로그아웃 후 메인 페이지로 리다이렉트
+        return "redirect:/board/list"; // 또는 "redirect:/user/login" 으로 변경 가능
     }
 
 }

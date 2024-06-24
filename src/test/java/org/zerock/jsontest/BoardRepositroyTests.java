@@ -9,14 +9,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.test.annotation.Commit;
+
 import org.zerock.jsontest.domain.board.Board;
 import org.zerock.jsontest.domain.board.BoardImage;
-import org.zerock.jsontest.domain.board.LikeC;
-import org.zerock.jsontest.dto.board.BoardListReplyCountDTO;
+
 import org.zerock.jsontest.repository.board.BoardRepository;
-import org.zerock.jsontest.repository.board.LikeRepository;
-import org.zerock.jsontest.repository.board.ReplyRepository;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -29,11 +27,6 @@ public class BoardRepositroyTests {
     @Autowired
     private BoardRepository boardRepository;
 
-    @Autowired
-    private ReplyRepository replyRepository;
-
-    @Autowired
-    private LikeRepository likeRepository;
 
     @Test
     public void testInsert() {
@@ -44,16 +37,11 @@ public class BoardRepositroyTests {
                     .name("name" + i%10)
                     .id("user" + i%10)
                     .viewCount(0L)
+                    .likeCount(0L)
                     .build();
 
             boardRepository.save(board);
 
-            LikeC likeC = LikeC.builder()
-                    .likeCount(0L)
-                    .board(board)
-                    .build();
-
-            likeRepository.save(likeC);
         });
     }
 

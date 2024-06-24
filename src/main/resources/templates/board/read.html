@@ -232,11 +232,8 @@
                         <span class="input-group-text">name</span>
                         <input type="text" class="form-control name" th:value="${userName}" readonly>
                     </div>
-                    <div class="input-group mb-3">
-                        <span class="input-group-text">id</span>
                         <input type="text" class="form-control replyRegisterLoginSession" th:value="${loginSession}"
-                               readonly>
-                    </div>
+                               hidden>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary registerBtn">Register</button>
@@ -337,8 +334,10 @@
     const registerModal = new bootstrap.Modal(document.querySelector(".registerModal"))
     const registerBtn = document.querySelector(".registerBtn")
 
-    document.querySelector(".addReplyBtn").addEventListener("click", function () {
-        if (name.value) {
+    document.querySelector(".addReplyBtn").addEventListener("click", function (e) {
+        e.stopPropagation()
+        e.preventDefault()
+        if (loginSession) {
             registerModal.show()
         } else {
             const currentUrl = window.location.href;
@@ -347,12 +346,14 @@
     }, false)
 
     registerBtn.addEventListener("click", function (e) {
+        e.preventDefault()
+        e.stopPropagation()
+
         const replyObj = {bno: bno, replyText: replyText.value, name: name.value, id: id.value}
         addReply(replyObj).then(result => {
-            alert(result.rno)
+            alert("댓글등록이 완료되었습니다.")
             registerModal.hide()
             replyText.value = ''
-            name.value = ''
             printReplies(0, 10, true) //댓글목록갱신 마지막 댓글로이동
         }).catch(e => {
             alert("Exception...")
