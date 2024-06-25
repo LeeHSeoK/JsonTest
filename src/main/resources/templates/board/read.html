@@ -141,6 +141,9 @@
                         <input type="text" name="yaxis" class="form-control"
                                th:value="${dto.yaxis}" hidden>
 
+                    <input type="text" name="placeName" class="form-control" th:value="${dto.placeName}">
+
+
 
                     <div class="col">
                         <div class="horizontal-line"></div>
@@ -554,12 +557,13 @@
     function updateLikeCount(newCount) {
         document.querySelector(".likeCountInput").value = newCount;
     }
+    const placeName = [[${dto.placeName}]]
 
     // 좋아요 버튼 클릭 이벤트 처리
     const likeButton = document.querySelector(".likebutton");
     likeButton.addEventListener("click", function (e) {
         if (likeButton.value === "false") {
-            addCount(bno).then(result => {
+            addCount(bno,placeName).then(result => {
                 alert(result.message); // 서버로부터의 응답 메시지를 알림으로 표시
                 updateLikeCount(result.likeCount); // 최신 좋아요 수를 표시
                 setLikeButtonStatus(true);
@@ -567,7 +571,7 @@
                 alert("Exception...");
             });
         } else {
-            minusCount(bno).then(result => {
+            minusCount(bno,placeName).then(result => {
                 alert(result.message); // 서버로부터의 응답 메시지를 알림으로 표시
                 updateLikeCount(result.likeCount); // 최신 좋아요 수를 표시
                 setLikeButtonStatus(false);

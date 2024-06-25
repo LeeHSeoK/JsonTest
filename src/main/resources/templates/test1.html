@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}" lang="ko">
+<head>
+    <title>Recommendation System</title>
+</head>
+
+<div layout:fragment="content">
+
+<h1>Recommendation System</h1>
+<form action="/recommend" method="post">
+    <label for="userid">User ID:</label>
+    <input type="text" id="userid" name="userid" th:value="${loginSession}">
+    <button type="submit">Get Recommendations</button>
+</form>
+
+</div>
+</html>

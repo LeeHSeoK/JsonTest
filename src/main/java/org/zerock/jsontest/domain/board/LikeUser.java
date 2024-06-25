@@ -24,5 +24,7 @@ public class LikeUser {
 
     private String userId;
 
+    private String placeName;
+
     private Long bno;
 }

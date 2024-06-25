@@ -18,4 +18,6 @@ public class LikeUserDTO {
 
     private String id;
 
+    private String placeName;
+
 }
