@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Recommendations</title>
+</head>
+<body>
+<h1>Recommendations</h1>
+<ul>
+    <th:block th:each="recommendation : ${recommendations}">
+        <li th:text="${recommendation}"></li>
+    </th:block>
+</ul>
+<a href="/">Go back</a>
+</body>
+</html>

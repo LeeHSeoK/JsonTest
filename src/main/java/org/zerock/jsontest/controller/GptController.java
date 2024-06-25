@@ -1,6 +1,5 @@
 package org.zerock.jsontest.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.zerock.jsontest.dto.TravelDTO;
-import org.zerock.jsontest.service.GptService;
 import org.zerock.jsontest.service.dbService.DbService;
 
 import java.util.HashMap;

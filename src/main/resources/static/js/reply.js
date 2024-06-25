@@ -12,13 +12,13 @@ async function getLikeInfo(bno) {
 }
 
 // 좋아요 1증가
-async function addCount(bno) {
-    const result = await axios.post(`/like/${bno}`);
+async function addCount(bno, placeName) {
+    const result = await axios.post(`/like/${bno}`,{placeName});
     return result.data;
 }
 // 좋아요 1감소
-async function minusCount(bno) {
-    const result = await axios.post(`/dislike/${bno}`);
+async function minusCount(bno, placeName) {
+    const result = await axios.post(`/dislike/${bno}`,{placeName});
     return result.data;
 }
 

@@ -27,4 +27,16 @@ public class LoginServiceTests {
         loginService.register(signUpDTO);
         });
     }
+
+    @Test
+    public void signup2() {
+        LongStream.rangeClosed(0,100L).forEach(i->{
+            SignUpDTO signUpDTO = SignUpDTO.builder()
+                    .id("user"+i)
+                    .name("name"+i)
+                    .password("12341234")
+                    .build();
+            loginService.register(signUpDTO);
+        });
+    }
 }
