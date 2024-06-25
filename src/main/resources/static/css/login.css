@@ -21,6 +21,9 @@ form {
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
+form>h2{
+    font-weight: 700;
+}
 
 h2 {
     text-align: center;
@@ -46,19 +49,19 @@ input[type="text"], input[type="password"] {
 button[type="submit"], button[type="button1"] {
     margin-top: 10px;
     padding: 10px;
-    background-color: #a369af;
+    background-color: lightblue;
     color: #fff;
     border: none;
     border-radius: 3px;
     font-family: 'Gamja Flower', cursive;
-    font-size: 16px;
+    font-size: 21px;
     cursor: pointer;
     width: 100%;
     transition: background-color 0.3s ease;
 }
 
 button[type="submit"]:hover, button[type="button1"]:hover {
-    background-color: #874294;
+    background-color: cornflowerblue;
 }
 
 .links {

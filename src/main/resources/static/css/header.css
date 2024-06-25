@@ -6,12 +6,12 @@ body {
 }
 
 .header {
-    background-color: #f8f8f8;
+    background-color: ghostwhite;
     padding: 20px;
     text-align: center;
     border-bottom: 1px solid #ddd;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
 }
 
@@ -45,7 +45,7 @@ body {
 
 .header nav .menu li a {
     text-decoration: none;
-    color: #333;
+    color: #27f;
     font-weight: bold;
     padding: 10px 15px;
     display: block;
@@ -96,22 +96,24 @@ body {
 .header .search-container button {
     padding: 6px 10px;
     margin-left: 5px;
-    background-color: #333;
+    background-color: cornflowerblue;
     color: white;
     border: none;
     cursor: pointer;
     border-radius: 4px;
+    width: 100px;
+    height:35px;
 }
 
 .header .search-container .login-button {
     margin-left: 5px;
-    background-color: #555;
+    background-color: cornflowerblue;
 }
 
 .header .search-container button:hover {
-    background-color: #555;
+    background-color: cornflowerblue;
 }
 
 .header .search-container .login-button:hover {
-    background-color: #333;
+    background-color: lightblue;
 }

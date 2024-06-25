@@ -10,37 +10,39 @@
     <div class="header">
         <nav>
             <div class="logo">
-                <a href="/home">Logo</a>
+                <a href="/">🐋떠나요</a>
             </div>
             <ul class="menu">
-                <li><a href="#home">Home</a></li>
+                <li><a href="/">홈</a></li>
                 <li class="dropdown">
-                    <a href="#travel" class="dropbtn">Travel</a>
+                    <a href="#travel" class="dropbtn">추천콕콕</a>
                     <div class="dropdown-content">
                         <a href="#recommendation">Travel Recommendation</a>
-                        <a href="#ai">AI Recommendation</a>
+                        <a href="/api/ask">AI Recommendation</a>
                     </div>
                 </li>
                 <li class="dropdown">
-                    <a href="#map" class="dropbtn">Travel Map</a>
+                    <a href="#map" class="dropbtn">여행지도</a>
                     <div class="dropdown-content">
                         <a href="#travelmap">Travel Map</a>
                     </div>
                 </li>
                 <li class="dropdown">
-                    <a href="#board" class="dropbtn">Board</a>
+                    <a href="/" class="dropbtn">게시판</a>
                     <div class="dropdown-content">
-                        <a href="#freeboard">Free Board</a>
+                        <a href="/board/list">유저게시판</a>
                     </div>
                 </li>
-                <li><a href="#support">Customer Service</a></li>
+                <li><a href="#support">여행정보</a></li>
             </ul>
             <div class="search-container">
-                <input type="text" placeholder="Search..">
-                <button type="submit">Search</button>
-                <button type="button" class="login-button">Login</button>
-                <!--회원가입 버튼 생성-->
-                <button type="button" class="login-button">Signup</button>
+                <a href="/user/login">
+                    <button type="button" class="login-button" href="/user/login">Login</button>
+                </a>
+
+                <a href="/user/signup">
+                    <button type="button" class="login-button">Signup</button>
+                </a>
             </div>
         </nav>
     </div>

@@ -1,20 +1,25 @@
 package org.zerock.jsontest.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.client.HttpClientErrorException;
-import com.fasterxml.jackson.databind.ObjectMapper; // Jackson 라이브러리 추가 필요
+import org.springframework.web.client.RestTemplate;
+import org.zerock.jsontest.controller.board.BoardController;
 import org.zerock.jsontest.dto.ReadOneDTO;
 import org.zerock.jsontest.dto.SearchListDTO;
+import org.zerock.jsontest.dto.board.BoardListAllDTO;
+import org.zerock.jsontest.dto.board.PageRequestDTO;
+import org.zerock.jsontest.dto.board.PageResponseDTO;
+import org.zerock.jsontest.service.board.BoardService;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +28,7 @@ import java.util.Random;
 
 @Controller
 public class TravelController {
+    private BoardService boardService;
 
     @Value("${service_key}")
     private String SERVICE_KEY; // Replace with your actual service key
@@ -33,11 +39,11 @@ public class TravelController {
     SearchListDTO response1;
     ReadOneDTO response2;
     Random random = new Random();
-    @GetMapping("/home")
+    @GetMapping("/")
     public String home(@RequestParam(value = "keyword", required = false, defaultValue = "대구") String keyword,
 //                                @RequestParam(value = "page", required = false, defaultValue = "") int page,
                        @RequestParam(value = "numOfRows", required = false, defaultValue = "20") int numOfRows,
-                       Model model, HttpServletRequest req) {
+                       Model model, HttpServletRequest req, PageRequestDTO pageRequestDTO) {
         int page = random.nextInt(1)+1;
         try {
             String encodedServiceKey = URLEncoder.encode(SERVICE_KEY, "UTF-8");
@@ -52,18 +58,20 @@ public class TravelController {
             response1 = new ObjectMapper().readValue(jsonResult, SearchListDTO.class);
 
             //검증 데이터 추가 06-14
-            // 리스트 받아서 뿌려주고 ?
             SearchListDTO.Response.Body.Items.Item[] items = response1.getResponse().getBody().getItems().getItem();
+            //해쉬맵 해보기 수정 중
             List<String> imglist = new ArrayList<>();
             List<String> contentlist = new ArrayList<>();
+            List<String> contenttypeidlist = new ArrayList<>();
             System.out.println("이거실행?");
             for(int i=0; i<items.length;i++){
                 String img = items[i].getFirstimage();
                 String contentid = items[i].getContentid();
+                String contenttypeid = items[i].getContenttypeid();
                 if(img.isEmpty()){
                     continue;
                 }
-
+                contenttypeidlist.add(contenttypeid);
                 imglist.add(img);
                 contentlist.add(contentid);
             }
@@ -73,15 +81,10 @@ public class TravelController {
                 return "redirect:/home?keyword=" + URLEncoder.encode(keyword, "UTF-8") + "&numOfRows=" + numOfRows;
             }
 
-//            model.addAttribute("items", response1.getResponse().getBody().getItems().getItem());
-            //이미지 리스트 추가'
             model.addAttribute("img",imglist);
             model.addAttribute("content", contentlist);
             req.setAttribute("notice", imglist);
-            model.addAttribute("keyword", keyword);
-            model.addAttribute("currentPage", page);
-            model.addAttribute("numOfRows", numOfRows);
-            model.addAttribute("totalCount", response1.getResponse().getBody().getTotalCount());
+            model.addAttribute("contenttype", contenttypeidlist);
 
         } catch (HttpClientErrorException e) {
             model.addAttribute("error", "API key is invalid or not registered.");
@@ -114,7 +117,6 @@ public class TravelController {
             response1 = new ObjectMapper().readValue(jsonResult, SearchListDTO.class);
 
             //검증 데이터 추가 06-14
-            // 리스트 받아서 뿌려주고 ?
             SearchListDTO.Response.Body.Items.Item[] items = response1.getResponse().getBody().getItems().getItem();
             List<String> imglist = new ArrayList<>();
             List<String> contentlist = new ArrayList<>();
@@ -123,26 +125,17 @@ public class TravelController {
             for(int i=0; i<items.length;i++){
                 String img = items[i].getFirstimage();
                 String contentid = items[i].getContentid();
-//수정
-//                String contenttypeid = items[i].getContenttypeid();
-                if(img.isEmpty()){
-                    continue;
-                }
-//수정
-//                contenttypeidlist.add(contenttypeid);
+                String contenttypeid = items[i].getContenttypeid();
+
+                if(img.isEmpty()){continue;}
+                contenttypeidlist.add(contenttypeid);
                 imglist.add(img);
                 contentlist.add(contentid);
             }
-//수정 DTO로 바꿔주세요
             model.addAttribute("img",imglist);
             model.addAttribute("content", contentlist);
             model.addAttribute("notice", imglist);
-            model.addAttribute("keyword", keyword);
-            model.addAttribute("currentPage", page);
-            model.addAttribute("numOfRows", numOfRows);
-//수정
-//            model.addAttribute("contentTypeId",contenttypeidlist);
-            model.addAttribute("totalCount", response1.getResponse().getBody().getTotalCount());
+            model.addAttribute("contenttype", contenttypeidlist);
 
         } catch (HttpClientErrorException e) {
             model.addAttribute("error", "API key is invalid or not registered.");
@@ -189,8 +182,7 @@ public class TravelController {
 
     @GetMapping("/kakao3")
     public String kakao3(Model model) {
-        model.addAttribute("kakaoApiKey", KAKAO_MAP_API_KEY);
+        model.addAttribute("kakaoMapApiKey", KAKAO_MAP_API_KEY);
         return "kakao3";
     }
-
 }

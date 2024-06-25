@@ -3,8 +3,14 @@ body {
 }
 
 .responsive {
-    max-width: 100%;
+    width:500px;
     height: auto;
+}
+
+.container{
+    width:auto;
+    height:auto;
+    margin:0 auto;
 }
 
 .screen_out {
