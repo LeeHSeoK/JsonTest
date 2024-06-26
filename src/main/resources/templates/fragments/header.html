@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Header</title>
+    <link th:href="@{./css/header.css}" rel="stylesheet">
+</head>
+<body>
+<div th:fragment="header">
+    <div class="header">
+        <nav>
+            <div class="logo">
+                <a href="/">🐋떠나요</a>
+            </div>
+            <ul class="menu">
+                <li><a href="/">홈</a></li>
+                <li class="dropdown">
+                    <a href="#travel" class="dropbtn">추천콕콕</a>
+                    <div class="dropdown-content">
+                        <a href="/bigdatarecommendation/main">Big 추천</a>
+                        <a href="/api/chat">Ai 대화</a>
+                    </div>
+                </li>
+                <li class="dropdown">
+                    <a href="#map" class="dropbtn">여행지도</a>
+                    <div class="dropdown-content">
+                        <a href="#travelmap">Travel Map</a>
+                    </div>
+                </li>
+                <li class="dropdown">
+                    <a href="/" class="dropbtn">게시판</a>
+                    <div class="dropdown-content">
+                        <a href="/board/list">유저게시판</a>
+                    </div>
+                </li>
+                <li><a href="#support">여행정보</a></li>
+            </ul>
+            <ul>
+                <div>
+                    <a th:if="${loginSession != null}" th:href="@{/user/logout}" type="button" class="btn btn-danger me-1">Sign Out</a>
+                    <a th:if="${loginSession != null}" th:href="@{/user/userinfologin}" type="button" class="btn btn-outline-secondary">회원정보</a>
+                    <span th:if="${loginSession != null}">[[${loginSession}]]님 안녕하세요</span>
+                    <a th:unless="${loginSession != null}" th:href="@{/user/login}" type="button" class="btn btn-primary me-1">Sign In</a>
+                </div>
+            </ul>
+
+        </nav>
+    </div>
+</div>
+</body>
+</html>

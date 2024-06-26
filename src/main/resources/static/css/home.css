@@ -1,0 +1,210 @@
+body {
+    padding: 0;
+    margin: 0;
+}
+.slideshow-container {
+    position: relative;
+    max-width: 1000px;
+    margin: auto;
+    overflow: hidden;
+}
+
+.slides {
+    display: flex;
+    transition: transform 0.6s ease;
+}
+
+.slide {
+    width: 100%;
+    flex-shrink: 0;
+}
+
+img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+}
+
+.controls {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 2;
+}
+
+.prev, .next {
+    cursor: pointer;
+    padding: 10px;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: none;
+    border-radius: 3px;
+    user-select: none;
+}
+
+.prev:hover, .next:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.pause {
+    padding: 10px 20px;
+    background-color: #333;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.main {
+    padding: 20px;
+    text-align: center;
+}
+
+.content-division {
+    max-width: 960px;
+    margin: 20px auto;
+    padding: 20px;
+    text-align: center;
+    background-color: #f0f0f0;
+}
+
+.title {
+    margin-bottom: 10px;
+    height:60px;
+    font-size: 30px;
+}
+
+.button-row {
+    display: flex;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    justify-content: space-between;
+}
+
+.button-row::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for Webkit browsers */
+}
+
+.button-row button {
+    flex: 0 0 auto;
+    width:70px;
+    height:40px;
+    padding: 10px 10px;
+    background-color: lightcyan;
+    color: black;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 16px;
+    margin: 5px;
+    margin-bottom: 6px;
+    border:solid 0.1px lightgray;
+}
+
+.button-row button:hover {
+    background-color: #555;
+}
+/*이미지 태그 구간*/
+
+.image-row {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px; /* 이미지 사이의 간격 */
+    padding: 20px;
+}
+
+.image-a {
+    flex: 1 1 200px; /* 각 이미지 컨테이너의 기본 너비를 200px로 설정 */
+    max-width: 250px;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.image-a img {
+    width: 100%;
+    height: 350px;
+    object-fit: cover; /* 이미지가 컨테이너에 맞게 조절되도록 설정 */
+    border-radius: 10px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.image-a img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    border:solid 1px black;
+}
+
+.gray-background {
+    background-color: #f0f0f0;
+}
+
+.content-division.gray-background {
+    border-bottom: 1px solid #EEE;
+    height: 550px; /* Fixed height for the first div */
+    background-color: white;
+}
+
+.content-division.gray-background.content-split {
+    border-bottom: 1px solid #EEE;
+    height: 300px; /* Fixed height for the second div */
+}
+
+.content-split {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%; /* Make sure it takes the full height of the parent */
+}
+
+.left-side {
+    width: 49%;
+    height: 100%;
+    overflow: hidden; /* Hide overflow */
+}
+
+.left-side .square-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.right-side {
+    width: 49%;
+    text-align: left;
+    padding: 20px 0; /* Add padding to increase vertical spacing */
+    height: 100%;
+}
+
+.notice-list {
+    list-style-type: none;
+    padding: 10px;
+}
+
+.notice-list li {
+    margin-bottom: 20px; /* Add margin to create space between notices */
+    font-weight: bold;
+    border-bottom: solid 1px lightgray;
+    font-size: 18px;
+    /*흘러 넘치는거 방지하는 css*/
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.notice-list li a {
+    text-decoration: none;
+    color: #333;
+}
+
+.notice-list li a:hover {
+    text-decoration: underline;
+}

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout1.html}">
+<!--layout:decorate에 보내줘야지 적용가능!-->
+<head>
+  <meta charset="UTF-8">
+  <link th:href="@{/css/home.css}" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script th:src="@{/js/home.js}" type="text/javascript"></script>
+</head>
+<body>
+<div layout:fragment="content">
+  <div class="main">
+    <div class="slideshow-container">
+      <div class="slides">
+        <div class="slide">
+          <!--임의로 지정해둠 - 일휘 - -->
+          <img src="http://tong.visitkorea.or.kr/cms/resource/55/3018555_image2_1.png" style="object-fit: cover">
+        </div>
+        <div class="slide">
+          <img src="http://tong.visitkorea.or.kr/cms/resource/55/3018555_image2_1.png" style="width:100%">
+        </div>
+        <div class="slide">
+          <img src="http://tong.visitkorea.or.kr/cms/resource/47/3018347_image2_1.jpg" style="width:100%">
+        </div>
+      </div>
+      <!--      수정해야할 부분 넘어가는거 만들기 -->
+      <!--      <div class="controls">-->
+      <!--        <a class="prev" onclick="plusSlides(-1)">&#10094;</a>-->
+      <!--        <button class="pause" id="pauseButton" onclick="togglePause()">Pause</button>-->
+      <!--        <a class="next" onclick="plusSlides(1)">&#10095;</a>-->
+      <!--      </div>-->
+
+    </div>
+    <div class="content-division gray-background">
+      <div class="title">
+        <h2>🐋 지 역 별 관 광 지 추 천</h2>
+      </div>
+      <div class="button-row">
+        <button onclick="updateImages('서울')">서울</button>
+        <button onclick="updateImages('인천')">인천</button>
+        <button onclick="updateImages('대전')">대전</button>
+        <button onclick="updateImages('대구')">대구</button>
+        <button onclick="updateImages('경기')">경기</button>
+        <button onclick="updateImages('부산')">부산</button>
+        <button onclick="updateImages('울산')">울산</button>
+        <button onclick="updateImages('광주')">광주</button>
+        <button onclick="updateImages('강원')">강원</button>
+        <button onclick="updateImages('제주')">제주</button>
+      </div>
+      <div class="image-row">
+        <a th:href="@{'/searchresultinfo?contentId=' + ${content[0]}+'&contentTypeId='+${contenttype[0]}}" th:unless="null" class="image-a">
+          <img th:src="${img[0]}" alt="Image" class="image-a" id="image1">
+        </a>
+        <a th:href="@{'/searchresultinfo?contentId=' + ${content[1]}+'&contentTypeId='+${contenttype[1]}}" th:unless="null" class="image-a">
+          <img th:src="${img[1]}" alt="Image" class="image-a" id="image2">
+        </a>
+        <a th:href="@{'/searchresultinfo?contentId=' + ${content[2]}+'&contentTypeId='+${contenttype[2]}}" th:unless="null" class="image-a">
+          <img th:src="${img[2]}" alt="Image" class="image-a" id="image3">
+        </a>
+        <a th:href="@{'/searchresultinfo?contentId=' + ${content[3]}+'&contentTypeId='+${contenttype[3]}}" th:unless="null" class="image-a">
+          <img th:src="${img[3]}" alt="Image" class="image-a" id="image4">
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="content-division gray-background content-split">
+    <div class="left-side">
+      <img th:src="${img[2]}" th:unless="null" alt="Image" class="square-image">
+    </div>
+    <div class="right-side">
+      <h2> 🎆지역별 행사 정보</h2>
+      <ul class="notice-list">
+        <li>
+          <a href="#notice1"></a>
+        </li>
+        <li><a href="#notice2">Notice 2</a></li>
+        <li><a href="#notice3">Notice 3</a></li>
+        <li><a href="#notice4">Notice 4</a></li>
+        <li><a href="#notice5">Notice 5</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+</body>
+</html>

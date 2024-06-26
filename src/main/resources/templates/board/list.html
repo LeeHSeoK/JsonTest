@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{layout/basic.html}">
+
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            margin: 0 auto;
+            min-width: 500px; /* 최소 너비 설정 */
+        }
+
+        html {
+            min-width: 500px; /* 최소 너비 설정 */
+        }
+        .travel-card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+            width: 100%; /* 카드의 고정 너비 */
+            height: 350px; /* 카드의 고정 높이 */
+        }
+        .travel-card:hover {
+            transform: scale(1.05);
+        }
+        .travel-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .travel-card .card-body {
+            padding: 15px;
+        }
+        .travel-card .title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .travel-card .meta {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 3px;
+        }
+        .card-deck.custom-deck {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start; /* Left align the cards */
+        }
+        .card.custom-card {
+            flex: 0 0 18%; /* Adjust width as needed */
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .likecount {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            color: #555;
+            margin-top: 10px;
+        }
+        .likecount i {
+            margin-right: 5px;
+            color: #e74c3c;
+        }
+
+        .content {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%; /* 너비를 제한합니다. 필요에 따라 조정하세요. */
+        }
+    </style>
+</head>
+
+<div layout:fragment="content">
+    <div class="row mt-3">
+        <form action="/board/list" method="get">
+            <div class="col">
+                <input type="hidden" name="size" th:value="${pageRequestDTO.size}">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <select class="form-select" name="type">
+                            <option value="">---</option>
+                            <option value="t" th:selected="${pageRequestDTO.type =='t'}">제목</option>
+                            <option value="c" th:selected="${pageRequestDTO.type =='c'}">내용</option>
+                            <option value="w" th:selected="${pageRequestDTO.type =='w'}">작성자</option>
+                            <option value="tc" th:selected="${pageRequestDTO.type =='tc'}">제목 내용</option>
+                            <option value="tcw" th:selected="${pageRequestDTO.type =='tcw'}">제목 내용 작성자</option>
+                        </select>
+                    </div>
+                    <input type="text" class="form-control" name="keyword" th:value="${pageRequestDTO.keyword}">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary searchBtn" type="submit">Search</button>
+                        <button class="btn btn-outline-secondary clearBtn" type="button">Clear</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col">
+            <button type="button" class="btn btn-outline-secondary sortViewCountBtn">조회수순</button>
+            <button type="button" class="btn btn-outline-secondary sortBnoBtn">최신순</button>
+            <button type="button" class="btn btn-outline-secondary sortLikeCountBtn">좋아요순</button>
+            <button type="button" class="btn btn btn-primary registerBtn">글작성</button>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col">
+            <div class="card">
+                <!--                <div class="card-header">-->
+                <!--                    Board List-->
+                <!--                </div>-->
+                <div class="card-body">
+                    <div class="card-deck custom-deck" th:with="link=${pageRequestDTO.getLink()}">
+                        <div class="card travel-card custom-card" th:each="dto : ${responseDTO.dtoList}">
+                            <a th:href="|@{/board/read(bno=${dto.bno})}&${link}|" class="text-decoration-none">
+                                <img style="width:100%" th:if="${dto.boardImages != null && dto.boardImages.size() > 0}"
+                                     th:src="|/view/s_${dto.boardImages[0].uuid}_${dto.boardImages[0].fileName}|"> <!-- 첫 번째 이미지 만을 출력 -->
+                                <div class="card-body">
+                                    <div class="title">
+                                        [[${dto.title}]]
+                                        <span class="count">[<span th:text="${dto.replyCount}">0</span>]</span>
+                                    </div>
+                                    <div class="content">
+                                        [[${dto.content}]]
+                                    </div>
+                                    <div class="meta">
+                                        [[${dto.name}]]
+                                        <br>
+                                        [[${#temporals.format(dto.regDate,'yyyy-MM-dd HH:mm')}]]
+                                    </div>
+                                    <div>
+                                        <div class="likecount">
+                                            <i class="fas fa-thumbs-up"></i>[[${dto.likeCount}]] <span style="margin-left: 10px" class="viewCount">  조회수 [[${dto.viewCount}]]</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4"> <!-- Add this div for centering the button -->
+
+                    </div>
+                    <div class="float-end mt-4">
+                        <ul class="pagination flex-wrap">
+                            <li class="page-item" th:if="${responseDTO.prev}">
+                                <a class="page-link" th:data-num="${responseDTO.start -1}">Previous</a>
+                            </li>
+                            <th:block th:each="i: ${#numbers.sequence(responseDTO.start, responseDTO.end)}">
+                                <li th:class="${responseDTO.page == i}?'page-item active':'page-item'">
+                                    <a class="page-link" th:if="${i!=0}" th:data-num="${i}">[[${i}]]</a>
+                                </li>
+                            </th:block>
+                            <li class="page-item" th:if="${responseDTO.next}">
+                                <a class="page-link" th:data-num="${responseDTO.end +1}">Next</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>게시글 등록이 완료되었습니다.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> <!-- layout end -->
+
+<script layout:fragment="script" th:inline="javascript">
+    document.addEventListener("DOMContentLoaded",function () {
+        //조회수순으로 정렬
+        document.querySelector(".sortViewCountBtn").addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const formObj = document.querySelector("form");
+            formObj.innerHTML += `<input type='hidden' name='sort' value='viewCount'>`;
+            formObj.submit();
+        });
+
+        //최신순으로 정렬
+        document.querySelector(".sortBnoBtn").addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const formObj = document.querySelector("form");
+            formObj.innerHTML += `<input type='hidden' name='sort' value='bno'>`;
+            formObj.submit();
+        });
+
+        //좋아요순으로 정렬
+        document.querySelector(".sortLikeCountBtn").addEventListener("click", function (e) { // 추가된 부분
+            e.preventDefault();
+            e.stopPropagation();
+
+            const formObj = document.querySelector("form");
+            formObj.innerHTML += `<input type='hidden' name='sort' value='likeCount'>`;
+            formObj.submit();
+        });
+
+        document.querySelector(".pagination").addEventListener("click", function (e) {
+            e.preventDefault()
+            e.stopPropagation()
+
+            const target = e.target
+            const num = target.getAttribute("data-num")
+            const formObj = document.querySelector("form")
+            formObj.innerHTML += `<input type='hidden' name='page' value='${num}'>`
+            formObj.submit()
+        }, false)
+
+        document.querySelector(".clearBtn").addEventListener("click", function (e) {
+            e.preventDefault()
+            e.stopPropagation()
+            self.location = '/board/list'
+        }, false)
+
+        //show modal
+        const result = [[${result}]]
+        const modal = new bootstrap.Modal(document.querySelector(".modal"))
+        if (result) {
+            modal.show()
+        }
+
+        const reigster = [[${loginSession}]]
+        document.querySelector(".registerBtn").addEventListener("click", function (e) {
+            e.preventDefault()
+            e.stopPropagation()
+            if (reigster) {
+                window.location.href = '/board/register'
+            } else {
+                window.location.href = '/user/login'
+            }
+        })
+    });
+
+</script>
+
+</html>

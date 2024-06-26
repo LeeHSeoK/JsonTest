@@ -1,0 +1,122 @@
+/* static/css/header.css */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.header {
+    background-color: ghostwhite;
+    padding: 20px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.header nav {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.header .logo a {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    text-decoration: none;
+}
+
+.header nav .menu {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-grow: 1;
+    justify-content: center;
+}
+
+.header nav .menu li {
+    position: relative;
+    margin: 0 15px;
+}
+
+.header nav .menu li a {
+    text-decoration: none;
+    width: 120px;
+    font-size: 22px;
+    color: #27f;
+    font-weight: bold;
+    padding: 10px 15px;
+    display: block;
+}
+
+.header nav .menu .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    top: 100%;
+    left: 0;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: all 0.3s ease;
+}
+
+.header nav .menu .dropdown-content a {
+    padding: 12px 16px;
+    font-size:16px;
+    text-decoration: none;
+    display: block;
+    color: steelblue;
+}
+
+.header nav .menu .dropdown-content a:hover {
+    background-color: #ddd;
+}
+
+.header nav .menu .dropdown:hover .dropdown-content {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.header .search-container {
+    display: flex;
+    align-items: center;
+}
+
+.header .search-container input[type="text"] {
+    padding: 5px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.header .search-container button {
+    padding: 6px 10px;
+    margin-left: 5px;
+    background-color: cornflowerblue;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    width: 100px;
+    height:35px;
+}
+
+.header .search-container .login-button {
+    margin-left: 5px;
+    background-color: cornflowerblue;
+}
+
+.header .search-container button:hover {
+    background-color: cornflowerblue;
+}
+
+.header .search-container .login-button:hover {
+    background-color: lightblue;
+}

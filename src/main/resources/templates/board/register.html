@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/basic.html}">
+
+<head>
+    <title>Board Register</title>
+    <link href="/css/kakoamap.css" rel="stylesheet"/>
+    <style>
+        .input-group-text {
+            width: 100px; /* 동일한 너비로 설정 */
+            text-align: right; /* 텍스트 정렬 */
+        }
+    </style>
+</head>
+
+
+<div layout:fragment="content">
+    <div class="row mt-3">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    Board Register
+                </div>
+                <div class="card-body">
+                    <form action="/board/register" method="post">
+                        <input type="text" name="id" class="form-control" th:value="${userInfo.id}" hidden>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Title</span>
+                            <input type="text" name="title" class="form-control" placeholder="Title" maxlength="20" required>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Content</span>
+                            <textarea class="form-control col-sm-5" rows="5" name="content" id="content" maxlength="500" required></textarea>
+                        </div>
+                        <div class="text-right">
+                            <span id="charCount" style="float: right">0 / 500</span>
+                        </div>
+                            <input type="text" name="name" class="form-control" th:value="${userInfo.name}" hidden>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Images</span>
+                            <div class="float-end uploadHidden">
+                                <button type="button" class="btn btn-primary uploadFileBtn">ADD Files</button> <span style="color: red">*사진필수</span>
+                            </div>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">Map</span>
+                            <div class="float-end mapHidden">
+                                <button type="button" class="btn btn-primary MapOpenBtn">Map OPEN</button>
+                            </div>
+                            <button type="button" class="btn btn-secondary resetMapBtn">Map Reset</button>
+
+                        </div>
+                            <input type="text" id="xxx" name="xaxis" hidden>
+                            <input type="text" id="yyy" name="yaxis" hidden>
+
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">장소명</span>
+                            <input type="text" id="placeName" name="placeName" class="form-control" readonly>
+                        </div>
+
+                        <input type="number" name="viewCount" th:value="0" hidden>
+                        <input type="number" name="likeCount" th:value="0" hidden>
+                        <div class="my-4">
+                            <div class="float-end">
+                                <button type="button" onclick="window.location.href='/board/list'"
+                                        class="btn btn-primary">list
+                                </button>
+                                <button type="submit" class="btn btn-primary submitBtn">Submit</button>
+                                <button type="reset" class="btn btn-secondary">Reset</button>
+                            </div>
+                        </div>
+
+
+                    </form>
+                </div><!--end card body-->
+
+            </div><!--end card-->
+        </div><!-- end col-->
+    </div><!-- end row-->
+
+    <!-- 첨부 파일 섬네일을 보여줄 부분 -->
+    <div class="row mt-3">
+        <div class="col ">
+            <div class="container-fluid d-flex uploadResult" style="flex-wrap: wrap;">
+            </div>
+        </div>
+    </div>
+
+    <!-- 첨부파일 추가를 위한 모달창 -->
+    <div class="modal uploadModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Upload File</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <input type="file" name="files" class="form-control" multiple>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary uploadBtn">Upload</button>
+                </div>
+            </div>
+        </div>
+    </div><!-- register modal -->
+
+    <div class="modal mapModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Upload Map</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="map_wrap">
+                    <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
+
+                    <div id="menu_wrap" class="bg_white">
+                        <div class="option">
+                            <div>
+                                <form onsubmit="searchPlaces(); return false;">
+                                    키워드 : <input type="text" value="이태원 맛집" id="keyword" size="15">
+                                    <button type="submit">검색하기</button>
+                                </form>
+                            </div>
+                        </div>
+                        <hr>
+                        <ul id="placesList"></ul>
+                        <div id="pagination"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=ef1d2aa6811f99e2d06bc35a4229086a&libraries=services"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script src="/js/upload.js"></script>
+
+</div>
+
+<script layout:fragment="script" th:inline="javascript">
+    const errors = [[${errors}]]
+    console.log(errors)
+    let errorMsg = ''
+
+    if (errors) {
+        for (let i = 0; i < errors.length; i++) {
+            errorMsg += `${errors[i].field}은(는) ${errors[i].code}`
+        }
+        alert(errorMsg)
+    }
+
+    //업로드 모달
+    const uploadModal = new bootstrap.Modal(document.querySelector(".uploadModal"))
+    document.querySelector(".uploadFileBtn").addEventListener("click", function (e) {
+        e.stopPropagation()
+        e.preventDefault()
+        uploadModal.show()
+    }, false)
+
+
+    //업로드모달 창 내의 파일첨부버튼처리 이미지 파일만 업로드가능하게
+    document.querySelector(".uploadBtn").addEventListener("click", function (e) {
+        const formObj = new FormData();
+        const fileInput = document.querySelector("input[name='files']");
+        const files = fileInput.files;
+        let validFiles = true;
+
+        for (let i = 0; i < files.length; i++) {
+            if (!files[i].type.startsWith("image/")) {
+                alert("이미지 파일만 업로드할 수 있습니다.");
+                validFiles = false;
+                break;
+            }
+            formObj.append("files", files[i]);
+        }
+
+        if (!validFiles) {
+            return;
+        }
+
+        uploadToServer(formObj).then(result => {
+            console.log(result);
+            for (const uploadResult of result) {
+                showUploadFile(uploadResult);
+            }
+            uploadModal.hide();
+        }).catch(e => {
+            uploadModal.hide();
+        });
+    }, false);
+
+    const uploadResult = document.querySelector(".uploadResult")
+
+    function showUploadFile({uuid, fileName, link}) {
+        const str = `<div class="card col-4">
+        <div class="card-header d-flex justify-content-center">
+            ${fileName}
+            <button class="btn-sm btn-danger" onclick="javascript:removeFile('${uuid}','${fileName}',this)">X</button>
+        </div>
+        <div class="card-body">
+            <img src="/view/${link}" data-src="${uuid + "_" + fileName}">
+        </div>
+    </div>`;
+        uploadResult.innerHTML += str;
+    }
+
+    function removeFile(uuid, fileName, obj) {
+        const targetDiv = obj.closest(".card")
+        removeFileToServer(uuid, fileName).then(data => {
+            targetDiv.remove()
+        })
+    }
+
+    document.querySelector(".submitBtn").addEventListener("click", function (e) {
+
+        // e.preventDefault()
+        // e.stopPropagation()
+
+        const target = document.querySelector(".uploadHidden")
+        const uploadFiles = uploadResult.querySelectorAll("img")
+
+        if (uploadFiles.length === 0) {
+            alert("파일을 업로드 해야 합니다.");
+            return;
+        }
+
+        let str = ''
+        for (let i = 0; i < uploadFiles.length; i++) {
+            const uploadFile = uploadFiles[i]
+            const imgLink = uploadFile.getAttribute("data-src")
+            str += `<input type='hidden' name='fileNames' value="${imgLink}">`
+        }
+        target.innerHTML = str;
+
+        const formObj = document.querySelector("form")
+        formObj.submit();
+        formObj.reset();
+
+    }, false)
+
+    //////////////////////////////////////////////////////////////////////////// kakaoMap
+
+    // 마커를 담을 배열입니다
+    let map;
+    let ps;
+    let markers = [];
+
+
+    const mapModal = new bootstrap.Modal(document.querySelector(".mapModal"))
+    document.querySelector('.MapOpenBtn').addEventListener("click", function (e) {
+        e.preventDefault()
+        e.stopPropagation()
+        mapModal.show()
+        if (!map) {
+            initializeMap();
+        }
+    })
+
+    document.querySelector(".resetMapBtn").addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        document.getElementById('xxx').value = null;
+        document.getElementById('yyy').value = null;
+        document.getElementById('placeName').value = null;
+    });
+
+    function initializeMap() {
+        const mapContainer = document.getElementById('map');
+        const mapOption = {
+            center: new kakao.maps.LatLng(37.566826, 126.9786567),
+            level: 4  // 초기 지도 레벨을 4로 설정
+        };
+        map = new kakao.maps.Map(mapContainer, mapOption);
+        ps = new kakao.maps.services.Places();
+        searchPlaces();  // 모달이 열릴 때 바로 장소 검색을 수행합니다
+    }
+
+    // 키워드 검색을 요청하는 함수입니다
+    function searchPlaces() {
+
+        var keyword = document.getElementById('keyword').value;
+
+        if (!keyword.replace(/^\s+|\s+$/g, '')) {
+            alert('키워드를 입력해주세요!');
+            return false;
+        }
+
+        // 장소검색 객체를 통해 키워드로 장소검색을 요청합니다
+        ps.keywordSearch(keyword, placesSearchCB);
+    }
+
+    // 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
+    function placesSearchCB(data, status, pagination) {
+        if (status === kakao.maps.services.Status.OK) {
+
+            // 정상적으로 검색이 완료됐으면
+            // 검색 목록과 마커를 표출합니다
+            displayPlaces(data);
+
+            // 페이지 번호를 표출합니다
+            displayPagination(pagination);
+
+        } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+
+            alert('검색 결과가 존재하지 않습니다.');
+            return;
+
+        } else if (status === kakao.maps.services.Status.ERROR) {
+
+            alert('검색 결과 중 오류가 발생했습니다.');
+            return;
+
+        }
+    }
+
+    // 검색 결과 목록과 마커를 표출하는 함수입니다
+    function displayPlaces(places) {
+
+        var listEl = document.getElementById('placesList'),
+            menuEl = document.getElementById('menu_wrap'),
+            fragment = document.createDocumentFragment(),
+            bounds = new kakao.maps.LatLngBounds(),
+            listStr = '';
+
+        // 검색 결과 목록에 추가된 항목들을 제거합니다
+        removeAllChildNods(listEl);
+
+        // 지도에 표시되고 있는 마커를 제거합니다
+        removeMarker();
+
+        for (var i = 0; i < places.length; i++) {
+
+            // 마커를 생성하고 지도에 표시합니다
+            var placePosition = new kakao.maps.LatLng(places[i].y, places[i].x),
+                marker = addMarker(placePosition, i),
+                itemEl = getListItem(i, places[i]); // 검색 결과 항목 Element를 생성합니다
+
+            // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
+            // LatLngBounds 객체에 좌표를 추가합니다
+            bounds.extend(placePosition);
+
+            // 마커와 검색결과 항목에 mouseover 했을때
+            // 해당 장소에 인포윈도우에 장소명을 표시합니다
+            // mouseout 했을 때는 인포윈도우를 닫습니다
+            // (function(marker, title) {
+            //     kakao.maps.event.addListener(marker, 'mouseover', function() {
+            //         displayInfowindow(marker, title);
+            //     });
+            //
+            //     kakao.maps.event.addListener(marker, 'mouseout', function() {
+            //         infowindow.close();
+            //     });
+            //
+            //     itemEl.onmouseover =  function () {
+            //         displayInfowindow(marker, title);
+            //     };
+            //
+            //     itemEl.onmouseout =  function () {
+            //         infowindow.close();
+            //     };
+            //
+            // })(marker, places[i].place_name);
+
+            fragment.appendChild(itemEl);
+        }
+
+        // 검색결과 항목들을 검색결과 목록 Element에 추가합니다
+        listEl.appendChild(fragment);
+        menuEl.scrollTop = 0;
+
+        // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
+        map.setBounds(bounds);
+    }
+
+    // 검색결과 항목을 Element로 반환하는 함수입니다
+    function getListItem(index, places) {
+        var el = document.createElement('li'),
+            itemStr = '<span class="markerbg marker_' + (index + 1) + '"></span>' +
+                '<div class="info" id="info' + (index + 1) + '">' +  // 수정된 부분
+                '   <h5 id="name' + (index + 1) + '">' + places.place_name + '</h5>' + // *
+                '   <span id="address' + (index + 1) + '">' + (places.road_address_name || places.address_name) + '</span>' + // *
+                '   <span class="tel" id="phone' + (index + 1) + '">' + places.phone + '</span>' + // *
+                '</div>';
+
+        el.innerHTML = itemStr;
+        el.className = 'item';
+
+        // info 요소 클릭 시 좌표 및 ID 출력
+        el.querySelector('.info').addEventListener('click', function () {
+            var placePosition = new kakao.maps.LatLng(places.y, places.x);
+
+            var yaxis = Math.round(placePosition.getLat() * 1000000) / 1000000;
+            var xaxis = Math.round(placePosition.getLng() * 1000000) / 1000000;
+
+            document.getElementById('xxx').value = xaxis;
+            document.getElementById('yyy').value = yaxis;
+
+            document.getElementById('placeName').value = places.place_name;
+
+            mapModal.hide();
+        });
+
+        return el;
+    }
+
+    // 마커를 생성하고 지도 위에 마커를 표시하는 함수입니다
+    function addMarker(position, idx, title) {
+        var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png', // 마커 이미지 url, 스프라이트 이미지를 씁니다
+            imageSize = new kakao.maps.Size(36, 37),  // 마커 이미지의 크기
+            imgOptions = {
+                spriteSize: new kakao.maps.Size(36, 691), // 스프라이트 이미지의 크기
+                spriteOrigin: new kakao.maps.Point(0, (idx * 46) + 10), // 스프라이트 이미지 중 사용할 영역의 좌상단 좌표
+                offset: new kakao.maps.Point(13, 37) // 마커 좌표에 일치시킬 이미지 내에서의 좌표
+            },
+            markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imgOptions),
+            marker = new kakao.maps.Marker({
+                position: position, // 마커의 위치
+                image: markerImage
+            });
+
+        marker.setMap(map); // 지도 위에 마커를 표출합니다
+        markers.push(marker);  // 배열에 생성된 마커를 추가합니다
+
+        return marker;
+    }
+
+    // 지도 위에 표시되고 있는 마커를 모두 제거합니다
+    function removeMarker() {
+        for (var i = 0; i < markers.length; i++) {
+            markers[i].setMap(null);
+        }
+        markers = [];
+    }
+
+    // 검색결과 목록 하단에 페이지번호를 표시는 함수입니다
+    function displayPagination(pagination) {
+        var paginationEl = document.getElementById('pagination'),
+            fragment = document.createDocumentFragment(),
+            i;
+
+        // 기존에 추가된 페이지번호를 삭제합니다
+        while (paginationEl.hasChildNodes()) {
+            paginationEl.removeChild(paginationEl.lastChild);
+        }
+
+        for (i = 1; i <= pagination.last; i++) {
+            var el = document.createElement('a');
+            el.href = "#";
+            el.innerHTML = i;
+
+            if (i === pagination.current) {
+                el.className = 'on';
+            } else {
+                el.onclick = (function (i) {
+                    return function () {
+                        pagination.gotoPage(i);
+                    }
+                })(i);
+            }
+
+            fragment.appendChild(el);
+        }
+        paginationEl.appendChild(fragment);
+    }
+
+    // 검색결과 목록 또는 마커를 클릭했을 때 호출되는 함수입니다
+    // 인포윈도우에 장소명을 표시합니다
+    function displayInfowindow(marker, title) {
+        var content = '<div style="padding:5px;z-index:1;">' + title + '</div>';
+
+        infowindow.setContent(content);
+        infowindow.open(map, marker);
+    }
+
+    // 검색결과 목록의 자식 Element를 제거하는 함수입니다
+    function removeAllChildNods(el) {
+        while (el.hasChildNodes()) {
+            el.removeChild(el.lastChild);
+        }
+    }
+
+    function centerMap() {
+        // 모달 내 지도가 중앙에 오도록 위치 조정
+        var mapWidth = mapContainer.offsetWidth;
+        var mapHeight = mapContainer.offsetHeight;
+
+        var centerPosition = new kakao.maps.LatLng(37.566826, 126.9786567);
+        map.setCenter(centerPosition);
+    }
+
+    //////////////////////////////////////////////////////////////////////////
+
+    //content 글자수 표시
+    const contentTextarea = document.getElementById('content');
+    const charCountSpan = document.getElementById('charCount');
+
+    contentTextarea.addEventListener('input', function () {
+        const currentLength = contentTextarea.value.length;
+        charCountSpan.textContent = `${currentLength} / 500`;
+    });
+</script>
+</html>

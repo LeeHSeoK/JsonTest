@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout1.html}">
+<link th:href="@{./css/searchresultinfo.css}" rel="stylesheet">
+<head>
+    <meta charset="UTF-8">
+    <title>Detail Information</title>
+</head>
+<body>
+<div layout:fragment="content">
+<h1 style="text-align: center; border: 1px solid black;"><span th:text="${item.title}">Title</span></h1>
+<div style="text-align: center;">
+    <div class="left-column">
+        <label>주소</label>
+        <p th:text="${item.addr1}">Address</p>
+        <img th:src="${item.firstimage}" alt="Image">
+    </div>
+    <div style="width: 1200px; text-align: center; margin:0 auto">
+
+        <input th:value="${item.mapx}" hidden>
+        <input th:value="${item.mapy}" hidden>
+
+        <p th:text="${item.overview}"></p>
+    </div>
+</div>
+<div class="wrap_content">
+    <div class="wrap_map">
+        <div id="map" style="width:1200px; height: 500px; margin: 0 auto;"></div>
+        <div class="wrap_button">
+            <a href="javascript:;" class="btn_comm btn_linkMap" target="_blank" onclick="moveKakaoMap(this)">
+                <span class="screen_out">지도 크게보기</span>
+            </a>
+            <a href="javascript:;" class="btn_comm btn_resetMap" onclick="resetKakaoMap()">
+                <span class="screen_out">지도 초기화</span>
+            </a>
+        </div>
+    </div>
+</div>
+    <script type="text/javascript"
+            src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0ae1ab5c4f8bc594184b9b91394aed69"></script>
+    <script th:inline="javascript">
+        // Thymelaef에서 JavaScript 변수에 값 할당
+        var mapx = [[${item.mapx}]];
+        var mapy = [[${item.mapy}]];
+        var title = [[${item.title}]]; // 따옴표 추가
+        // mapx 값을 소숫점 6자리까지 반올림
+        var xaixs = Math.round(mapx * 1000000) / 1000000;
+        var yaixs = Math.round(mapy * 1000000) / 1000000;
+
+        var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+            mapCenter = new kakao.maps.LatLng(yaixs, xaixs), // 지도의 중심 좌표
+            mapOption = {
+                center: mapCenter, // 지도의 중심 좌표
+                level: 4 // 지도의 확대 레벨
+            };
+
+        // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
+        var map = new kakao.maps.Map(mapContainer, mapOption);
+
+        // 지도에 올릴 마커를 생성합니다.
+        var mMarker = new kakao.maps.Marker({
+            position: mapCenter, // 지도의 중심좌표에 올립니다.
+            map: map // 생성하면서 지도에 올립니다.
+        });
+
+        //지도 이동 이벤트 핸들러
+        function moveKakaoMap(self) {
+
+            var center = map.getCenter(),
+                lat = center.getLat(),
+                lng = center.getLng();
+
+            self.href = 'https://map.kakao.com/link/map/' + encodeURIComponent(title) + ',' + lat + ',' + lng; //Kakao 지도로 보내는 링크
+        }
+        //지도 초기화 이벤트 핸들러
+        function resetKakaoMap() {
+            map.setCenter(mapCenter); //지도를 초기화 했던 값으로 다시 셋팅합니다.
+            map.setLevel(mapOption.level);
+        }
+    </script>
+</div>
+</body>
+</html>
+
