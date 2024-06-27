@@ -272,6 +272,8 @@
 
 <script layout:fragment="script" th:inline="javascript">
 
+    var map, mapCenter, mapOption, placeName;
+
     //지도 이동 이벤트 핸들러
     function moveKakaoMap(self) {
 
@@ -466,20 +468,19 @@
 
     //////////////////////////////////////////////////////////////////////////// 카카오 지도
 
-
         var mapx = [[${dto.xaxis}]];
         var mapy = [[${dto.yaxis}]];
         var placeName = [[${dto.placeName}]];
 
-        var mapContainer = document.getElementById('map'), // 지도를 표시할 div
-            mapCenter = new kakao.maps.LatLng(mapy, mapx), // 지도의 중심 좌표
-            mapOption = {
-                center: mapCenter, // 지도의 중심 좌표
-                level: 4 // 지도의 확대 레벨
-            };
+        var mapContainer = document.getElementById('map'); // 지도를 표시할 div
+        mapCenter = new kakao.maps.LatLng(mapy, mapx); // 지도의 중심 좌표
+        mapOption = {
+            center: mapCenter, // 지도의 중심 좌표
+            level: 4 // 지도의 확대 레벨
+        };
 
         // 지도를 표시할 div와 지도 옵션으로 지도를 생성합니다
-        var map = new kakao.maps.Map(mapContainer, mapOption);
+        map = new kakao.maps.Map(mapContainer, mapOption);
 
         // 지도에 올릴 마커를 생성합니다.
         var mMarker = new kakao.maps.Marker({

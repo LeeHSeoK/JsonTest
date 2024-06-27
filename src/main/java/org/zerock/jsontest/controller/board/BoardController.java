@@ -33,6 +33,7 @@ public class BoardController {
     @Value("${org.zerock.upload.path}")
     private String uploadPath;
 
+
     private final BoardService boardService;
     private final LoginService loginService;
 
@@ -46,6 +47,7 @@ public class BoardController {
     public void registerGET(HttpSession session, Model model){
         String loginSession = (String) session.getAttribute("loginSession");
         Optional<SignUpDTO> optionalSignUpDTO = loginService.searchOne(loginSession); // 변경된 부분
+
         if (optionalSignUpDTO.isPresent()) { // 변경된 부분
             model.addAttribute("userInfo", optionalSignUpDTO.get()); // 변경된 부분
         } else { // 변경된 부분
