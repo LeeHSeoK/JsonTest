@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Travel Map Result</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+<h1>Travel Map Result</h1>
+<table>
+    <thead>
+    <tr>
+        <th>호텔 이름</th>
+        <th>주소</th>
+        <th>우편번호</th>
+        <th>전화번호</th>
+        <th>이미지</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="item : ${items}">
+        <td th:text="${item.title}"></td>
+        <td th:text="${item.addr1}"></td>
+        <td th:text="${item.zipcode}"></td>
+        <td th:text="${item.tel}"></td>
+        <td><img th:src="${item.firstimage}" alt="No Image" width="100"></td>
+    </tr>
+    </tbody>
+</table>
+<a href="/map">Back</a>
+</body>
+</html>

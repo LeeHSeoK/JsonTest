@@ -175,6 +175,22 @@
 </div>
 
 <script layout:fragment="script" th:inline="javascript">
+
+    const removeFileList = []
+
+    function removeFile(uuid, fileName, obj) {
+        if (!confirm("파일을 삭제하겠습니까?")) {
+            return
+        }
+        removeFileList.push({uuid, fileName})
+        removeFileToServer(uuid, fileName).then(data => {
+
+            const targetDiv = obj.closest(".card")
+            targetDiv.remove()
+        })
+
+    }
+
     document.addEventListener("DOMContentLoaded",function (e){
 
     const errors = [[${errors}]]
@@ -238,7 +254,7 @@
     }, false)
 
     //최종적으로 삭제될 첨부파일들의 목록
-    const removeFileList = []
+
 
     function appendNotShownData() {
         if (removeFileList.length === 0) {
@@ -260,18 +276,7 @@
         })
     }
 
-    function removeFile(uuid, fileName, obj) {
-        if (!confirm("파일을 삭제하겠습니까?")) {
-            return
-        }
-        removeFileList.push({uuid, fileName})
-        removeFileToServer(uuid, fileName).then(data => {
 
-            const targetDiv = obj.closest(".card")
-            targetDiv.remove()
-        })
-
-    }
 
     document.querySelector(".listBtn").addEventListener("click", function (e) {
         e.preventDefault()

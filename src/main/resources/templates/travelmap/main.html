@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout1.html}">
+<link th:href="@{./css/searchresultinfo.css}" rel="stylesheet">
+<head>
+  <meta charset="UTF-8">
+  <title>Travel Map</title>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <style>
+    .area-button, .sigungu-button {
+      margin: 5px;
+    }
+
+    .spinner {
+      display: none;
+      margin: 20px auto;
+      width: 50px;
+      height: 50px;
+      border: 5px solid lightgray;
+      border-top: 5px solid black;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+<div layout:fragment="content">
+<h1>Travel Map</h1>
+<form id="searchForm">
+  <input type="hidden" id="areaCode" name="areaCode">
+  <input type="hidden" id="sigunguCode" name="sigunguCode">
+
+  <label>Select Area Code:</label><br>
+  <button type="button" class="area-button" data-code="1">서울</button>
+  <button type="button" class="area-button" data-code="2">인천</button>
+  <button type="button" class="area-button" data-code="3">대전</button>
+  <button type="button" class="area-button" data-code="4">대구</button>
+  <button type="button" class="area-button" data-code="5">광주</button>
+  <button type="button" class="area-button" data-code="6">부산</button>
+  <button type="button" class="area-button" data-code="7">울산</button>
+  <button type="button" class="area-button" data-code="8">세종특별자치시</button>
+  <button type="button" class="area-button" data-code="31">경기도</button>
+  <button type="button" class="area-button" data-code="32">강원도</button>
+  <br><br>
+
+  <div id="sigunguContainer"></div>
+
+  <br><br>
+</form>
+
+<form id="keywordForm">
+  <label for="keyword">Keyword:</label>
+  <input type="text" id="keyword" name="keyword">
+  <button type="submit">Search</button>
+</form>
+
+<div class="spinner" id="spinner"></div>
+
+<h2>Results</h2>
+<table id="resultsTable" border="1">
+  <thead>
+  <tr>
+    <th>호텔 이름</th>
+    <th>주소</th>
+    <th>우편번호</th>
+    <th>전화번호</th>
+    <th>이미지</th>
+  </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+
+<div id="pagination">
+  <button id="prevPage">Previous</button>
+  <span id="currentPage">1</span>
+  <button id="nextPage">Next</button>
+</div>
+</div>
+</body>
+</html>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    let currentPage = 1;
+    const numOfRows = 10;
+
+    const areaButtons = document.querySelectorAll('.area-button');
+    areaButtons.forEach(button => {
+      button.addEventListener('click', function () {
+        const areaCode = this.getAttribute('data-code');
+        document.getElementById('areaCode').value = areaCode;
+        document.getElementById('sigunguCode').value = ''; // Reset sigunguCode
+        currentPage = 1; // Reset page number
+        fetchResults(areaCode); // Fetch results when an area button is clicked
+        fetchSigungu(areaCode); // Fetch sigungu when an area button is clicked
+      });
+    });
+
+    function fetchSigungu(areaCode) {
+      const spinner = document.getElementById('spinner');
+      spinner.style.display = 'block';
+      axios.get('/getSigungu', {
+        params: {
+          areaCode: areaCode
+        }
+      })
+              .then(function (response) {
+                const sigunguContainer = document.getElementById('sigunguContainer');
+                sigunguContainer.innerHTML = ''; // Clear previous buttons
+
+                response.data.response.body.items.item.forEach(function (item) {
+                  const button = document.createElement('button');
+                  button.type = 'button';
+                  button.classList.add('sigungu-button');
+                  button.setAttribute('data-code', item.code);
+                  button.innerText = item.name;
+                  button.addEventListener('click', function () {
+                    document.getElementById('sigunguCode').value = this.getAttribute('data-code');
+                    currentPage = 1; // 페이지 번호를 1로 초기화
+                    fetchResults(areaCode, this.getAttribute('data-code')); // Fetch results when a sigungu button is clicked
+                  });
+                  sigunguContainer.appendChild(button);
+                });
+              })
+              .catch(function (error) {
+                console.error('Error retrieving sigungu data:', error);  // 콘솔 로그 추가
+                alert('Error retrieving sigungu data.');
+              })
+              .finally(function () {
+                spinner.style.display = 'none';
+              });
+    }
+
+    document.getElementById('prevPage').addEventListener('click', function () {
+      if (currentPage > 1) {
+        currentPage--;
+        fetchResults(document.getElementById('areaCode').value, document.getElementById('sigunguCode').value);
+      }
+    });
+
+    document.getElementById('nextPage').addEventListener('click', function () {
+      currentPage++;
+      fetchResults(document.getElementById('areaCode').value, document.getElementById('sigunguCode').value);
+    });
+
+    document.getElementById('keywordForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+      const keyword = document.getElementById('keyword').value;
+      currentPage = 1; // 페이지 번호를 초기화
+      fetchKeywordResults(keyword);
+    });
+
+    function fetchResults(areaCode, sigunguCode = '') {
+      const spinner = document.getElementById('spinner');
+      spinner.style.display = 'block';
+
+      let params = {
+        areaCode: areaCode,
+        pageNo: currentPage,
+        numOfRows: numOfRows
+      };
+
+      if (sigunguCode) {
+        params.sigunguCode = sigunguCode;
+      }
+
+      axios.get('/getMapTravel', { params: params })
+              .then(function (response) {
+                const resultsTable = document.getElementById('resultsTable').getElementsByTagName('tbody')[0];
+                resultsTable.innerHTML = '';
+
+                response.data.response.body.items.item.forEach(function (item) {
+                  const row = resultsTable.insertRow();
+                  row.insertCell(0).innerHTML = `<a href="/searchresultinfo?contentId=${item.contentid}&contentTypeId=${item.contenttypeid}">${item.title}</a>`;
+                  row.insertCell(1).innerText = item.addr1;
+                  row.insertCell(2).innerText = item.zipcode;
+                  row.insertCell(3).innerText = item.tel;
+                  const imgCell = row.insertCell(4);
+                  const img = document.createElement('img');
+                  img.src = item.firstimage;
+                  img.alt = 'No Image';
+                  img.width = 100;
+                  imgCell.appendChild(img);
+                });
+
+                document.getElementById('currentPage').innerText = currentPage;
+              })
+              .catch(function (error) {
+                console.error('Error retrieving data:', error);
+                alert('Error retrieving data.');
+              })
+              .finally(function () {
+                spinner.style.display = 'none';
+              });
+    }
+
+    function fetchKeywordResults(keyword) {
+      const spinner = document.getElementById('spinner');
+      spinner.style.display = 'block';
+
+      axios.get('/searchByKeyword', {
+        params: {
+          keyword: keyword,
+          pageNo: currentPage,
+          numOfRows: numOfRows
+        }
+      })
+              .then(function (response) {
+                const resultsTable = document.getElementById('resultsTable').getElementsByTagName('tbody')[0];
+                resultsTable.innerHTML = '';
+
+                response.data.response.body.items.item.forEach(function (item) {
+                  const row = resultsTable.insertRow();
+                  row.insertCell(0).innerHTML = `<a href="/searchresultinfo?contentId=${item.contentid}&contentTypeId=${item.contenttypeid}">${item.title}</a>`;
+                  row.insertCell(1).innerText = item.addr1;
+                  row.insertCell(2).innerText = item.zipcode;
+                  row.insertCell(3).innerText = item.tel;
+                  const imgCell = row.insertCell(4);
+                  const img = document.createElement('img');
+                  img.src = item.firstimage;
+                  img.alt = 'No Image';
+                  img.width = 100;
+                  imgCell.appendChild(img);
+                });
+
+                document.getElementById('currentPage').innerText = currentPage;
+              })
+              .catch(function (error) {
+                console.error('Error retrieving keyword data:', error);
+                alert('Error retrieving keyword data.');
+              })
+              .finally(function () {
+                spinner.style.display = 'none';
+              });
+    }
+  });
+</script>

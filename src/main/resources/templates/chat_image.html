@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Chat with AI (Image)</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .chat-container {
+            width: 80%;
+            margin: 0 auto;
+            max-width: 600px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+        .message {
+            padding: 5px;
+            border-bottom: 1px solid #ddd;
+        }
+        .user-message {
+            text-align: right;
+        }
+        .assistant-message {
+            text-align: left;
+        }
+        .input-container {
+            display: flex;
+            margin-top: 10px;
+        }
+        .input-container input {
+            flex: 1;
+            padding: 10px;
+        }
+        .input-container button {
+            padding: 10px;
+        }
+        .upload-container {
+            display: flex;
+            margin-top: 10px;
+            justify-content: space-between;
+        }
+        #image-url-input {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="chat-container">
+    <div class="upload-container">
+        <input type="file" id="image" />
+        <button onclick="uploadImage()">Upload Image</button>
+    </div>
+    <div id="chat-box">
+        <!-- Chat messages will be appended here -->
+    </div>
+    <div class="input-container">
+        <input type="text" id="message" placeholder="Type your message..." />
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
+
+<script>
+    var imageUrl = '';
+
+    function uploadImage() {
+        var imageInput = $('#image')[0].files[0];
+        if (!imageInput) {
+            alert('Please select an image');
+            return;
+        }
+
+        var formData = new FormData();
+        formData.append('image', imageInput);
+
+        $.ajax({
+            url: '/api/upload-image',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                imageUrl = response.image_url;
+                alert('Image uploaded successfully: ' + imageUrl);
+            },
+            error: function(error) {
+                alert('Image upload failed: ' + error.responseText);
+            }
+        });
+    }
+
+    function sendMessage() {
+        var message = $('#message').val();
+        if (message.trim() === '') {
+            alert('Please enter a message');
+            return;
+        }
+        if (imageUrl === '') {
+            alert('Please upload an image first');
+            return;
+        }
+
+        $('#chat-box').append('<div class="message user-message">' + message + '</div>');
+        $('#message').val('');
+
+        $.ajax({
+            url: '/api/ask-image',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ url: imageUrl, message: message }),
+            success: function(response) {
+                var responseText = response.response.replace(/\\n/g, '<br>').replace(/\\"/g, '');
+                $('#chat-box').append('<div class="message assistant-message">' + responseText + '</div>');
+            },
+            error: function(error) {
+                alert('Error: ' + error.responseText);
+            }
+        });
+    }
+
+    $(document).ready(function() {
+        $('#message').keydown(function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                sendMessage();
+            }
+        });
+    });
+</script>
+</body>
+</html>
